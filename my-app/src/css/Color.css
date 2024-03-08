@@ -1,0 +1,20 @@
+.textColor {
+    color: rgb(222, 184, 135);
+    font-size: '20px';
+}
+
+.borderColor {
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgb(222, 184, 135);
+}
+
+.backgroundColor {
+    background-color: rgb(222, 184, 135);
+    color: white;
+}
+
+.backgroundGradient {
+    background: linear-gradient(to bottom, white, rgb(222, 184, 135));
+    color: white;
+}

@@ -1,0 +1,12 @@
+h2 {
+    color: #333;
+    font-style: bold;
+}
+
+h3 {
+    color: #fff;
+}
+
+h3:hover {
+    color: blue;
+}

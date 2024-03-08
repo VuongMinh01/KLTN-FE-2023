@@ -1,0 +1,33 @@
+.nav-customr {
+    max-height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: bold;
+    font-weight: bolder;
+}
+
+.homeNav {
+    background-color: #F6D389;
+    border-radius: 10px;
+    border: solid 0.1px;
+}
+
+.NavLinkCss {
+    padding: 10px;
+    color: black;
+}
+
+.NavLinkCss:hover {
+    color: white;
+}
+
+.NavLinkCss1 {
+    padding: 10px;
+    color: white;
+}
+
+.NavLinkCss1:hover {
+    color: red;
+}
