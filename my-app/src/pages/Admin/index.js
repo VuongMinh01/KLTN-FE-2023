@@ -7,23 +7,23 @@ import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 export default function Admin() {
     return (
-        <div className="App">
-            <Space className="SideMenuAndPageContent">
-                <SideMenu></SideMenu>
-                <PageContent></PageContent>
-            </Space>
-        </div>
-        // <Container fluid>
-        // <Header />
+        // <div className="App">
+        //     <Space className="SideMenuAndPageContent">
+        //         <SideMenu></SideMenu>
+        //         <PageContent></PageContent>
+        //     </Space>
+        // </div>
+        <Container fluid>
+            <Header />
 
-        //     <Row>
-        //         <Col xs={4} sm={12}>
-        //             <SideMenu></SideMenu>
-        //         </Col>
-        //         <Col xs={8} sm={12}>
-        //             <PageContent></PageContent>
-        //         </Col>
-        //     </Row>
-        // </Container>
+            <Row>
+                <Col xs={3} sm={2}>
+                    <SideMenu></SideMenu>
+                </Col>
+                <Col xs={9} sm={10}>
+                    <PageContent></PageContent>
+                </Col>
+            </Row>
+        </Container>
     )
 }

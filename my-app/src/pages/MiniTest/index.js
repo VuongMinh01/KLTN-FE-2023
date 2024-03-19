@@ -8,7 +8,7 @@ import { PlusOutlined, InfoOutlined } from '@ant-design/icons';
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
 
-export default function FullTest() {
+export default function MiniTest() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
@@ -32,7 +32,7 @@ export default function FullTest() {
     };
     // Drawer
     const showDrawer = () => {
-        Navigate('/admin/fulltest/add')
+        Navigate('/admin/minitest/add')
     };
     const onClose = () => {
         setOpen(false);

@@ -19,24 +19,37 @@ export default function LoginPage() {
 
     const onButtonClick = async (e) => {
 
-        e.preventDefault();
-        const { password, email } = values;
-        const { data } = await axios.post(loginRoute, {
-            email,
-            password,
-        });
-
-        if (data.status === false) {
-            toast.error(data.msg, toastOptions);
-        }
-        if (data.status === true) {
-            navigate("/admin1")
+        if (handleValidation()) {
+            const { password, email } = values;
+            const { data } = await axios.post(loginRoute, {
+                email,
+                password,
+            });
+            if (data.status === false) {
+                toast.error(data.msg, toastOptions);
+            }
+            if (data.status === true) {
+                // localStorage.setItem("car-app-user", JSON.stringify(data.user));
+                navigate("/admin")
+            }
         }
     }
     const onButtonClickGmail = async (e) => {
         e.preventDefault();
 
     }
+    const handleValidation = () => {
+        const { password, email } = values;
+        if (password === "") {
+            toast.error("Password is required.", toastOptions);
+            return false;
+        }
+        else if (email.length === "") {
+            toast.error("Email is required.", toastOptions);
+            return false;
+        }
+        return true;
+    };
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
