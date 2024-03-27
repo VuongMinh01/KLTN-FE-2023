@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import '../../css/AddPart1.css';
 import NavPart from "../NavPart";
+
 export default function AddPart1() {
 
+    const onSubmit = () => {
+
+
+    }
 
 
     const onAudioChange1 = (event) => {
@@ -81,7 +86,7 @@ export default function AddPart1() {
     }
     const onImageChange4 = (event) => {
         if (event.target.files && event.target.files[0]) {
-            setImage2(URL.createObjectURL(event.target.files[0]));
+            setImage4(URL.createObjectURL(event.target.files[0]));
         }
     }
     const onImageChange5 = (event) => {
@@ -272,7 +277,7 @@ export default function AddPart1() {
 
                 </Row>
 
-                <button type="submit">Save</button>
+                <button type="submit" onClick={onSubmit}>Save</button>
                 <button>Next</button>
             </form>
         </Container >

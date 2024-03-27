@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getAllCustomer, getCustomerById } from "../../utils/APIRoutes";
+import { addCustomer, getCustomerById } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, InfoOutlined } from '@ant-design/icons';
@@ -32,7 +32,9 @@ export default function MiniTest() {
     };
     // Drawer
     const showDrawer = () => {
-        Navigate('/admin/minitest/add')
+        // Navigate('/admin/minitest/add')
+        setOpen(true);
+
     };
     const onClose = () => {
         setOpen(false);
@@ -172,31 +174,20 @@ export default function MiniTest() {
                 <Table columns={[
                     {
                         key: "1",
-                        title: "Mã khách hàng",
+                        title: "Mã bài thi",
                         dataIndex: "customerId",
                     },
                     {
                         key: "2",
-                        title: "Họ và tên",
+                        title: "Id bài thi",
                         dataIndex: "customerName",
 
                     },
 
                     {
                         key: "3",
-                        title: "Địa chỉ Mail",
+                        title: "Dạng bài thi",
                         dataIndex: "email",
-                    },
-                    {
-                        key: "4",
-                        title: "Số điện thoại",
-                        dataIndex: "phone",
-                    },
-                    {
-                        key: "5",
-                        title: "Địa chỉ",
-                        dataIndex: "address",
-
                     },
                     {
                         key: "6",
@@ -228,14 +219,6 @@ export default function MiniTest() {
                 onClose={onClose}
                 open={open}
                 bodyStyle={{ paddingBottom: 80 }}
-                extra={
-                    <Space>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={(e) => handleClick(e)} type="primary">
-                            Thêm
-                        </Button>
-                    </Space>
-                }
             >
                 <Form layout="vertical">
                     <Row gutter={16}>
@@ -321,6 +304,12 @@ export default function MiniTest() {
 
 
                 </Form>
+                <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={(e) => handleClick(e)} type="primary">
+                        Thêm
+                    </Button>
+                </Space>
             </Drawer>
             {/* Thông tin chi tiết khách hàng */}
             <Modal

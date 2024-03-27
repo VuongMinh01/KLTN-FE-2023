@@ -36,13 +36,13 @@ export default function KhachHang() {
         setOpen(false);
     };
     // Load data from db
-    useEffect(() => {
-        setLoading(true);
-        getAllCustomer().then((res) => {
-            setDataSource(res.data);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     getAllCustomer().then((res) => {
+    //         setDataSource(res.data);
 
-        });
-    }, [loading]);
+    //     });
+    // }, [loading]);
 
 
     const handleOnChange = (e) => {

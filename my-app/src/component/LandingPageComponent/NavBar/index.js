@@ -2,12 +2,33 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { NavLink } from "react-router-dom";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../../css/NavBar.css';
 import '../../../css/Color.css';
 import Logo from '../../../assets/minmedia.png'
+import axios from 'axios';
 
 function NavBar() {
+
+    useEffect(() => {
+        checkLogin()
+    }, []);
+    const checkLogin = async (e) => {
+        try {
+
+            const token = localStorage.getItem("user");
+            if (
+                token !== null) {
+
+                setSignedIn(true)
+            }
+        } catch (e) {
+            setSignedIn(false)
+        }
+
+    }
+
+    const [signedIn, setSignedIn] = useState(false)
     return (
         <Navbar expand="lg" fixed='top' style={{ backgroundColor: 'burlywood' }}   >
 
@@ -35,7 +56,8 @@ function NavBar() {
                         <NavLink className='NavLinkCss' to="/test">Ngữ pháp</NavLink>
                         <NavLink className='NavLinkCss' to="/test">Từ vựng</NavLink>
                     </Nav>
-                    <NavLink className='NavLinkCss' to="/login">Đăng nhập</NavLink>
+                    {signedIn && <NavLink className='NavLinkCss' to="/login" >View profile</NavLink>}
+                    {!signedIn && <NavLink className='NavLinkCss' to="/login">Đăng nhập</NavLink>}
                 </Navbar.Collapse>
             </Container>
         </Navbar>

@@ -32,7 +32,8 @@ export default function FullTest() {
     };
     // Drawer
     const showDrawer = () => {
-        Navigate('/admin/fulltest/add')
+        // Navigate('/admin/fulltest/add')
+        setOpen(true);
     };
     const onClose = () => {
         setOpen(false);
@@ -228,14 +229,7 @@ export default function FullTest() {
                 onClose={onClose}
                 open={open}
                 bodyStyle={{ paddingBottom: 80 }}
-                extra={
-                    <Space>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={(e) => handleClick(e)} type="primary">
-                            Thêm
-                        </Button>
-                    </Space>
-                }
+
             >
                 <Form layout="vertical">
                     <Row gutter={16}>
@@ -321,6 +315,12 @@ export default function FullTest() {
 
 
                 </Form>
+                <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={(e) => handleClick(e)} type="primary">
+                        Thêm
+                    </Button>
+                </Space>
             </Drawer>
             {/* Thông tin chi tiết khách hàng */}
             <Modal

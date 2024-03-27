@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageContent from "../../component/AdminPage/PageContent";
 import SideMenu from "../../component/AdminPage/SideMenu";
 import { Space } from "antd"
 import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
+import { useNavigate } from "react-router-dom";
 export default function Admin() {
+
+    // useEffect(() => {
+    //     if (localStorage.getItem('user')) {
+    //         navigate('/admin')
+    //     }
+    // }, [])
+    // const navigate = useNavigate();
+    // useEffect(() => {
+    //     checkLogout()
+    // }, []);
+    // const checkLogout = async (e) => {
+    //     try {
+
+    //         const token = localStorage.getItem("user");
+    //         if (
+    //             token === null) {
+    //             console.log(token);
+    //             setLogout(true)
+    //         }
+    //     } catch (e) {
+    //         setLogout(false)
+    //     }
+    //     if (setLogout)
+    //         navigate("/login")
+
+    // }
+    // const [logOut, setLogout] = useState(false)
+
     return (
-        // <div className="App">
-        //     <Space className="SideMenuAndPageContent">
-        //         <SideMenu></SideMenu>
-        //         <PageContent></PageContent>
-        //     </Space>
-        // </div>
+
         <Container fluid>
             <Header />
 

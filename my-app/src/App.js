@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
-import cors from 'cors';
 
-import { publicRoute } from "./routes";
+import { publicRoute, privateRoute } from "./routes";
 import Admin from "./pages/Admin";
 function App() {
 

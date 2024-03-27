@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import "../../css/LoginRegisterPage.css"
@@ -15,24 +15,37 @@ export default function LoginPage() {
         password: "",
     });
 
+    useEffect(() => {
+        if (localStorage.getItem('user')) {
+            navigate('/admin')
+        }
+    }, [])
+
     const navigate = useNavigate()
 
     const onButtonClick = async (e) => {
-
+        e.preventDefault();
         if (handleValidation()) {
             const { password, email } = values;
             const { data } = await axios.post(loginRoute, {
                 email,
                 password,
             });
-            if (data.status === false) {
+            console.log(data.result.access_token);
+
+            if (data.message === "Login success") {
+                localStorage.setItem("user", JSON.stringify(data.result.access_token));
+
+                // localStorage.setItem(JSON.stringify('token', data.access_token));
+                // JSON.parse(localStorage.getItem('token', data.access_token));
+
+                navigate("/admin");
+            }
+            if (data.message === "Request failed with status code 422") {
                 toast.error(data.msg, toastOptions);
             }
-            if (data.status === true) {
-                // localStorage.setItem("car-app-user", JSON.stringify(data.user));
-                navigate("/admin")
-            }
         }
+
     }
     const onButtonClickGmail = async (e) => {
         e.preventDefault();

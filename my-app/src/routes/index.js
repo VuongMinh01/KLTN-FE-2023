@@ -7,10 +7,12 @@ const publicRoute = [
     { path: '/', component: LandingPage },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/admin', component: Admin },
     { path: '/test', component: Tests },
 
 ]
 
+const privateRoute = [
+    { path: '/admin', component: Admin },
 
-export { publicRoute }
+]
+export { publicRoute, privateRoute }
