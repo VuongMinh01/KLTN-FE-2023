@@ -3,6 +3,7 @@ import React from "react";
 
 import { publicRoute, privateRoute } from "./routes";
 import Admin from "./pages/Admin";
+import User from "./pages/User";
 function App() {
 
   return (
@@ -20,6 +21,7 @@ function App() {
 
           })}
           <Route path="/admin/*" element={<Admin />}></Route>
+          <Route path="/user/*" element={<User />}></Route>
 
         </Routes>
       </BrowserRouter>

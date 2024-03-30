@@ -9,10 +9,13 @@ import Logo from '../../../assets/minmedia.png'
 import axios from 'axios';
 
 function NavBar() {
+    const [loading, setLoading] = useState(false)
+
 
     useEffect(() => {
-        checkLogin()
-    }, []);
+        setLoading(true);
+        checkLogin();
+    }, [loading]);
     const checkLogin = async (e) => {
         try {
 

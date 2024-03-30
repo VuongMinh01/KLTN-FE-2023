@@ -12,13 +12,17 @@ export default function SideMenu() {
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate();
-    const [name, setName] = useState([]);
-    useEffect(() => {
-        setLoading(true);
-        setName(name1);
+    const [name, setName] = useState('');
+    // useEffect(() => {
+    //     setLoading(true);
+    //     setName(name1);
 
-    }, [loading]);
+    // }, [loading]);
 
+    const handleOnChange = (e) => {
+        setName({ ...name, [e.target.name]: e.target.value });
+
+    }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
     // let token1 = token.replace(/"/g, '');
@@ -53,12 +57,13 @@ export default function SideMenu() {
             >
 
 
-                <Meta
+                {/* <Meta
                     avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8"
                     />}
                     name="name"
                     tittle={`${name}`}
-                />
+                /> */}
+                <input name="name" onChange={handleOnChange} />
             </Card>
             <Menu
                 // theme="dark"
