@@ -47,6 +47,7 @@ export default function User() {
                     <PageContent></PageContent>
                 </Col>
             </Row>
+
         </Container>
     )
 }

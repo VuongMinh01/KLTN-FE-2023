@@ -7,9 +7,9 @@ export default function SideMenu() {
 
     const navigate = useNavigate();
     const options = [
-        { value: 'Part 1', label: 'Part 1 ' },
-        { value: 'Part 2', label: 'Part 2' },
-        { value: 'Part 3', label: 'Part 3' }
+        { value: 'test1', label: 'Test 1 ' },
+        { value: 'test2', label: 'Test 2' },
+        { value: 'test3', label: 'Test 3' }
     ]
 
     return (
@@ -38,7 +38,7 @@ export default function SideMenu() {
                         label: "Part 1",
                         icon: <ShoppingCartOutlined />,
                         children: [
-                            { label: "Question 1 - 6 ", key: '/user/part1' },
+                            { label: "Question 1 - 6 ", key: '/user/test1/part1' },
 
                         ]
                     },
@@ -47,7 +47,7 @@ export default function SideMenu() {
                         label: "Part 2",
                         icon: <ShoppingCartOutlined />,
                         children: [
-                            { label: "Question 7 - 31 ", key: '/user/part2' },
+                            { label: "Question 7 - 31 ", key: '/user/test1/part2' },
 
                         ]
                     },
@@ -56,7 +56,7 @@ export default function SideMenu() {
                         label: "Part 3",
                         icon: <ShoppingCartOutlined />,
                         children: [
-                            { label: "Question 32 - 34 ", key: '/user/part3/' },
+                            { label: "Question 32 - 34 ", key: '/user/test1/part3/q1' },
                             { label: "Question 35 - 37", key: '/user/fulltest' },
                             { label: "Question 38 - 40", key: '/user/fulltest' },
                             { label: "Question 41 - 43", key: '/user/fulltest' },
