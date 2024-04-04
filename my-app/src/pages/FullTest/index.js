@@ -15,12 +15,10 @@ export default function FullTest() {
     const { Option } = Select;
     const [input, setInput] = useState('');
     const [values, setValues] = useState({
-        customerId: "",
-        customerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        carPlate: "",
+        source_id: "",
+        title: "",
+        description: "",
+        timeline: "",
     })
     const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
@@ -56,14 +54,9 @@ export default function FullTest() {
     const handleClick = async (e) => {
         e.preventDefault();
         if (handleValidation()) {
-            const { customerId, customerName, phone, address, email, carPlate } = values;
+            const { source_id, title, description, timeline } = values;
             const { data } = await axios.post(addCustomer, {
-                customerId,
-                customerName,
-                phone,
-                address,
-                email,
-                carPlate,
+                source_id, title, description, timeline,
             })
             if (data.status === false) {
                 console.log("Thêm thất bại");
@@ -104,39 +97,35 @@ export default function FullTest() {
         setInput('');
     }
     // Tìm 
-    const handleSearch = async (e) => {
-        const { data } = await axios.get(getCustomerById + '/' + search);
-        let dataTemp = []
-        dataTemp.push(data.resultCustomer)
-        setDataSource(dataTemp);
+    // const handleSearch = async (e) => {
+    //     const { data } = await axios.get(getCustomerById + '/' + search);
+    //     let dataTemp = []
+    //     dataTemp.push(data.resultCustomer)
+    //     setDataSource(dataTemp);
 
-    }
+    // }
 
-    const handleOnChangeSearch = (e) => {
-        setSearch(e.target.value)
-    }
+    // const handleOnChangeSearch = (e) => {
+    //     setSearch(e.target.value)
+    // }
 
     // Valid khi thêm
     const handleValidation = () => {
-        const { customerId, customerName, phone, address, email } = values;
-        if (customerId.length < 5 || customerId === "") {
+        const { source_id, title, description, timeline } = values;
+        if (source_id.length < 5 || source_id === "") {
             toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
             return false;
         }
-        else if (customerName.length < 5) {
+        else if (title.length < 5) {
             toast.error("Tên nhân viên phải lớn hơn 5 kí tự", toastOptions);
             return false;
         }
-        else if (phone.length !== 10) {
+        else if (description.length !== 10) {
             toast.error("Số điện thoại không hợp lệ", toastOptions);
             return false;
         }
-        else if (email === "") {
+        else if (timeline === "") {
             toast.error("Email không được để trống", toastOptions);
-            return false;
-        }
-        else if (address.value === "") {
-            toast.error("Địa chỉ không được để trống", toastOptions);
             return false;
         }
         return true;

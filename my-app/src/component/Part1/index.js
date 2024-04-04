@@ -33,6 +33,7 @@ export default function Part1() {
 
 
     return (
+
         <Container>
             <h1>Part 1</h1>
             <form>
@@ -40,7 +41,7 @@ export default function Part1() {
                 <Row className="RowQuestion" >
                     <div className="div1">
 
-                        <h1 style={{ textAlign: 'center' }}>Question 1</h1>
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 1</h3>
 
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
@@ -69,9 +70,9 @@ export default function Part1() {
 
                 <Row className="RowQuestion" >
                     <div className="div1">
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 2</h3>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
-                            <h1 style={{ textAlign: 'center' }}>Question 2</h1>
                             <audio controls="true" src={audio2} ></audio>
                         </div>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
@@ -94,9 +95,9 @@ export default function Part1() {
 
                 <Row className="RowQuestion" >
                     <div className="div1">
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 3</h3>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
-                            <h1 style={{ textAlign: 'center' }}>Question 3</h1>
                             <audio controls="true" src={audio3} ></audio>
                         </div>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
@@ -118,9 +119,9 @@ export default function Part1() {
                 </Row>
                 <Row className="RowQuestion" >
                     <div className="div1">
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 4</h3>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
-                            <h1 style={{ textAlign: 'center' }}>Question 4</h1>
                             <audio controls="true" src={audio4} ></audio>
                         </div>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
@@ -142,9 +143,9 @@ export default function Part1() {
                 </Row>
                 <Row className="RowQuestion" >
                     <div className="div1">
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 5</h3>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
-                            <h1 style={{ textAlign: 'center' }}>Question 5</h1>
                             <audio controls="true" src={audio5} ></audio>
                         </div>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
@@ -166,9 +167,9 @@ export default function Part1() {
                 </Row>
                 <Row className="RowQuestion" >
                     <div className="div1">
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 6</h3>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
-                            <h1 style={{ textAlign: 'center' }}>Question 6</h1>
                             <audio controls="true" src={audio6} ></audio>
                         </div>
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>

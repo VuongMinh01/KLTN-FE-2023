@@ -44,7 +44,6 @@ export default function SideMenu() {
 
     return (
         <div className="SideMenu">
-            <button >d</button>
 
             <Card
                 style={{ width: '100%' }}
@@ -63,7 +62,7 @@ export default function SideMenu() {
                     name="name"
                     tittle={`${name}`}
                 /> */}
-                <input name="name" onChange={handleOnChange} />
+                {/* <input name="name" onChange={handleOnChange} /> */}
             </Card>
             <Menu
                 // theme="dark"

@@ -1,4 +1,4 @@
-const host = "https://nguyenminhquang.io.vn";
+const host = "https://toeictesting247api.io.vn";
 
 // export const registerRoute = `${host}/api/auth/register`;
 export const loginRoute = `${host}/users/login`;
@@ -23,7 +23,7 @@ export const getAllCustomer = () => {
     return fetch('http://localhost:4001/api/customer/getAllCustomer').then(res => res.json())
 }
 export const getCustomerById = `${host}/api/customer/getCustomerById`;
-export const addCustomer = `${host}/api/customer/addCustomer`;
+export const addCustomer = `${host}/tests/`;
 
 export const getAllCoupon = () => {
     return fetch('http://localhost:4001/api/coupon/getAllCoupon').then(res => res.json())

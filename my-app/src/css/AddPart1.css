@@ -17,9 +17,10 @@ audio {
 .RowQuestion .div1 {
     background-color: antiquewhite;
     border-radius: 40px;
-    margin-left: 10px;
+    margin-left: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-right: 10px;
     display: grid;
+    padding: 10px;
 }

@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getCustomerById } from "../../utils/APIRoutes";
+import { addCustomer } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, InfoOutlined } from '@ant-design/icons';
@@ -15,14 +15,12 @@ export default function MiniTest() {
     const { Option } = Select;
     const [input, setInput] = useState('');
     const [values, setValues] = useState({
-        customerId: "",
-        customerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        carPlate: "",
+        source_id: "",
+        title: "",
+        description: "",
+        timeline: "",
     })
-    const [search, setSearch] = useState();
+    // const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -53,25 +51,38 @@ export default function MiniTest() {
         setValues({ ...values, [e.target.name]: e.target.value });
 
     }
+
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // axios.get(getUser
+    //     ,
+    //     config
+    // ).then((response) => {
+    //     const checkToken = response.data.result.name;
+    //     console.log(checkToken);
+    //     name1 = checkToken;
+    //     console.log(response.data);
+    // });
+
     //  Thêm khách hàng
     const handleClick = async (e) => {
+        console.log(config);
         e.preventDefault();
         if (handleValidation()) {
-            const { customerId, customerName, phone, address, email, carPlate } = values;
+            const { source_id, title, description, timeline } = values;
             const { data } = await axios.post(addCustomer, {
-                customerId,
-                customerName,
-                phone,
-                address,
-                email,
-                carPlate,
-            })
+                source_id, title, description, timeline,
+
+            }, config)
             if (data.status === false) {
                 console.log("Thêm thất bại");
             }
             if (data.status === true) {
                 setLoading(true)
-                updateTable(data.customer)
+                // updateTable(data.customer)
                 console.log(dataSource);
                 console.log("Thêm thành công");
                 onClose();
@@ -105,39 +116,35 @@ export default function MiniTest() {
         setInput('');
     }
     // Tìm 
-    const handleSearch = async (e) => {
-        const { data } = await axios.get(getCustomerById + '/' + search);
-        let dataTemp = []
-        dataTemp.push(data.resultCustomer)
-        setDataSource(dataTemp);
+    // const handleSearch = async (e) => {
+    //     const { data } = await axios.get(getCustomerById + '/' + search);
+    //     let dataTemp = []
+    //     dataTemp.push(data.resultCustomer)
+    //     setDataSource(dataTemp);
 
-    }
+    // }
 
-    const handleOnChangeSearch = (e) => {
-        setSearch(e.target.value)
-    }
+    // const handleOnChangeSearch = (e) => {
+    //     setSearch(e.target.value)
+    // }
 
     // Valid khi thêm
     const handleValidation = () => {
-        const { customerId, customerName, phone, address, email } = values;
-        if (customerId.length < 5 || customerId === "") {
+        const { source_id, title, description, timeline } = values;
+        if (source_id.length < 5 || source_id === "") {
             toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
             return false;
         }
-        else if (customerName.length < 5) {
-            toast.error("Tên nhân viên phải lớn hơn 5 kí tự", toastOptions);
+        else if (title.length < 5) {
+            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
             return false;
         }
-        else if (phone.length !== 10) {
-            toast.error("Số điện thoại không hợp lệ", toastOptions);
+        else if (description.length < 10) {
+            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
             return false;
         }
-        else if (email === "") {
-            toast.error("Email không được để trống", toastOptions);
-            return false;
-        }
-        else if (address.value === "") {
-            toast.error("Địa chỉ không được để trống", toastOptions);
+        else if (timeline === "") {
+            toast.error("Timeline không được để trống", toastOptions);
             return false;
         }
         return true;
@@ -174,23 +181,28 @@ export default function MiniTest() {
                 <Table columns={[
                     {
                         key: "1",
-                        title: "Mã bài thi",
-                        dataIndex: "customerId",
+                        title: "Mã bài test",
+                        dataIndex: "source_id",
                     },
                     {
                         key: "2",
-                        title: "Id bài thi",
-                        dataIndex: "customerName",
+                        title: "Tiêu dề",
+                        dataIndex: "title",
 
                     },
 
                     {
                         key: "3",
-                        title: "Dạng bài thi",
-                        dataIndex: "email",
+                        title: "Mô tả",
+                        dataIndex: "description",
                     },
                     {
-                        key: "6",
+                        key: "4",
+                        title: "Thời gian làm bài",
+                        dataIndex: "timeline",
+                    },
+                    {
+                        key: "5",
                         title: "Actions",
                         render: () => {
                             return (
@@ -214,7 +226,7 @@ export default function MiniTest() {
 
             {/* Thanh thêm khách hàng */}
             <Drawer
-                title="Create a new customer"
+                title="Create a new test"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -224,83 +236,55 @@ export default function MiniTest() {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Mã khách hàng"
-                                rules={[{ required: true, message: 'Mã khách hàng không được để trống' }]}
+                                label="Mã bài thi"
+                                rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
                                     onChange={(e) => handleOnChange(e)}
-                                    name="customerIdSearch"
-                                    placeholder="Nhập mã khách hàng" />
+                                    name="source_id"
+                                    placeholder="Nhập mã bài thi" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
 
-                                label="Tên khách hàng"
-                                rules={[{ required: true, message: 'Tên khách hàng không được để trống' }]}
+                                label="Tiêu đề"
+                                rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
                             >
                                 <Input
-                                    name="customerName"
+                                    name="title"
                                     onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập tên khách hàng" />
+                                    placeholder="Nhập tiêu đề" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
 
-                                label="Số điện thoại"
-                                rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
+                                label="Mô tả"
+                                rules={[{ required: true, message: 'Mô tả không được để trống' }]}
                             >
                                 <Input
-                                    name="phone"
+                                    name="description"
                                     onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập số điện thoại" />
+                                    placeholder="Mô tả" />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
 
-                                label="Địa chỉ mail"
-                                rules={[{ required: true, message: 'Địa chỉ mail không được để trống' }]}
+                                label="Thời gian"
+                                rules={[{ required: true, message: 'Thời gian không được để trống' }]}
                             >
                                 <Input
-                                    name="email"
+                                    name="timeline"
                                     onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập địa chỉ mail"
-                                    addonAfter="@gmail.com"
+                                    placeholder="Nhập thời gian"
                                 />
                             </Form.Item>
                         </Col>
 
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
 
-                                label="Địa chỉ"
-                                rules={[{ required: true, message: 'Please select a city' }]}
-                            >
-                                <Select
-                                    name="address"
-                                    placeholder="Please select an city">
-                                    <Option value="TP.HCM">Tp.HCM</Option>
-                                    <Option value="Hà Nội">Hà Nội</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Biển số xe"
-                            >
-                                <Input
-                                    name="carPlate"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập biển số xe" />
-                            </Form.Item>
-                        </Col>
-
-                    </Row>
 
 
                 </Form>
