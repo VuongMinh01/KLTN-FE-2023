@@ -84,13 +84,25 @@ export default function SideMenu() {
                         key: '/admin/dashboard',
                     },
                     {
-                        label: "Tests",
+                        label: "Courses",
                         icon: <ShoppingCartOutlined />,
-                        children: [
-                            { label: "Full Test", key: '/admin/fulltest' },
-                            { label: "Mini Test", key: '/admin/minitest' },
+                        key: '/admin/courses',
 
-                        ]
+                    },
+                    {
+                        label: "Listening",
+                        key: '/admin/listening',
+                        icon: <UserOutlined />
+                    },
+                    {
+                        label: "Reading",
+                        key: '/admin/reading',
+                        icon: <UserOutlined />
+                    },
+                    {
+                        label: "Full Test",
+                        key: '/admin/fulltest',
+                        icon: <UserOutlined />
                     },
 
                     {

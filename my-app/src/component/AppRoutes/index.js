@@ -9,6 +9,7 @@ import AddingMiniTestPage from '../../component/AddingMiniTestPage';
 import AddPart1 from '../../component/AddPart1';
 import AddPart2 from '../../component/AddPart2';
 import AddPart1Test from '../../component/AddPart1Test';
+import Courses from '../../pages/Courses';
 
 export default function AppRoutes() {
     return (
@@ -23,8 +24,8 @@ export default function AppRoutes() {
             <Route path="/minitest/add" element={<AddingMiniTestPage />}></Route>
             <Route path="/minitest/add/Part1" element={<AddPart1 />}></Route>
             <Route path="/minitest/add/Part2" element={<AddPart2 />}></Route>
-
             <Route path="/minitest/add/Part3" element={<AddPart1Test />}></Route>
+            <Route path="/courses" element={<Courses />}></Route>
 
         </Routes>
     )
