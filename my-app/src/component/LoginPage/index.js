@@ -21,7 +21,7 @@ export default function LoginPage() {
         }
     }, [])
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const onButtonClick = async (e) => {
         e.preventDefault();
@@ -33,11 +33,10 @@ export default function LoginPage() {
             });
             console.log(data.result.access_token);
 
+
             if (data.message === "Login success") {
                 localStorage.setItem("user", JSON.stringify(data.result.access_token));
 
-                // localStorage.setItem(JSON.stringify('token', data.access_token));
-                // JSON.parse(localStorage.getItem('token', data.access_token));
 
                 navigate("/admin");
             }

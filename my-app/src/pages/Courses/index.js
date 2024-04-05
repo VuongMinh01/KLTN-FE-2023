@@ -15,23 +15,28 @@ export default function Courses() {
         setValues({ ...values, [e.target.name]: parseInt(e.target.value) });
 
     }
+    useEffect(() => {
+        setLoading(true);
+        getAllCourses1();
+    }, [loading]);
+
     const getAllCourses1 = () => {
+        console.log('lan 1')
         axios.get(getAllCourses, {
             params: {
                 limit: 10,
                 page: 1,
             }
         }).then((response) => {
-            console.log(response.data.result.courses);
+            console.log(response.data.result.courses, '1');
+
             setDataSource(response.data.result.courses);
+
 
         });
 
     }
-    useEffect(() => {
-        setLoading(true);
-        getAllCourses1();
-    }, [loading]);
+
     const Navigate = useNavigate();
     const [dataSource, setDataSource] = useState([])
     const { Option } = Select;
@@ -98,8 +103,6 @@ export default function Courses() {
             if (data.status === true) {
                 setLoading(true)
                 updateTable(data.customer)
-                console.log(dataSource);
-                console.log("Thêm thành công");
                 onClose();
             }
         }
@@ -115,9 +118,7 @@ export default function Courses() {
 
     const updateTable = (data) => {
         setDataSource(previousState => {
-            console.log(data);
             // previousState.push(data);
-            console.log(previousState);
             setLoading(false)
             return previousState
         });
@@ -195,34 +196,34 @@ export default function Courses() {
                 {/* Table thông tin khách hàng */}
                 <Table columns={[
                     {
-                        key: "1",
+                        key: '1',
                         title: "Loại",
                         dataIndex: "type",
                     },
                     {
-                        key: "2",
+                        key: '2',
                         title: "Tiêu dề",
                         dataIndex: "title",
 
                     },
 
                     {
-                        key: "3",
+                        key: '3',
                         title: "Mô tả",
                         dataIndex: "description",
                     },
                     {
-                        key: "4",
+                        key: '4',
                         title: "Content làm bài",
                         dataIndex: "content",
                     },
                     {
-                        key: "5",
+                        key: '5',
                         title: "Ảnh",
                         dataIndex: "thumbnails",
                     },
                     {
-                        key: "6",
+                        key: '6',
                         title: "Actions",
                         render: () => {
                             return (
@@ -235,6 +236,7 @@ export default function Courses() {
                     },
                 ]}
                     dataSource={dataSource}
+                    rowKey="_id"
                     pagination={
                         {
                             pageSize: 10,

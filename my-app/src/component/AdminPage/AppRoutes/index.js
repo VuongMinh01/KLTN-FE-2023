@@ -1,16 +1,16 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import KhachHang from '../../pages/KhachHang';
-import FullTest from '../../pages/FullTest';
-import MiniTest from '../../pages/MiniTest';
-import KhuyenMai from '../../pages/KhuyenMai';
-import AddingFullTestPage from '../../component/AddingFullTestPage';
-import AddingMiniTestPage from '../../component/AddingMiniTestPage';
-import AddPart1 from '../../component/AddPart1';
-import AddPart2 from '../../component/AddPart2';
-import AddPart1Test from '../../component/AddPart1Test';
-import Courses from '../../pages/Courses';
-
+import KhachHang from '../../../pages/KhachHang';
+import FullTest from '../../../pages/FullTest';
+import MiniTest from '../../../pages/MiniTest';
+import KhuyenMai from '../../../pages/KhuyenMai';
+import AddingFullTestPage from '../../AddingFullTestPage';
+import AddingMiniTestPage from '../../AddingMiniTestPage';
+import AddPart1 from '../../AddPart1';
+import AddPart2 from '../../AddPart2';
+import AddPart1Test from '../../AddPart1Test';
+import Courses from '../../../pages/Courses';
+import Verify from "../../VerifyPage/Verify";
 export default function AppRoutes() {
     return (
         <Routes>
@@ -26,6 +26,7 @@ export default function AppRoutes() {
             <Route path="/minitest/add/Part2" element={<AddPart2 />}></Route>
             <Route path="/minitest/add/Part3" element={<AddPart1Test />}></Route>
             <Route path="/courses" element={<Courses />}></Route>
+            <Route path="/verify" element={<Verify />}></Route>
 
         </Routes>
     )

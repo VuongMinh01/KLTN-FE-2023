@@ -25,19 +25,20 @@ export default function SideMenu() {
     }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
-    // let token1 = token.replace(/"/g, '');
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
-    axios.get(getUser
-        ,
-        config
-    ).then((response) => {
-        const checkToken = response.data.result.name;
-        console.log(checkToken);
-        name1 = checkToken;
-        console.log(response.data);
-    });
+    // axios.get(getUser
+    //     ,
+    //     config
+    // ).then((response) => {
+    //     const checkToken = response.data.result.name;
+    //     console.log(checkToken);
+    //     name1 = checkToken;
+    //     console.log(response.data);
+    //     console.log(response.data.result.verify);
+
+    // });
 
 
 
@@ -82,6 +83,7 @@ export default function SideMenu() {
                         label: "Dashboard",
                         icon: <AppstoreOutlined />,
                         key: '/admin/dashboard',
+
                     },
                     {
                         label: "Courses",
@@ -122,7 +124,11 @@ export default function SideMenu() {
                         key: '/signout',
                         icon: <LogoutOutlined />,
                     },
-
+                    {
+                        label: "Xác minh",
+                        key: '/admin/verify',
+                        icon: <LogoutOutlined />,
+                    },
                 ]}
             >
 

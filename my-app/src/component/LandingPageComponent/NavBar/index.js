@@ -20,13 +20,16 @@ function NavBar() {
         try {
 
             const token = localStorage.getItem("user");
-            if (
-                token !== null) {
+            if (token) {
 
-                setSignedIn(true)
+                return setSignedIn(true)
+
             }
+            return setSignedIn(false)
+
+
+
         } catch (e) {
-            setSignedIn(false)
         }
 
     }

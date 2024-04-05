@@ -5,7 +5,10 @@ import { Space } from "antd"
 import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
+
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getUser } from "../../utils/APIRoutes";
 export default function Admin() {
 
     // useEffect(() => {
@@ -34,7 +37,24 @@ export default function Admin() {
 
     // }
     // const [logOut, setLogout] = useState(false)
+    let name1 = '';
+    let verify1 = '';
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    axios.get(getUser
+        ,
+        config
+    ).then((response) => {
+        const checkToken = response.data.result.name;
+        console.log(checkToken);
+        name1 = checkToken;
+        localStorage.setItem("verify", JSON.stringify(response.data.result.verify));
+        console.log(response.data);
+        console.log(response.data.result.verify);
 
+    });
     return (
 
         <Container fluid>

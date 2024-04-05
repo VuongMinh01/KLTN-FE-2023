@@ -60,7 +60,7 @@ export default function RegisterPage() {
             }
             if (data.message === "Register success") {
                 localStorage.setItem("user", JSON.stringify(data.user));
-                navigate("/admin")
+                navigate("/admin/verify")
             }
         }
     }
