@@ -1,12 +1,12 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getAllCustomer, getCustomerById } from "../../utils/APIRoutes";
+import { addCustomer, getAllFullTest, } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, InfoOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function FullTest() {
     const Navigate = useNavigate();
@@ -88,14 +88,7 @@ export default function FullTest() {
             return previousState
         });
     }
-    const handleRefresh = (e) => {
-        updateTable();
-        clearInput();
-        console.log('refresh');
-    }
-    const clearInput = () => {
-        setInput('');
-    }
+
     // Tìm 
     // const handleSearch = async (e) => {
     //     const { data } = await axios.get(getCustomerById + '/' + search);
@@ -162,39 +155,35 @@ export default function FullTest() {
                 <Table columns={[
                     {
                         key: "1",
-                        title: "Mã khách hàng",
-                        dataIndex: "customerId",
+                        title: "Mã bài test",
+                        dataIndex: "_id",
                     },
                     {
                         key: "2",
-                        title: "Họ và tên",
-                        dataIndex: "customerName",
+                        title: "Tiêu dề",
+                        dataIndex: "title",
 
                     },
 
                     {
                         key: "3",
-                        title: "Địa chỉ Mail",
-                        dataIndex: "email",
+                        title: "Mô tả",
+                        dataIndex: "description",
                     },
                     {
                         key: "4",
-                        title: "Số điện thoại",
-                        dataIndex: "phone",
+                        title: "Thời gian làm bài",
+                        dataIndex: "timeline",
                     },
                     {
                         key: "5",
-                        title: "Địa chỉ",
-                        dataIndex: "address",
-
-                    },
-                    {
-                        key: "6",
                         title: "Actions",
                         render: () => {
                             return (
                                 <>
-                                    <InfoOutlined onClick={showModal}
+                                    <PlusOutlined onClick={showModal}
+                                    />
+                                    <DeleteOutlined
                                     />
                                 </>
                             )
@@ -202,6 +191,7 @@ export default function FullTest() {
                     },
                 ]}
                     dataSource={dataSource}
+                    rowKey="test_id"
                     pagination={
                         {
                             pageSize: 10,

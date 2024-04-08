@@ -1,25 +1,19 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer } from "../../utils/APIRoutes";
+import { addCustomer, getAllTestListening } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, InfoOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
 
-export default function MiniTest() {
+export default function Listening() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
-    const { Option } = Select;
-    const [input, setInput] = useState('');
-    const [values, setValues] = useState({
-        source_id: "",
-        title: "",
-        description: "",
-        timeline: "",
-    })
+
+
     // const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,58 +31,63 @@ export default function MiniTest() {
     const onClose = () => {
         setOpen(false);
     };
+    useEffect(() => {
+        setLoading(true);
+        getAllTest();
+    }, [loading]);
     // Load data from db
-    // useEffect(() => {
-    //     setLoading(true);
-    //     getAllCustomer().then((res) => {
-    //         setDataSource(res.data);
 
-    //     });
-    // }, [loading]);
+    const getAllTest = () => {
+        console.log('lan 1')
+        axios.get(getAllTestListening, {
+            params: {
+                limit: 10,
+                page: 1,
+            }
+        }).then((response) => {
+            console.log(response.data.result.tests, '1');
+
+            setDataSource(response.data.result.tests);
 
 
-    const handleOnChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
+        });
 
     }
+
+
+    // const handleOnChange = (e) => {
+    //     setValues({ ...values, [e.target.name]: e.target.value });
+
+    // }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    // axios.get(getUser
-    //     ,
-    //     config
-    // ).then((response) => {
-    //     const checkToken = response.data.result.name;
-    //     console.log(checkToken);
-    //     name1 = checkToken;
-    //     console.log(response.data);
-    // });
 
     //  Thêm khách hàng
-    const handleClick = async (e) => {
-        console.log(config);
-        e.preventDefault();
-        if (handleValidation()) {
-            const { source_id, title, description, timeline } = values;
-            const { data } = await axios.post(addCustomer, {
-                source_id, title, description, timeline,
+    // const handleClick = async (e) => {
+    //     console.log(config);
+    //     e.preventDefault();
+    //     if (handleValidation()) {
+    //         const { source_id, title, description, timeline } = values;
+    //         const { data } = await axios.post(addCustomer, {
+    //             source_id, title, description, timeline,
 
-            }, config)
-            if (data.status === false) {
-                console.log("Thêm thất bại");
-            }
-            if (data.status === true) {
-                setLoading(true)
-                // updateTable(data.customer)
-                console.log(dataSource);
-                console.log("Thêm thành công");
-                onClose();
-            }
-        }
-    };
+    //         }, config)
+    //         if (data.status === false) {
+    //             console.log("Thêm thất bại");
+    //         }
+    //         if (data.status === true) {
+    //             setLoading(true)
+    //             // updateTable(data.customer)
+    //             console.log(dataSource);
+    //             console.log("Thêm thành công");
+    //             onClose();
+    //         }
+    //     }
+    // };
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
@@ -98,57 +97,38 @@ export default function MiniTest() {
         setIsModalOpen(false);
     }
 
-    const updateTable = (data) => {
-        setDataSource(previousState => {
-            console.log(data);
-            // previousState.push(data);
-            console.log(previousState);
-            setLoading(false)
-            return previousState
-        });
-    }
-    const handleRefresh = (e) => {
-        updateTable();
-        clearInput();
-        console.log('refresh');
-    }
-    const clearInput = () => {
-        setInput('');
-    }
-    // Tìm 
-    // const handleSearch = async (e) => {
-    //     const { data } = await axios.get(getCustomerById + '/' + search);
-    //     let dataTemp = []
-    //     dataTemp.push(data.resultCustomer)
-    //     setDataSource(dataTemp);
-
+    // const updateTable = (data) => {
+    //     setDataSource(previousState => {
+    //         console.log(data);
+    //         // previousState.push(data);
+    //         console.log(previousState);
+    //         setLoading(false)
+    //         return previousState
+    //     });
     // }
 
-    // const handleOnChangeSearch = (e) => {
-    //     setSearch(e.target.value)
-    // }
 
     // Valid khi thêm
-    const handleValidation = () => {
-        const { source_id, title, description, timeline } = values;
-        if (source_id.length < 5 || source_id === "") {
-            toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
-            return false;
-        }
-        else if (title.length < 5) {
-            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
-            return false;
-        }
-        else if (description.length < 10) {
-            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
-            return false;
-        }
-        else if (timeline === "") {
-            toast.error("Timeline không được để trống", toastOptions);
-            return false;
-        }
-        return true;
-    }
+    // const handleValidation = () => {
+    //     const { source_id, title, description, timeline } = values;
+    //     if (source_id.length < 5 || source_id === "") {
+    //         toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (title.length < 5) {
+    //         toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (description.length < 10) {
+    //         toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (timeline === "") {
+    //         toast.error("Timeline không được để trống", toastOptions);
+    //         return false;
+    //     }
+    //     return true;
+    // }
     // css thông báo
     const toastOptions = {
         position: "bottom-right",
@@ -182,7 +162,7 @@ export default function MiniTest() {
                     {
                         key: "1",
                         title: "Mã bài test",
-                        dataIndex: "source_id",
+                        dataIndex: "_id",
                     },
                     {
                         key: "2",
@@ -207,7 +187,9 @@ export default function MiniTest() {
                         render: () => {
                             return (
                                 <>
-                                    <InfoOutlined onClick={showModal}
+                                    <PlusOutlined onClick={showModal}
+                                    />
+                                    <DeleteOutlined
                                     />
                                 </>
                             )
@@ -215,6 +197,7 @@ export default function MiniTest() {
                     },
                 ]}
                     dataSource={dataSource}
+                    rowKey="test_id"
                     pagination={
                         {
                             pageSize: 10,
@@ -225,7 +208,7 @@ export default function MiniTest() {
             <ToastContainer />
 
             {/* Thanh thêm khách hàng */}
-            <Drawer
+            {/* <Drawer
                 title="Create a new test"
                 width={720}
                 onClose={onClose}
@@ -294,17 +277,66 @@ export default function MiniTest() {
                         Thêm
                     </Button>
                 </Space>
-            </Drawer>
+            </Drawer> */}
             {/* Thông tin chi tiết khách hàng */}
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+                open={isModalOpen} onOk={''} onCancel={handleCancel}
             >
                 <Space>
-                    <Segmented options={['Thông tin chi tiết', 'Kho xe', 'Lịch sử mua']} />
+                    <Form layout="verical">
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Mã bài thi"
+                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                >
+                                    <Input
+
+                                        name="source_id"
+                                        placeholder="Nhập mã bài thi" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Title "
+                                    rules={[{ required: true, message: 'Title không được để trống' }]}
+                                >
+                                    <Input
+                                        name="title"
+                                        placeholder="Nhập tiêu đề" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Mô tả"
+                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                                >
+                                    <Input
+                                        name="description"
+                                        placeholder="Mô tả" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Time line"
+                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                                >
+                                    <Input
+                                        name="timeline"
+                                        placeholder="Nhập thời gian làm bài test"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </Form>
 
                 </Space>
+
             </Modal>
         </div>
     )

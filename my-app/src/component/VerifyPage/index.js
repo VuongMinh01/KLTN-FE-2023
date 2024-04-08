@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { verifyEmail, getUser } from "../../../utils/APIRoutes";
+import { verifyEmail, getUser } from "../../utils/APIRoutes";
 import axios from "axios";
 
 export default function Verify() {

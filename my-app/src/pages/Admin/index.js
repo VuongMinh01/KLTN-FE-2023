@@ -11,32 +11,29 @@ import axios from "axios";
 import { getUser } from "../../utils/APIRoutes";
 export default function Admin() {
 
+    const navigate = useNavigate();
     // useEffect(() => {
     //     if (localStorage.getItem('user')) {
     //         navigate('/admin')
     //     }
     // }, [])
     // const navigate = useNavigate();
-    // useEffect(() => {
-    //     checkLogout()
-    // }, []);
-    // const checkLogout = async (e) => {
-    //     try {
+    useEffect(() => {
+        checkLogout()
+    }, []);
+    const checkLogout = async (e) => {
+        try {
 
-    //         const token = localStorage.getItem("user");
-    //         if (
-    //             token === null) {
-    //             console.log(token);
-    //             setLogout(true)
-    //         }
-    //     } catch (e) {
-    //         setLogout(false)
-    //     }
-    //     if (setLogout)
-    //         navigate("/login")
+            const token = localStorage.getItem("user");
+            if (token === null)
+                navigate('/login');
 
-    // }
-    // const [logOut, setLogout] = useState(false)
+        } catch (e) {
+            console.error();
+        }
+
+    }
+    const [logOut, setLogout] = useState(false)
     let name1 = '';
     let verify1 = '';
     const token = localStorage.getItem("user").replace(/"/g, '');

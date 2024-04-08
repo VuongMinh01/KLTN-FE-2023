@@ -7,11 +7,15 @@ export const registerRoute = `${host}/users/register`;
 export const verifyEmail = `${host}/users/verify-email`;
 
 export const getAllCourses = `${host}/courses/list`;
+export const getAllTestReading = `${host}/tests/list/660e9e7ebcacb7dfe482795f`;
+export const getAllTestListening = `${host}/tests/list/66101219bcacb7dfe4827987`;
+export const getAllFullTest = `${host}/tests/list/660e9e7ebcacb7dfe482795f`;
 
 export const addCustomer = `${host}/tests/`;
 export const addCourses = `${host}/courses/`;
 
 
+export const addTest = `${host}/tests/`;
 
 
 export const getUser = `${host}/users/me`;
