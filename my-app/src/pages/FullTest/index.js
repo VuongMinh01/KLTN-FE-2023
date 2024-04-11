@@ -1,26 +1,20 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getAllFullTest, } from "../../utils/APIRoutes";
+import { addCustomer, getAllTestListening } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function FullTest() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
-    const { Option } = Select;
-    const [input, setInput] = useState('');
-    const [values, setValues] = useState({
-        source_id: "",
-        title: "",
-        description: "",
-        timeline: "",
-    })
-    const [search, setSearch] = useState();
+
+
+    // const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,46 +24,70 @@ export default function FullTest() {
     };
     // Drawer
     const showDrawer = () => {
-        // Navigate('/admin/fulltest/add')
+        // Navigate('/admin/minitest/add')
         setOpen(true);
+
     };
     const onClose = () => {
         setOpen(false);
     };
+    useEffect(() => {
+        setLoading(true);
+        getAllTest();
+    }, [loading]);
     // Load data from db
-    // useEffect(() => {
-    //     setLoading(true);
-    //     getAllCustomer().then((res) => {
-    //         setDataSource(res.data);
 
-    //     });
-    // }, [loading]);
+    const getAllTest = () => {
+        console.log('lan 1')
+        axios.get(getAllTestListening, {
+            params: {
+                limit: 10,
+                page: 1,
+            }
+        }).then((response) => {
+            console.log(response.data.result.tests, '1');
+
+            setDataSource(response.data.result.tests);
 
 
-    const handleOnChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
+        });
 
     }
-    //  Thêm khách hàng
-    const handleClick = async (e) => {
-        e.preventDefault();
-        if (handleValidation()) {
-            const { source_id, title, description, timeline } = values;
-            const { data } = await axios.post(addCustomer, {
-                source_id, title, description, timeline,
-            })
-            if (data.status === false) {
-                console.log("Thêm thất bại");
-            }
-            if (data.status === true) {
-                setLoading(true)
-                updateTable(data.customer)
-                console.log(dataSource);
-                console.log("Thêm thành công");
-                onClose();
-            }
-        }
+
+
+    // const handleOnChange = (e) => {
+    //     setValues({ ...values, [e.target.name]: e.target.value });
+
+    // }
+
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
     };
+
+
+    //  Thêm khách hàng
+    // const handleClick = async (e) => {
+    //     console.log(config);
+    //     e.preventDefault();
+    //     if (handleValidation()) {
+    //         const { source_id, title, description, timeline } = values;
+    //         const { data } = await axios.post(addCustomer, {
+    //             source_id, title, description, timeline,
+
+    //         }, config)
+    //         if (data.status === false) {
+    //             console.log("Thêm thất bại");
+    //         }
+    //         if (data.status === true) {
+    //             setLoading(true)
+    //             // updateTable(data.customer)
+    //             console.log(dataSource);
+    //             console.log("Thêm thành công");
+    //             onClose();
+    //         }
+    //     }
+    // };
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
@@ -79,50 +97,30 @@ export default function FullTest() {
         setIsModalOpen(false);
     }
 
-    const updateTable = (data) => {
-        setDataSource(previousState => {
-            console.log(data);
-            // previousState.push(data);
-            console.log(previousState);
-            setLoading(false)
-            return previousState
-        });
-    }
 
-    // Tìm 
-    // const handleSearch = async (e) => {
-    //     const { data } = await axios.get(getCustomerById + '/' + search);
-    //     let dataTemp = []
-    //     dataTemp.push(data.resultCustomer)
-    //     setDataSource(dataTemp);
 
-    // }
-
-    // const handleOnChangeSearch = (e) => {
-    //     setSearch(e.target.value)
-    // }
 
     // Valid khi thêm
-    const handleValidation = () => {
-        const { source_id, title, description, timeline } = values;
-        if (source_id.length < 5 || source_id === "") {
-            toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
-            return false;
-        }
-        else if (title.length < 5) {
-            toast.error("Tên nhân viên phải lớn hơn 5 kí tự", toastOptions);
-            return false;
-        }
-        else if (description.length !== 10) {
-            toast.error("Số điện thoại không hợp lệ", toastOptions);
-            return false;
-        }
-        else if (timeline === "") {
-            toast.error("Email không được để trống", toastOptions);
-            return false;
-        }
-        return true;
-    }
+    // const handleValidation = () => {
+    //     const { source_id, title, description, timeline } = values;
+    //     if (source_id.length < 5 || source_id === "") {
+    //         toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (title.length < 5) {
+    //         toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (description.length < 10) {
+    //         toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+    //         return false;
+    //     }
+    //     else if (timeline === "") {
+    //         toast.error("Timeline không được để trống", toastOptions);
+    //         return false;
+    //     }
+    //     return true;
+    // }
     // css thông báo
     const toastOptions = {
         position: "bottom-right",
@@ -132,7 +130,18 @@ export default function FullTest() {
         theme: "dark"
     };
 
-
+    const [audio, setAudio] = useState();
+    const onAudioChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setAudio(URL.createObjectURL(event.target.files[0]));
+        }
+    }
+    const [image, setImage] = useState(null);
+    const onImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImage(URL.createObjectURL(event.target.files[0]));
+        }
+    }
     return (
         <div>
             <Space size={20} direction={"vertical"}>
@@ -140,56 +149,53 @@ export default function FullTest() {
                 <Typography.Title level={4}>Danh sách bài Test</Typography.Title>
 
                 {/* Nút chức năng  */}
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={showDrawer} icon={<PlusOutlined />}>
-                        Thêm bài Test
-                    </Button>
-
-
-
-                </Space>
 
                 {/* Table thông tin khách hàng */}
-                <Table columns={[
-                    {
-                        key: "1",
-                        title: "Mã bài test",
-                        dataIndex: "_id",
-                    },
-                    {
-                        key: "2",
-                        title: "Tiêu dề",
-                        dataIndex: "title",
+                <Table
+                    scroll={{ y: 'max-content', x: 'max-content' }}
+                    columns={[
+                        {
+                            key: "1",
+                            title: "Mã bài test",
+                            dataIndex: "_id",
+                        },
+                        {
+                            key: "2",
+                            title: "Tiêu dề",
+                            dataIndex: "title",
 
-                    },
+                        },
 
-                    {
-                        key: "3",
-                        title: "Mô tả",
-                        dataIndex: "description",
-                    },
-                    {
-                        key: "4",
-                        title: "Thời gian làm bài",
-                        dataIndex: "timeline",
-                    },
-                    {
-                        key: "5",
-                        title: "Actions",
-                        render: () => {
-                            return (
-                                <>
-                                    <PlusOutlined onClick={showModal}
-                                    />
-                                    <DeleteOutlined
-                                    />
-                                </>
-                            )
-                        }
-                    },
-                ]}
+                        {
+                            key: "3",
+                            title: "Mô tả",
+                            dataIndex: "description",
+                        },
+                        {
+                            key: "4",
+                            title: "Thời gian làm bài",
+                            dataIndex: "timeline",
+                        },
+                        {
+                            key: "5",
+                            title: "Actions",
+                            render: () => {
+                                return (
+                                    <>
+                                        <PlusOutlined
+                                            style={{ marginRight: '5px' }}
+                                            onClick={showModal}
+                                        />
+
+                                        <DeleteOutlined
+                                            style={{ marginLeft: '5px' }}
+
+                                        />
+                                    </>
+                                )
+                            }
+                        },
+                    ]}
                     dataSource={dataSource}
                     rowKey="test_id"
                     pagination={
@@ -201,116 +207,94 @@ export default function FullTest() {
             </Space>
             <ToastContainer />
 
-            {/* Thanh thêm khách hàng */}
-            <Drawer
-                title="Create a new customer"
-                width={720}
-                onClose={onClose}
-                open={open}
-                bodyStyle={{ paddingBottom: 80 }}
 
-            >
-                <Form layout="vertical">
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Mã khách hàng"
-                                rules={[{ required: true, message: 'Mã khách hàng không được để trống' }]}
-                            >
-                                <Input
-                                    onChange={(e) => handleOnChange(e)}
-                                    name="customerIdSearch"
-                                    placeholder="Nhập mã khách hàng" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Tên khách hàng"
-                                rules={[{ required: true, message: 'Tên khách hàng không được để trống' }]}
-                            >
-                                <Input
-                                    name="customerName"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập tên khách hàng" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Số điện thoại"
-                                rules={[{ required: true, message: 'Số điện thoại không được để trống' }]}
-                            >
-                                <Input
-                                    name="phone"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập số điện thoại" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Địa chỉ mail"
-                                rules={[{ required: true, message: 'Địa chỉ mail không được để trống' }]}
-                            >
-                                <Input
-                                    name="email"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập địa chỉ mail"
-                                    addonAfter="@gmail.com"
-                                />
-                            </Form.Item>
-                        </Col>
-
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Địa chỉ"
-                                rules={[{ required: true, message: 'Please select a city' }]}
-                            >
-                                <Select
-                                    name="address"
-                                    placeholder="Please select an city">
-                                    <Option value="TP.HCM">Tp.HCM</Option>
-                                    <Option value="Hà Nội">Hà Nội</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-
-                                label="Biển số xe"
-                            >
-                                <Input
-                                    name="carPlate"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập biển số xe" />
-                            </Form.Item>
-                        </Col>
-
-                    </Row>
-
-
-                </Form>
-                <Space>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button onClick={(e) => handleClick(e)} type="primary">
-                        Thêm
-                    </Button>
-                </Space>
-            </Drawer>
-            {/* Thông tin chi tiết khách hàng */}
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+                open={isModalOpen} onOk={''} onCancel={handleCancel}
             >
-                <Space>
-                    <Segmented options={['Thông tin chi tiết', 'Kho xe', 'Lịch sử mua']} />
+                <Form  >
+                    <Row vertical>
+                        <Col span={24} >
+                            <Form.Item
+                                label="Num quest"
+                                rules={[{ required: true, message: 'Num quest không được để trống' }]}
+                            >
+                                <Input
 
-                </Space>
+                                    name="num_quest"
+                                    placeholder="Nhập num quest" />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={24} >
+                            <Form.Item
+
+                                label="Mô tả"
+                                rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                            >
+                                <Input
+                                    name="description"
+                                    placeholder="Mô tả" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24} >
+                            <Form.Item
+
+                                label="Content"
+                                rules={[{ required: true, message: 'Content không được để trống' }]}
+                            >
+                                <Input
+                                    name="content"
+                                    placeholder="Nhập content câu hỏi"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col style={{ padding: '10px' }}>
+                            <label>Question:</label> <br />
+                            <div className="divQuestion">
+                                <input type="radio" id="A" name="order_answer" value="A" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
+
+                                <input type="radio" id="B" name="order_answer" value="B" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+
+                            <div className="divQuestion">
+
+                                <input type="radio" id="C" name="order_answer" value="C" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
+                                <input type="radio" id="D" name="order_answer" value="D" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                        </Col>
+                        <Col span={24} >
+
+                            <label>Audio:</label>
+                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+
+                                <input name='audio' type="file" onChange={onAudioChange} className="filetype" style={{ marginBottom: '10px' }} />
+                                <audio controls="true" src={audio} ></audio>
+                            </div>
+                        </Col>
+                        <Col span={24} >
+
+                            <label>Image:</label>
+                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+
+                                <input type="file" onChange={onImageChange} className="filetype" style={{ marginBottom: '10px' }} />
+                                <img alt="preview " src={image} style={{ width: 300 }} />
+                            </div>
+                        </Col>
+                    </Row>
+
+                </Form>
+
+
             </Modal>
         </div>
     )

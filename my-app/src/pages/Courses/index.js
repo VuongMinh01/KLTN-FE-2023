@@ -1,9 +1,9 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCourses, getAllCourses, addTest } from "../../utils/APIRoutes";
+import { addCourses, getAllCourses, addTest, deleteCourses } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, InfoOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
@@ -85,15 +85,7 @@ export default function Courses() {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    // axios.get(getUser
-    //     ,
-    //     config
-    // ).then((response) => {
-    //     const checkToken = response.data.result.name;
-    //     console.log(checkToken);
-    //     name1 = checkToken;
-    //     console.log(response.data);
-    // });
+
 
     //  Thêm khách hàng
     const handleClick = async (e) => {
@@ -193,8 +185,15 @@ export default function Courses() {
             handleCancel();
         }
     };
-    const onDeleteService = () => {
-
+    const onDeleteService = async (e) => {
+        const { courses_id, type, title, description, content } = values;
+        const { data } = await axios.delete(deleteCourses,
+            {
+                courses_id, type, title, description, content
+            }, config)
+        setLoading(true)
+        updateTable(data.service)
+        console.log('deleted');
     }
     return (
         <div>

@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getAllTestListening } from "../../utils/APIRoutes";
+import { getAllTestListening } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -97,15 +97,7 @@ export default function Listening() {
         setIsModalOpen(false);
     }
 
-    // const updateTable = (data) => {
-    //     setDataSource(previousState => {
-    //         console.log(data);
-    //         // previousState.push(data);
-    //         console.log(previousState);
-    //         setLoading(false)
-    //         return previousState
-    //     });
-    // }
+
 
 
     // Valid khi thêm
@@ -138,7 +130,12 @@ export default function Listening() {
         theme: "dark"
     };
 
-
+    const [audio, setAudio] = useState();
+    const onAudioChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setAudio(URL.createObjectURL(event.target.files[0]));
+        }
+    }
     return (
         <div>
             <Space size={20} direction={"vertical"}>
@@ -146,56 +143,53 @@ export default function Listening() {
                 <Typography.Title level={4}>Danh sách bài Test</Typography.Title>
 
                 {/* Nút chức năng  */}
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={showDrawer} icon={<PlusOutlined />}>
-                        Thêm bài Test
-                    </Button>
-
-
-
-                </Space>
 
                 {/* Table thông tin khách hàng */}
-                <Table columns={[
-                    {
-                        key: "1",
-                        title: "Mã bài test",
-                        dataIndex: "_id",
-                    },
-                    {
-                        key: "2",
-                        title: "Tiêu dề",
-                        dataIndex: "title",
+                <Table
+                    scroll={{ y: 'max-content', x: 'max-content' }}
+                    columns={[
+                        {
+                            key: "1",
+                            title: "Mã bài test",
+                            dataIndex: "_id",
+                        },
+                        {
+                            key: "2",
+                            title: "Tiêu dề",
+                            dataIndex: "title",
 
-                    },
+                        },
 
-                    {
-                        key: "3",
-                        title: "Mô tả",
-                        dataIndex: "description",
-                    },
-                    {
-                        key: "4",
-                        title: "Thời gian làm bài",
-                        dataIndex: "timeline",
-                    },
-                    {
-                        key: "5",
-                        title: "Actions",
-                        render: () => {
-                            return (
-                                <>
-                                    <PlusOutlined onClick={showModal}
-                                    />
-                                    <DeleteOutlined
-                                    />
-                                </>
-                            )
-                        }
-                    },
-                ]}
+                        {
+                            key: "3",
+                            title: "Mô tả",
+                            dataIndex: "description",
+                        },
+                        {
+                            key: "4",
+                            title: "Thời gian làm bài",
+                            dataIndex: "timeline",
+                        },
+                        {
+                            key: "5",
+                            title: "Actions",
+                            render: () => {
+                                return (
+                                    <>
+                                        <PlusOutlined
+                                            style={{ marginRight: '5px' }}
+                                            onClick={showModal}
+                                        />
+
+                                        <DeleteOutlined
+                                            style={{ marginLeft: '5px' }}
+
+                                        />
+                                    </>
+                                )
+                            }
+                        },
+                    ]}
                     dataSource={dataSource}
                     rowKey="test_id"
                     pagination={
@@ -207,40 +201,27 @@ export default function Listening() {
             </Space>
             <ToastContainer />
 
-            {/* Thanh thêm khách hàng */}
-            {/* <Drawer
-                title="Create a new test"
-                width={720}
-                onClose={onClose}
-                open={open}
-                bodyStyle={{ paddingBottom: 80 }}
-            >
-                <Form layout="vertical">
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Mã bài thi"
-                                rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
-                            >
-                                <Input
-                                    onChange={(e) => handleOnChange(e)}
-                                    name="source_id"
-                                    placeholder="Nhập mã bài thi" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
 
-                                label="Tiêu đề"
-                                rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalOpen} onOk={''} onCancel={handleCancel}
+            >
+                <Form  >
+                    <Row vertical>
+                        <Col span={24} >
+                            <Form.Item
+                                label="Num quest"
+                                rules={[{ required: true, message: 'Num quest không được để trống' }]}
                             >
                                 <Input
-                                    name="title"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập tiêu đề" />
+
+                                    name="num_quest"
+                                    placeholder="Nhập num quest" />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
+
+                        <Col span={24} >
                             <Form.Item
 
                                 label="Mô tả"
@@ -248,94 +229,56 @@ export default function Listening() {
                             >
                                 <Input
                                     name="description"
-                                    onChange={(e) => handleOnChange(e)}
                                     placeholder="Mô tả" />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
+                        <Col span={24} >
                             <Form.Item
 
-                                label="Thời gian"
-                                rules={[{ required: true, message: 'Thời gian không được để trống' }]}
+                                label="Content"
+                                rules={[{ required: true, message: 'Content không được để trống' }]}
                             >
                                 <Input
-                                    name="timeline"
-                                    onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập thời gian"
+                                    name="content"
+                                    placeholder="Nhập content câu hỏi"
                                 />
                             </Form.Item>
                         </Col>
+                        <Col style={{ padding: '10px' }}>
+                            <label>Question:</label> <br />
+                            <div className="divQuestion">
+                                <input type="radio" id="A" name="order_answer" value="A" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
 
+                                <input type="radio" id="B" name="order_answer" value="B" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+
+                            <div className="divQuestion">
+
+                                <input type="radio" id="C" name="order_answer" value="C" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
+                                <input type="radio" id="D" name="order_answer" value="D" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                        </Col>
+                        <Col span={24} >
+
+                            <label>Audio:</label>
+                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+
+                                <input name='audio' type="file" onChange={onAudioChange} className="filetype" style={{ marginBottom: '10px' }} />
+                                <audio controls="true" src={audio} ></audio>
+                            </div>
+                        </Col>
                     </Row>
 
-
-
                 </Form>
-                <Space>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button onClick={(e) => handleClick(e)} type="primary">
-                        Thêm
-                    </Button>
-                </Space>
-            </Drawer> */}
-            {/* Thông tin chi tiết khách hàng */}
-            <Modal
-                width={900}
-                title="Thông tin chi tiết"
-                open={isModalOpen} onOk={''} onCancel={handleCancel}
-            >
-                <Space>
-                    <Form layout="verical">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <Form.Item
-                                    label="Mã bài thi"
-                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
-                                >
-                                    <Input
 
-                                        name="source_id"
-                                        placeholder="Nhập mã bài thi" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
-
-                                    label="Title "
-                                    rules={[{ required: true, message: 'Title không được để trống' }]}
-                                >
-                                    <Input
-                                        name="title"
-                                        placeholder="Nhập tiêu đề" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
-
-                                    label="Mô tả"
-                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
-                                >
-                                    <Input
-                                        name="description"
-                                        placeholder="Mô tả" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
-
-                                    label="Time line"
-                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
-                                >
-                                    <Input
-                                        name="timeline"
-                                        placeholder="Nhập thời gian làm bài test"
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
-
-                </Space>
 
             </Modal>
         </div>

@@ -1,13 +1,13 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { addCustomer, getAllTestReading } from "../../utils/APIRoutes";
+import { getAllTestReading } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import { ToastContainer, toast } from 'react-toastify';
-import { Navigate, useNavigate } from "react-router-dom";
-
+import { ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import '../../css/Reading.css'
 export default function Reading() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
@@ -23,14 +23,14 @@ export default function Reading() {
         setIsModalOpen(true);
     };
     // Drawer
-    const showDrawer = () => {
-        // Navigate('/admin/minitest/add')
-        setOpen(true);
+    // const showDrawer = () => {
+    //     // Navigate('/admin/minitest/add')
+    //     setOpen(true);
 
-    };
-    const onClose = () => {
-        setOpen(false);
-    };
+    // };
+    // const onClose = () => {
+    //     setOpen(false);
+    // };
     useEffect(() => {
         setLoading(true);
         getAllTest();
@@ -66,28 +66,6 @@ export default function Reading() {
     };
 
 
-    //  Thêm khách hàng
-    // const handleClick = async (e) => {
-    //     console.log(config);
-    //     e.preventDefault();
-    //     if (handleValidation()) {
-    //         const { source_id, title, description, timeline } = values;
-    //         const { data } = await axios.post(addCustomer, {
-    //             source_id, title, description, timeline,
-
-    //         }, config)
-    //         if (data.status === false) {
-    //             console.log("Thêm thất bại");
-    //         }
-    //         if (data.status === true) {
-    //             setLoading(true)
-    //             // updateTable(data.customer)
-    //             console.log(dataSource);
-    //             console.log("Thêm thành công");
-    //             onClose();
-    //         }
-    //     }
-    // };
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
@@ -137,7 +115,12 @@ export default function Reading() {
         pauseOnHover: true,
         theme: "dark"
     };
-
+    const [image, setImage] = useState(null);
+    const onImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImage(URL.createObjectURL(event.target.files[0]));
+        }
+    }
 
     return (
         <div>
@@ -145,57 +128,55 @@ export default function Reading() {
 
                 <Typography.Title level={4}>Danh sách bài Test</Typography.Title>
 
-                {/* Nút chức năng  */}
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={showDrawer} icon={<PlusOutlined />}>
-                        Thêm bài Test
-                    </Button>
 
-
-
-                </Space>
 
                 {/* Table thông tin khách hàng */}
-                <Table columns={[
-                    {
-                        key: "1",
-                        title: "Mã bài test",
-                        dataIndex: "_id",
-                    },
-                    {
-                        key: "2",
-                        title: "Tiêu dề",
-                        dataIndex: "title",
+                <Table
+                    scroll={{ y: 'max-content', x: 'max-content' }}
+                    columns={[
+                        {
+                            key: "1",
+                            title: "Mã bài test",
+                            dataIndex: "_id",
+                        },
+                        {
+                            key: "2",
+                            title: "Tiêu dề",
+                            dataIndex: "title",
 
-                    },
+                        },
 
-                    {
-                        key: "3",
-                        title: "Mô tả",
-                        dataIndex: "description",
-                    },
-                    {
-                        key: "4",
-                        title: "Thời gian làm bài",
-                        dataIndex: "timeline",
-                    },
-                    {
-                        key: "5",
-                        title: "Actions",
-                        render: () => {
-                            return (
-                                <>
-                                    <PlusOutlined onClick={showModal}
-                                    />
-                                    <DeleteOutlined
-                                    />
-                                </>
-                            )
-                        }
-                    },
-                ]}
+                        {
+                            key: "3",
+                            title: "Mô tả",
+                            dataIndex: "description",
+                        },
+                        {
+                            key: "4",
+                            title: "Thời gian làm bài",
+                            dataIndex: "timeline",
+                        },
+                        {
+                            key: "5",
+                            title: "Actions",
+                            render: () => {
+                                return (
+                                    <div>
+
+                                        <PlusOutlined
+                                            style={{ marginRight: '5px' }}
+                                            onClick={showModal}
+                                        />
+
+                                        <DeleteOutlined
+                                            style={{ marginLeft: '5px' }}
+
+                                        />
+                                    </div>
+                                )
+                            }
+                        },
+                    ]}
                     dataSource={dataSource}
                     rowKey="test_id"
                     pagination={
@@ -284,58 +265,78 @@ export default function Reading() {
                 title="Thông tin chi tiết"
                 open={isModalOpen} onOk={''} onCancel={handleCancel}
             >
-                <Space>
-                    <Form layout="verical">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <Form.Item
-                                    label="Mã bài thi"
-                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
-                                >
-                                    <Input
+                <Form  >
+                    <Row vertical>
+                        <Col span={24} >
+                            <Form.Item
+                                label="Num quest"
+                                rules={[{ required: true, message: 'Num quest không được để trống' }]}
+                            >
+                                <Input
 
-                                        name="source_id"
-                                        placeholder="Nhập mã bài thi" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
+                                    name="num_quest"
+                                    placeholder="Nhập num quest" />
+                            </Form.Item>
+                        </Col>
 
-                                    label="Title "
-                                    rules={[{ required: true, message: 'Title không được để trống' }]}
-                                >
-                                    <Input
-                                        name="title"
-                                        placeholder="Nhập tiêu đề" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
+                        <Col span={24} >
+                            <Form.Item
 
-                                    label="Mô tả"
-                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
-                                >
-                                    <Input
-                                        name="description"
-                                        placeholder="Mô tả" />
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
+                                label="Mô tả"
+                                rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                            >
+                                <Input
+                                    name="description"
+                                    placeholder="Mô tả" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24} >
+                            <Form.Item
 
-                                    label="Time line"
-                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
-                                >
-                                    <Input
-                                        name="timeline"
-                                        placeholder="Nhập thời gian làm bài test"
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
+                                label="Content"
+                                rules={[{ required: true, message: 'Content không được để trống' }]}
+                            >
+                                <Input
+                                    name="content"
+                                    placeholder="Nhập content câu hỏi"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col style={{ padding: '10px' }}>
+                            <label>Question:</label> <br />
+                            <div className="divQuestion">
+                                <input type="radio" id="A" name="order_answer" value="A" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
 
-                </Space>
+                                <input type="radio" id="B" name="order_answer" value="B" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+
+                            <div className="divQuestion">
+
+                                <input type="radio" id="C" name="order_answer" value="C" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                            <div className="divQuestion">
+                                <input type="radio" id="D" name="order_answer" value="D" />
+                                <input className="inputArea" type="text" name="content_answer" />
+                            </div>
+                        </Col>
+                        <Col span={24} >
+
+                            <label>Image:</label>
+                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+
+                                <input type="file" onChange={onImageChange} className="filetype" style={{ marginBottom: '10px' }} />
+                                <img alt="preview " src={image} style={{ width: 300 }} />
+                            </div>
+                        </Col>
+                    </Row>
+
+                </Form>
+
 
             </Modal>
         </div>

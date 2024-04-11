@@ -1,0 +1,11 @@
+.divQuestion {
+    padding: 10px;
+}
+
+.divQuestion input {
+    margin-left: 10px;
+}
+
+.divQuestion .inputArea {
+    width: 500px;
+}
