@@ -28,17 +28,7 @@ export default function SideMenu() {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
-    // axios.get(getUser
-    //     ,
-    //     config
-    // ).then((response) => {
-    //     const checkToken = response.data.result.name;
-    //     console.log(checkToken);
-    //     name1 = checkToken;
-    //     console.log(response.data);
-    //     console.log(response.data.result.verify);
 
-    // });
 
 
 
@@ -109,7 +99,7 @@ export default function SideMenu() {
 
                     {
                         label: "Học viên",
-                        key: '/admin/khachhang',
+                        key: '/admin/hocvien',
                         icon: <UserOutlined />
                     },
 

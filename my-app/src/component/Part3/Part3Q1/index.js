@@ -3,10 +3,7 @@ import { Container } from "react-bootstrap";
 import React, { useState } from "react";
 
 export default function Part3Q1() {
-    {/* <label className="selection_label">{title}</label>
 
-                        <input value={value} checked={state[value]} type="checkbox" onChange={this.onCheckboxChange(value)} /> */
-    }
 
     const title32 = "32. What was that? ";
     const title33 = "33. What was that? ";
@@ -59,40 +56,7 @@ export default function Part3Q1() {
                                 <br />
                             </div>
                         </div>
-                        <div>
-                            <h3 style={{ textAlign: 'center' }}>{title33}</h3>
-                            <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                                <input type="radio" id="A" name="Question1" value="A" />
-                                <label for="A">A.{title33A}</label>
-                                <br />
-                                <input type="radio" id="B" name="Question1" value="B" />
-                                <label for="B">B.{title33B}</label>
-                                <br />
-                                <input type="radio" id="C" name="Question1" value="C" />
-                                <label for="C">C.{title33C}</label>
-                                <br />
-                                <input type="radio" id="D" name="Question1" value="D" />
-                                <label for="D">D.{title33D}</label>
-                                <br />
-                            </div>
-                        </div>
-                        <div>
-                            <h3 style={{ textAlign: 'center' }}>{title34}</h3>
-                            <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                                <input type="radio" id="A" name="Question1" value="A" />
-                                <label for="A">A.{title34A}</label>
-                                <br />
-                                <input type="radio" id="B" name="Question1" value="B" />
-                                <label for="B">B.{title34B}</label>
-                                <br />
-                                <input type="radio" id="C" name="Question1" value="C" />
-                                <label for="C">C.{title34C}</label>
-                                <br />
-                                <input type="radio" id="D" name="Question1" value="D" />
-                                <label for="D">D.{title34D}</label>
-                                <br />
-                            </div>
-                        </div>
+
 
                     </div>
 

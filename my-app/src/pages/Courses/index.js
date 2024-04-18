@@ -1,5 +1,5 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { addCourses, getAllCourses, addTest, deleteCourses } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
@@ -9,6 +9,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Courses() {
+    const [form] = Form.useForm();
+
+
     const [loading, setLoading] = useState(false)
 
     const handleOnChangeNumber = (e) => {
@@ -24,21 +27,16 @@ export default function Courses() {
         getAllCourses1();
     }, [loading]);
 
+
     const getAllCourses1 = () => {
-        console.log('lan 1')
         axios.get(getAllCourses, {
             params: {
                 limit: 10,
                 page: 1,
             }
         }).then((response) => {
-            console.log(response.data.result.courses, '1');
-
             setDataSource(response.data.result.courses);
-
-
         });
-
     }
 
     const Navigate = useNavigate();
@@ -54,22 +52,13 @@ export default function Courses() {
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Modal
-    const showModal = () => {
-
-        setIsModalOpen(true);
-    };
     // Drawer
     const showDrawer = () => {
-        // Navigate('/admin/minitest/add')
         setOpen(true);
-
     };
     const onClose = () => {
         setOpen(false);
     };
-
-
 
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
@@ -85,31 +74,31 @@ export default function Courses() {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-
-
-    //  Thêm khách hàng
+    //  Thêm courses
     const handleClick = async (e) => {
-        console.log(config);
         e.preventDefault();
         if (handleValidation()) {
             const { type, title, description, content } = values;
             const { data } = await axios.post(addCourses, {
                 type, title, description, content, thumbnails: [],
             }, config)
-            if (data.status === false) {
+
+            if (data.message === 'Validation error') {
                 console.log("Thêm thất bại");
+                toast.error(data.message, toastOptions);
+
             }
-            if (data.status === true) {
+            if (data.message === 'Course created successfully') {
+                setOpen(false);
                 setLoading(true)
-                updateTable(data.customer)
-                onClose();
+                form.resetFields();
+                updateTable();
             }
         }
     };
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
-
     }
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -122,8 +111,6 @@ export default function Courses() {
             return previousState
         });
     }
-
-
 
     // Valid khi thêm
     const handleValidation = () => {
@@ -178,23 +165,29 @@ export default function Courses() {
             if (dataTest === 'Test created successfully') {
                 setLoading(true)
                 console.log("Thêm thành công");
-                console.log(dataTest.result, '123');
             }
             setLoading(true)
-            console.log("Thêm thành công");
-            handleCancel();
+            setIsModalOpen(false);
         }
     };
     const onDeleteService = async (e) => {
-        const { courses_id, type, title, description, content } = values;
-        const { data } = await axios.delete(deleteCourses,
-            {
-                courses_id, type, title, description, content
-            }, config)
+        await axios.delete(`${deleteCourses}/${e._id}`, config,
+        )
         setLoading(true)
-        updateTable(data.service)
+        updateTable();
         console.log('deleted');
     }
+
+
+    // Modal
+    const showModal = async (e) => {
+        setIsModalOpen(true);
+        setCoursesId(e._id);
+        setLoading(true);
+        console.log(coursesId, '3232')
+    };
+    const [coursesId, setCoursesId] = useState('');
+
     return (
         <div>
             <Space size={20} direction={"vertical"}>
@@ -208,8 +201,6 @@ export default function Courses() {
                         onClick={showDrawer} icon={<PlusOutlined />}>
                         Thêm Courses
                     </Button>
-
-
 
                 </Space>
 
@@ -273,16 +264,15 @@ export default function Courses() {
                 ></Table>
             </Space>
             <ToastContainer />
-
-            {/* Thanh thêm khách hàng */}
             <Drawer
-                title="Create a new test"
+                title="Create a new courses"
                 width={720}
                 onClose={onClose}
                 open={open}
                 bodyStyle={{ paddingBottom: 80 }}
             >
-                <Form layout="vertical">
+                <Form layout="vertical"
+                    form={form}>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
@@ -359,14 +349,13 @@ export default function Courses() {
                 </Space>
             </Drawer>
 
-            {/* Thông tin chi tiết khách hàng */}
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
                 open={isModalOpen} onOk={handleAddTest} onCancel={handleCancel}
             >
                 <Space>
-                    <Form layout="verical">
+                    <Form name="formThemTest" layout="verical">
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
@@ -374,8 +363,9 @@ export default function Courses() {
                                     rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                                 >
                                     <Input
-
                                         onChange={(e) => handleOnChangeTest(e)}
+                                        type="text"
+                                        value={coursesId}
                                         name="source_id"
                                         placeholder="Nhập mã bài thi" />
                                 </Form.Item>

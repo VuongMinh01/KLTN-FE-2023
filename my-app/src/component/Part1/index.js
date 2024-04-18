@@ -12,24 +12,14 @@ export default function Part1() {
 
 
 
-    const [audio1, setAudio1] = useState();
-    const [audio2, setAudio2] = useState();
-    const [audio3, setAudio3] = useState();
-    const [audio4, setAudio4] = useState();
-    const [audio5, setAudio5] = useState();
-    const [audio6, setAudio6] = useState();
+    const [audio, setAudio] = useState();
 
 
 
 
 
 
-    const [image1, setImage1] = useState(null);
-    const [image2, setImage2] = useState(null);
-    const [image3, setImage3] = useState(null);
-    const [image4, setImage4] = useState(null);
-    const [image5, setImage5] = useState(null);
-    const [image6, setImage6] = useState(null);
+    const [image, setImage] = useState(null);
 
 
     return (
@@ -46,134 +36,12 @@ export default function Part1() {
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
 
 
-                            <audio controls="true" src={audio1} ></audio>
+                            <audio controls="true" src={audio} ></audio>
                         </div>
 
 
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image1} style={{ width: 300 }} />
-                        </div>
-
-                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                            <input type="radio" id="A" name="Question1" value="A" />
-                            <label for="A">A</label><br />
-                            <input type="radio" id="B" name="Question1" value="B" />
-                            <label for="B">B</label><br />
-                            <input type="radio" id="C" name="Question1" value="C" />
-                            <label for="C">C</label><br />
-                            <input type="radio" id="D" name="Question1" value="D" />
-                            <label for="D">D</label><br />
-                        </div>
-                    </div>
-
-                </Row>
-
-                <Row className="RowQuestion" >
-                    <div className="div1">
-                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 2</h3>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                            <audio controls="true" src={audio2} ></audio>
-                        </div>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image2} style={{ width: 300 }} />
-                        </div>
-
-                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                            <input type="radio" id="A" name="Question1" value="A" />
-                            <label for="A">A</label><br />
-                            <input type="radio" id="B" name="Question1" value="B" />
-                            <label for="B">B</label><br />
-                            <input type="radio" id="C" name="Question1" value="C" />
-                            <label for="C">C</label><br />
-                            <input type="radio" id="D" name="Question1" value="D" />
-                            <label for="D">D</label><br />
-                        </div>
-                    </div>
-
-                </Row>
-
-                <Row className="RowQuestion" >
-                    <div className="div1">
-                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 3</h3>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                            <audio controls="true" src={audio3} ></audio>
-                        </div>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image3} style={{ width: 300 }} />
-                        </div>
-
-                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                            <input type="radio" id="A" name="Question1" value="A" />
-                            <label for="A">A</label><br />
-                            <input type="radio" id="B" name="Question1" value="B" />
-                            <label for="B">B</label><br />
-                            <input type="radio" id="C" name="Question1" value="C" />
-                            <label for="C">C</label><br />
-                            <input type="radio" id="D" name="Question1" value="D" />
-                            <label for="D">D</label><br />
-                        </div>
-                    </div>
-
-                </Row>
-                <Row className="RowQuestion" >
-                    <div className="div1">
-                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 4</h3>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                            <audio controls="true" src={audio4} ></audio>
-                        </div>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image4} style={{ width: 300 }} />
-                        </div>
-
-                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                            <input type="radio" id="A" name="Question1" value="A" />
-                            <label for="A">A</label><br />
-                            <input type="radio" id="B" name="Question1" value="B" />
-                            <label for="B">B</label><br />
-                            <input type="radio" id="C" name="Question1" value="C" />
-                            <label for="C">C</label><br />
-                            <input type="radio" id="D" name="Question1" value="D" />
-                            <label for="D">D</label><br />
-                        </div>
-                    </div>
-
-                </Row>
-                <Row className="RowQuestion" >
-                    <div className="div1">
-                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 5</h3>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                            <audio controls="true" src={audio5} ></audio>
-                        </div>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image5} style={{ width: 300 }} />
-                        </div>
-
-                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                            <input type="radio" id="A" name="Question1" value="A" />
-                            <label for="A">A</label><br />
-                            <input type="radio" id="B" name="Question1" value="B" />
-                            <label for="B">B</label><br />
-                            <input type="radio" id="C" name="Question1" value="C" />
-                            <label for="C">C</label><br />
-                            <input type="radio" id="D" name="Question1" value="D" />
-                            <label for="D">D</label><br />
-                        </div>
-                    </div>
-
-                </Row>
-                <Row className="RowQuestion" >
-                    <div className="div1">
-                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 6</h3>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                            <audio controls="true" src={audio6} ></audio>
-                        </div>
-                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                            <img alt="preview " src={image6} style={{ width: 300 }} />
+                            <img alt="preview " src={image} style={{ width: 300 }} />
                         </div>
 
                         <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
