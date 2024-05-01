@@ -4,6 +4,9 @@ import React from "react";
 import { publicRoute, privateRoute } from "./routes";
 import Admin from "./pages/Admin";
 import User from "./pages/User";
+import ReadingTesting from "./pages/ReadingTesting";
+import ListeningTesting from "./pages/ListeningTesting";
+import FullTesting from "./pages/FullTesting";
 function App() {
 
   return (
@@ -21,7 +24,10 @@ function App() {
 
           })}
           <Route path="/admin/*" element={<Admin />}></Route>
-          <Route path="/user/*" element={<User />}></Route>
+          {/* <Route path="/user/*" element={<User />}></Route> */}
+          <Route path="/study/reading-test/*" element={<ReadingTesting />}></Route>
+          <Route path="/study/listening-test/*" element={<ListeningTesting />}></Route>
+          <Route path="/study/full-test/*" element={<FullTesting />}></Route>
 
         </Routes>
       </BrowserRouter>

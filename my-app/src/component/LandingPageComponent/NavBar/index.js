@@ -5,8 +5,7 @@ import { NavLink } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import '../../../css/NavBar.css';
 import '../../../css/Color.css';
-import Logo from '../../../assets/minmedia.png'
-import axios from 'axios';
+import Logo from '../../../assets/ToeicTesting.png'
 
 function NavBar() {
     const [loading, setLoading] = useState(false)
@@ -44,7 +43,7 @@ function NavBar() {
                     width={'60px'}
                     height={'50px'}
                     className="d-inline-block align-center"
-
+                    alt="#"
                 />
                 <Navbar.Brand
                     style={{ fontSize: '20px', color: 'white', padding: '5px' }}>
@@ -58,8 +57,8 @@ function NavBar() {
                     >
 
                         <NavLink className='NavLinkCss' to="/"  >Trang chủ</NavLink>
-                        <NavLink className='NavLinkCss' to="/test">Đề thi thử</NavLink>
-                        <NavLink className='NavLinkCss' to="/test">Ngữ pháp</NavLink>
+                        <NavLink className='NavLinkCss' to="/tests">Đề thi thử</NavLink>
+                        <NavLink className='NavLinkCss' to="/tests">Ngữ pháp</NavLink>
                         <NavLink className='NavLinkCss' to="/user/luyen-de">Từ vựng</NavLink>
                     </Nav>
                     {signedIn && <NavLink className='NavLinkCss' to="/login" >View profile</NavLink>}

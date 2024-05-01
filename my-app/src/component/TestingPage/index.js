@@ -1,55 +1,138 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Header from '../LandingPageComponent/Header'
 import { Card } from "antd"
-
+import { getAllTestReading, getAllTestListening, getAllFullTest } from "../../utils/APIRoutes";
+import axios from "axios";
+import { Link } from 'react-router-dom'; // Import Link
+import '../../css/TestingPage.css'
 export default function TestsingPage() {
     const { Meta } = Card;
+    const [loading, setLoading] = useState(false)
+
+
+    useEffect(() => {
+        setLoading(true);
+        getAllReadingTests();
+        getAllListeningTests();
+        getAllFullTests();
+    }, [loading]);
+
+
+
+    const getAllReadingTests = () => {
+        axios.get(getAllTestReading, {
+            params: {
+                limit: 10,
+                page: 1,
+            }
+        }).then((response) => {
+            setDataSource(response.data.result.tests);
+        });
+    }
+    const getAllListeningTests = () => {
+        axios.get(getAllTestListening, {
+            params: {
+                limit: 10,
+                page: 1,
+            }
+        }).then((response) => {
+            setDataSource1(response.data.result.tests);
+        });
+    }
+    const getAllFullTests = () => {
+        axios.get(getAllFullTest, {
+            params: {
+                limit: 10,
+                page: 1,
+            }
+        }).then((response) => {
+            setDataSource2(response.data.result.tests);
+        });
+    }
+    const [dataSource, setDataSource] = useState([])
+    const [dataSource1, setDataSource1] = useState([])
+
+    const [dataSource2, setDataSource2] = useState([])
+
+
 
     return (
+
         <>
             <Header />
-            <Container fluid>
-                <Row className="RowH2" >
-                    <h2>Full Test</h2>
-                    <Col xs={6} sm={4} className="Card" >
-                        <Card
-                            hoverable
-                            style={{ width: 250 }}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
 
-                        >
-                            <Meta title="Test 1" name="Score" description="
-                            Score:50"
-                            />
-                            <Meta name="Test" description="
-                            0/100" />
 
-                        </Card>
-                    </Col>
-                    <Col xs={6} sm={4} className="Card" >
-                        <Card
-                            hoverable
-                            style={{ width: 250 }}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Test 1" description="" />
 
-                        </Card>
-                    </Col>
-                    <Col xs={6} sm={4} className="Card" >
-                        <Card
-                            hoverable
-                            style={{ width: 250 }}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Test 1" description="" />
+            <Container>
+                <h1>Reading Tests</h1>
+                <Row gutter={16}>
+                    {Array.isArray(dataSource) && dataSource.length > 0 ? (
+                        dataSource.map(item => (
+                            <Col span={8} key={item._id}>
+                                <Link to={`/study/reading-test/${item._id}`}>
 
-                        </Card>
-                    </Col>
+                                    <Card
+                                        hoverable
+                                        style={{ marginBottom: '16px' }}
+                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                    >
+                                        <Meta title={item.title} description={item.description} />
+                                    </Card>
+                                </Link>
 
+                            </Col>
+                        ))
+                    ) : (
+                        <p>No data available</p>
+                    )}
                 </Row>
+                <h1>Listening Tests</h1>
 
+                <Row gutter={16}>
+                    {Array.isArray(dataSource1) && dataSource1.length > 0 ? (
+                        dataSource1.map(item => (
+                            <Col span={8} key={item._id}>
+                                <Link to={`/study/listening-test/${item._id}`}>
+
+                                    <Card
+                                        hoverable
+                                        style={{ marginBottom: '16px' }}
+                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                    >
+                                        <Meta title={item.title} description={item.description} />
+                                    </Card>
+                                </Link>
+
+                            </Col>
+                        ))
+                    ) : (
+                        <p>No data available</p>
+                    )}
+                </Row>
+                <h1>Full Tests</h1>
+
+                <Row gutter={16}>
+                    {Array.isArray(dataSource2) && dataSource2.length > 0 ? (
+                        dataSource2.map(item => (
+                            <Col span={8} key={item._id}>
+                                <Link to={`/study/full-test/${item._id}`}>
+
+                                    <Card
+                                        hoverable
+                                        style={{ marginBottom: '16px' }}
+                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                    >
+                                        <Meta title={item.title} description={item.description} />
+                                    </Card>
+                                </Link>
+
+                            </Col>
+                        ))
+                    ) : (
+                        <p>No data available</p>
+                    )}
+                </Row>
             </Container>
         </>
 

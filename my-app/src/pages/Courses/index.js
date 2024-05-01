@@ -69,6 +69,7 @@ export default function Courses() {
         setValuesTest({ ...valuesTest, [e.target.name]: e.target.value });
 
     }
+
     const token = localStorage.getItem("user").replace(/"/g, '');
     const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -178,15 +179,22 @@ export default function Courses() {
         console.log('deleted');
     }
 
+    const [coursesId, setCoursesId] = useState('');
 
     // Modal
-    const showModal = async (e) => {
+    // const showModal = async (e) => {
+    //     setCoursesId(e._id);
+    //     console.log(coursesId, '3232')
+    //     setIsModalOpen(true);
+    //     setLoading(true);
+    // };
+    const showModal = (record) => {
+        console.log("Clicked record:", record);
+        setCoursesId(record._id);
+        console.log(record._id, '333');
+
         setIsModalOpen(true);
-        setCoursesId(e._id);
-        setLoading(true);
-        console.log(coursesId, '3232')
     };
-    const [coursesId, setCoursesId] = useState('');
 
     return (
         <div>
@@ -349,11 +357,13 @@ export default function Courses() {
                 </Space>
             </Drawer>
 
+            {isModalOpen}
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
                 open={isModalOpen} onOk={handleAddTest} onCancel={handleCancel}
             >
+                {isModalOpen}
                 <Space>
                     <Form name="formThemTest" layout="verical">
                         <Row gutter={16}>

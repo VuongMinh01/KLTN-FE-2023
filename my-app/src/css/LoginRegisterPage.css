@@ -4,7 +4,9 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+
 }
+
 
 .titleContainer {
     display: flex;
@@ -13,6 +15,29 @@
     font-weight: bolder;
     align-items: center;
     justify-content: center;
+    color: cornflowerblue;
+}
+
+.Login {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    width: 70vh;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.Register {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    width: 70vh;
+    background-color: white;
+    border-radius: 15px;
 }
 
 .resultContainer,

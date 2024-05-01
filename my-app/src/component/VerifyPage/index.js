@@ -1,11 +1,11 @@
 import { Button, Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { verifyEmail, getUser } from "../../utils/APIRoutes";
+import { verifyEmail } from "../../utils/APIRoutes";
 import axios from "axios";
-
+import '../../css/Verify.css'
+import VerifyImage from '../../assets/verify.jpeg'
 export default function Verify() {
-    // let veryfi1 = '';
 
     const handleOnChange = (e) => {
         setVerify({ ...verify, [e.target.name]: e.target.value });
@@ -41,18 +41,27 @@ export default function Verify() {
 
     }
     return (
-        <Container fluid>
+        <div className="verification-page">
+            <div className="verification-content">
 
-            <h1>Xác minh tài khoản</h1>
+                <h1>Xác minh tài khoản</h1>
 
-            {verifyAccount && <h1>Đã xác minh</h1>}
-            {!verifyAccount && <><Input
-                name="email_verify_token"
-                onChange={(e) => handleOnChange(e)}
-                placeholder="Nhập mã xác minh" /><Button onClick={onSend}>Send</Button></>
+                {verifyAccount && <div>
+                    <h1>Account Verified</h1>
+                    <p>Your account has been successfully verified.</p>
+                    {/* Display any additional information or components for verified accounts */}
+                </div>}
+                {!verifyAccount && <div>
+                    <><Input
+                        name="email_verify_token"
+                        onChange={(e) => handleOnChange(e)}
+                        placeholder="Nhập mã xác minh" />
+                        <Button style={{ marginTop: '10px' }} onClick={onSend}>Send</Button></>
 
-            }
-            {/* {!verifyAccount && <h1>Chưa xác minh</h1>} */}
-        </Container>
+                </div>}
+            </div>
+            <img src={VerifyImage} alt="Verification" className="verification-image" />
+
+        </div>
     )
 }

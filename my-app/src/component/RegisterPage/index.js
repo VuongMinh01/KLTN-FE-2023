@@ -75,64 +75,67 @@ export default function RegisterPage() {
 
     return (
         <div className={'mainContainer'}>
-            <div className={'titleContainer'}>
-                <div>Register</div>
-            </div>
-            <div className={'inputContainer'}>
-                <input
-                    placeholder="Enter your Name here"
-                    className={'inputBox'}
-                    name="name"
-                    onChange={(e) => handleOnChange(e)}
+            <div className='Register'>
 
-                />
-            </div>
-            <br />
+                <div className={'titleContainer'}>
+                    <div>Register</div>
+                </div>
+                <div className={'inputContainer'}>
+                    <input
+                        placeholder="Enter your Name here"
+                        className={'inputBox'}
+                        name="name"
+                        onChange={(e) => handleOnChange(e)}
 
-            <div className={'inputContainer'}>
-                <input
-                    placeholder="Enter your email here"
-                    className={'inputBox'}
-                    name="email"
-                    onChange={(e) => handleOnChange(e)}
+                    />
+                </div>
+                <br />
 
-                />
-            </div>
-            <br />
-            <div className={'inputContainer'}>
-                <input
-                    placeholder="Enter your password here"
-                    className={'inputBox'}
-                    name="password"
-                    onChange={(e) => handleOnChange(e)}
+                <div className={'inputContainer'}>
+                    <input
+                        placeholder="Enter your email here"
+                        className={'inputBox'}
+                        name="email"
+                        onChange={(e) => handleOnChange(e)}
 
-                />
-            </div>
-            <br />
-            <div className={'inputContainer'}>
-                <input
-                    placeholder="Enter your confirm password here"
-                    className={'inputBox'}
-                    name="confirm_password"
-                    onChange={(e) => handleOnChange(e)}
+                    />
+                </div>
+                <br />
+                <div className={'inputContainer'}>
+                    <input
+                        placeholder="Enter your password here"
+                        className={'inputBox'}
+                        name="password"
+                        onChange={(e) => handleOnChange(e)}
 
-                />
-            </div>
-            <br />
+                    />
+                </div>
+                <br />
+                <div className={'inputContainer'}>
+                    <input
+                        placeholder="Enter your confirm password here"
+                        className={'inputBox'}
+                        name="confirm_password"
+                        onChange={(e) => handleOnChange(e)}
 
-            <div className={'inputContainer'}>
-                <input
-                    placeholder="Enter your date of birth here"
-                    className={'inputBox'}
-                    name="date_of_birth"
-                    onChange={(e) => handleOnChange(e)}
+                    />
+                </div>
+                <br />
 
-                />
-            </div>
-            <br />
-            <div className={'inputContainer'}>
+                <div className={'inputContainer'}>
+                    <input
+                        placeholder="Enter your date of birth here"
+                        className={'inputBox'}
+                        name="date_of_birth"
+                        onChange={(e) => handleOnChange(e)}
+
+                    />
+                </div>
+                <br />
                 <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Register'} />
-                <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'white' }} to="/login">Login</NavLink></h4>
+                <div className={'inputContainer'}>
+                    <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
+                </div>
             </div>
         </div>
     )

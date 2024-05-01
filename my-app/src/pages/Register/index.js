@@ -6,7 +6,10 @@ export default function Register() {
     return (
         <Container fluid style={{
 
-            backgroundColor: 'blue',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'cornflowerblue',
         }}>
             <Row>
                 <Col xs={4} sm={12}>

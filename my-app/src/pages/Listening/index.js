@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect } from "react";
-import { getAllTestListening } from "../../utils/APIRoutes";
+import { getAllTestListening, deleteTest } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -61,10 +61,16 @@ export default function Listening() {
     // }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
     };
-
+    const updateTable = (data) => {
+        setDataSource(previousState => {
+            setLoading(false)
+            return previousState
+        });
+    }
 
     //  Thêm khách hàng
     // const handleClick = async (e) => {
@@ -136,6 +142,18 @@ export default function Listening() {
             setAudio(URL.createObjectURL(event.target.files[0]));
         }
     }
+    const onDeleteService = async (e) => {
+
+        axios.delete(deleteTest, {
+            data: {
+                test_id: e._id, source_id: e.source_id
+            }
+            , headers
+        }).then((res) => console.log(res.data))
+        setLoading(true)
+        updateTable();
+        console.log('deleted');
+    }
     return (
         <div>
             <Space size={20} direction={"vertical"}>
@@ -173,18 +191,14 @@ export default function Listening() {
                         {
                             key: "5",
                             title: "Actions",
-                            render: () => {
+                            render: (record) => {
                                 return (
                                     <>
-                                        <PlusOutlined
-                                            style={{ marginRight: '5px' }}
-                                            onClick={showModal}
+                                        <PlusOutlined onClick={() => showModal(record)}
                                         />
 
-                                        <DeleteOutlined
-                                            style={{ marginLeft: '5px' }}
+                                        <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
 
-                                        />
                                     </>
                                 )
                             }

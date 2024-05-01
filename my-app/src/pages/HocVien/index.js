@@ -13,15 +13,16 @@ export default function HocVien() {
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
     const token = localStorage.getItem("user").replace(/"/g, '');
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
     };
     const getAllHocVien1 = () => {
-        axios.get(getAllHocVien, config, {
+        axios.get(getAllHocVien, {
             params: {
                 page: 1,
                 limit: 10
-            }
+            }, headers
         }).then((response) => {
             console.log(response.data.result, '1');
             setDataSource(response.data.result.users);

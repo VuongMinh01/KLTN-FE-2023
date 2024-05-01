@@ -8,7 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { loginRoute } from "../../utils/APIRoutes";
 import { loginWithGmailRoute } from "../../utils/APIRoutes"
-
+import Logo from "../../assets/dai-hoc-iuh.jpg"
+import { Image } from 'antd';
 export default function LoginPage() {
     const [values, setValues] = useState({
         email: "",
@@ -74,44 +75,47 @@ export default function LoginPage() {
         theme: "dark"
     };
     return (
-        <div className={'mainContainer'}>
-            <div className={'titleContainer'}>
-                <div>Login</div>
-            </div>
-            <br />
-            <div className={'inputContainer'}>
-                <input
-                    name="email"
-                    placeholder="Enter your email here"
-                    onChange={(e) => handleOnChange(e)}
-                    className={'inputBox'}
-                />
-            </div>
-            <br />
-            <div className={'inputContainer'}>
-                <input
-                    name="password"
-                    placeholder="Enter your password here"
-                    onChange={(e) => handleOnChange(e)}
-                    className={'inputBox'}
-                    type='password'
-                />
-            </div>
-            <br />
-            <div className={'inputContainer'}>
-                <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
-                <input className={'inputButton'} type="button" onClick={onButtonClickGmail} value={'Gmail'} />
+
+        <div className={'mainContainer'} >
+            <div className='Login'>
 
 
-            </div>
-            <div style={{ display: 'flex' }}>
-                <h4>Don't have an account?</h4>
-                <h4><NavLink className='NavLinkCss' style={{ color: 'white' }} to="/register">Register</NavLink></h4>
+                <div className={'titleContainer'}>
+                    <div>Login</div>
+                </div>
+                <br />
+                <div className={'inputContainer'}>
+                    <input
+                        name="email"
+                        placeholder="Enter your email here"
+                        onChange={(e) => handleOnChange(e)}
+                        className={'inputBox'}
+                    />
+                </div>
+                <br />
+                <div className={'inputContainer'}>
+                    <input
+                        name="password"
+                        placeholder="Enter your password here"
+                        onChange={(e) => handleOnChange(e)}
+                        className={'inputBox'}
+                        type='password'
+                    />
+                </div>
+                <br />
+                <div className={'inputContainer'}>
+                    <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
+                    <input className={'inputButton'} type="button" onClick={onButtonClickGmail} value={'Gmail'} />
 
-            </div>
-            <ToastContainer />
 
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <h4>Don't have an account?</h4>
+                    <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/register">Register</NavLink></h4>
+
+                </div>
+                <ToastContainer />
+            </div>
         </div>
-
     )
 }

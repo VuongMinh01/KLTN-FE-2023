@@ -1,4 +1,4 @@
-import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
+import { Space, Table, Typography, Col, Form, Row, Modal } from "antd";
 import React, { useState, useEffect } from "react";
 import { deleteTest, getAllTestReading, addQuestion } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
@@ -8,6 +8,8 @@ import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
+const { TextArea } = Input;
+
 export default function Reading() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
@@ -15,30 +17,16 @@ export default function Reading() {
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [values, setValues] = useState({
-        num_quest: "",
+        num_quest: 0,
         content: "",
         description: "",
         test_id: "",
+        score: 0,
         answers: [],
-        score: "",
-        correct_at: [],
+        correct_at: {},
     });
 
-    const [answers, setAnswers] = useState({
-        order_answer: [],
-        content_answer: [],
-    })
-    const [correctat, setCorrectat] = useState({
-        order_answer: "",
-        content_answer: "",
-    })
-    const handleAnswers = async (e) => {
-        setAnswers({ ...answers, [e.target.name]: e.target.value })
 
-    }
-    const handleCorrectat = async (e) => {
-        setCorrectat({ ...correctat, [e.target.name]: e.target.value })
-    }
     // Modal
     const showModal = async (e) => {
         setIsModalOpen(true);
@@ -52,6 +40,10 @@ export default function Reading() {
     }, [loading]);
     // Load data from db
 
+    const handleOnChangeNumber = (e) => {
+        setValues({ ...values, [e.target.name]: parseInt(e.target.value) });
+
+    }
     const getAllTest = () => {
         console.log('lan 1')
         axios.get(getAllTestReading, {
@@ -66,13 +58,20 @@ export default function Reading() {
     }
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
-
+    }
+    const clickButton = (e) => {
+        setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
+        console.log(values, 'duoi');
     }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
     };
+
+
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
@@ -134,17 +133,39 @@ export default function Reading() {
             data: {
                 test_id: e._id, source_id: e.source_id
             }
-        }, config).then((res) => console.log(res.data))
+            , headers
+        }).then((res) => console.log(res.data))
         setLoading(true)
         updateTable();
         console.log('deleted');
     }
     const handleAddQuestion = async (e) => {
         e.preventDefault();
-        const { num_quest, content, description, test_id, answers: [], correct_at, score } = values;
-        const { data } = await axios.post(addQuestion, {
-            num_quest, content, description, test_id, answers: [], correct_at, score
-        }, config)
+        console.log(values, 'valuessss');
+        console.log('jhasjdhas', values);
+        values['answers'] = [{
+            order_answer: "A",
+            content_answer: values.content_answer_1,
+        }, {
+            order_answer: "B",
+            content_answer: values.content_answer_2,
+        }, {
+            order_answer: "C",
+            content_answer: values.content_answer_3,
+        }, {
+            order_answer: "D",
+            content_answer: values.content_answer_4,
+        }]
+
+        try {
+            const { data } = await axios.post(addQuestion, {
+                ...values
+            }, headers)
+
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     const [testId, setTestId] = useState('');
 
@@ -246,7 +267,7 @@ export default function Reading() {
                                 rules={[{ required: true, message: 'Num quest không được để trống' }]}
                             >
                                 <Input
-                                    onChange={handleOnChange}
+                                    onChange={handleOnChangeNumber}
                                     name="num_quest"
                                     placeholder="Nhập num quest" />
                             </Form.Item>
@@ -258,7 +279,7 @@ export default function Reading() {
                                 label="Mô tả"
                                 rules={[{ required: true, message: 'Mô tả không được để trống' }]}
                             >
-                                <Input
+                                <TextArea rows={4}
                                     onChange={handleOnChange}
                                     name="description"
                                     placeholder="Mô tả" />
@@ -270,7 +291,7 @@ export default function Reading() {
                                 label="Content"
                                 rules={[{ required: true, message: 'Content không được để trống' }]}
                             >
-                                <Input
+                                <TextArea rows={4}
                                     onChange={handleOnChange}
                                     name="content"
                                     placeholder="Nhập content câu hỏi"
@@ -298,35 +319,31 @@ export default function Reading() {
                             */}
                             <div name="answers">
 
-
                                 <div className="divQuestion" >
-                                    <input type="radio" id="A" name="order_answer" value="A" onSelect={handleCorrectat} on />
-                                    <input className="inputArea" type="text" name="content_answer" onChange={handleAnswers} />
+                                    <input type="radio" id="A" onClick={clickButton} name="order_answer" value="A" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_1" />
                                 </div>
                                 <div className="divQuestion">
 
-                                    <input type="radio" id="B" name="order_answer" value="B" />
-                                    <input className="inputArea" type="text" name="content_answer" onChange={handleAnswers} />
+                                    <input type="radio" onClick={clickButton} id="B" name="order_answer" value="B" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_2" />
                                 </div>
 
                                 <div className="divQuestion">
 
-                                    <input type="radio" id="C" name="order_answer" value="C" />
-                                    <input className="inputArea" type="text" name="content_answer" onChange={handleAnswers} />
+                                    <input type="radio" onClick={clickButton} id="C" name="order_answer" value="C" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_3" />
                                 </div>
                                 <div className="divQuestion">
-                                    <input type="radio" id="D" name="order_answer" value="D" />
-                                    <input className="inputArea" type="text" name="content_answer" onChange={handleAnswers} />
+                                    <input type="radio" onClick={clickButton} id="D" name="order_answer" value="D" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_4" />
                                 </div>
                             </div>
                         </Col>
-                        <Col span={24} >
-                            <label>Correct Answer</label> <br />
-                            <input onChange={handleOnChange} type='text' name='correct_at' placeholder="Nhập kết quả đúng"></input>
-                        </Col>
+
                         <Col span={24} >
                             <label>Score</label> <br />
-                            <input onChange={handleOnChange} type='text' name='score' placeholder="Nhập điểm câu hỏi"></input>
+                            <input onChange={handleOnChangeNumber} type='number' name='score' placeholder="Nhập điểm câu hỏi"></input>
                         </Col>
 
                     </Row>

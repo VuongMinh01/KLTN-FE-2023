@@ -9,18 +9,8 @@ export default function Part1() {
 
     }
 
-
-
-
     const [audio, setAudio] = useState();
-
-
-
-
-
-
     const [image, setImage] = useState(null);
-
 
     return (
 

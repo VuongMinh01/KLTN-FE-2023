@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Menu } from "antd"
-import { AppstoreOutlined, CarOutlined, LogoutOutlined, ShopOutlined, ShoppingCartOutlined, TagOutlined, UserOutlined, TeamOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, LogoutOutlined, ShoppingCartOutlined, TagOutlined, UserOutlined, TeamOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import { Avatar, Card } from 'antd';
-import axios from "axios";
-import { getUser } from "../../../utils/APIRoutes";
 export default function SideMenu() {
     let name1 = '';
     const { Meta } = Card;
@@ -103,20 +100,16 @@ export default function SideMenu() {
                         icon: <UserOutlined />
                     },
 
+
                     {
-                        label: "Khuyến mãi",
-                        key: '/admin/khuyenmai',
-                        icon: <TagOutlined />
+                        label: "Xác minh",
+                        key: '/admin/verify',
+                        icon: <LogoutOutlined />,
                     },
 
                     {
                         label: "Đăng xuất",
                         key: '/signout',
-                        icon: <LogoutOutlined />,
-                    },
-                    {
-                        label: "Xác minh",
-                        key: '/admin/verify',
                         icon: <LogoutOutlined />,
                     },
                 ]}
