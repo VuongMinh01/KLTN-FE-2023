@@ -14,11 +14,11 @@ export default function Footer() {
                 </div>
 
                 <div>
-                    <a href='https://www.facebook.com/MinMinMedia01?mibextid=LQQJ4d' target='_blank' rel='noopener noreferrer' className='me-4 text-reset'>
+                    <a href='https://www.facebook.com/2minhvuong/' target='_blank' rel='noopener noreferrer' className='me-4 text-reset'>
                         <MDBIcon fab icon="facebook-f" />
                     </a>
-                    <a href='https://www.youtube.com/@thien_minweddingfilm6102' target='_blank' rel='noopener noreferrer' className='me-4 text-reset'>
-                        <MDBIcon fab icon="youtube" />
+                    <a href='https://www.facebook.com/profile.php?id=100008212694689' target='_blank' rel='noopener noreferrer' className='me-4 text-reset'>
+                        <MDBIcon fab icon="facebook-f" />
                     </a>
                 </div>
             </section>
@@ -29,10 +29,11 @@ export default function Footer() {
                         <MDBCol md="3" lg="4" xl="3" className='mx-auto mb-4'>
                             <h6 className='text-uppercase fw-bold mb-4'>
                                 <MDBIcon icon="gem" className="me-3" />
-                                Min Media
+                                Toeic Testing 247
                             </h6>
                             <p>
-                                Min Media cung cấp dịch vụ Quay-Chụp Lễ - Tiệc đám cưới, Phóng sự cưới, Event, Tiệc sinh nhật, Lễ khai trương, TeamBuilding
+                                Toeic Testing 247 là một website nhằm phục vụ mục đích học tập trong chương trình Khoá luận tốt nghiệp. Ngoài ra không phục vụ bất kì lợi ích thương mại nào khác.
+
                             </p>
                         </MDBCol>
 
@@ -46,40 +47,42 @@ export default function Footer() {
                                 </Link>
                             </p>
                             <p>
-                                <Link to='/service' className='text-reset'>
-                                    Dịch vụ
+                                <Link to='/tests' className='text-reset'>
+                                    Đề kiểm tra
                                 </Link>
                             </p>
                             <p>
-                                <Link to='/videos' className='text-reset'>
-                                    Videos
+                                <Link to='/' className='text-reset'>
+                                    Ngữ pháp
                                 </Link>
                             </p>
                             <p>
-                                <Link to='/albums' className='text-reset'>
-                                    Albums
-                                </Link>
-                            </p>
-                            <p>
-                                <Link to='/contact' className='text-reset'>
-                                    Liên lạc
+                                <Link to='/' className='text-reset'>
+                                    Từ vựng
                                 </Link>
                             </p>
                         </MDBCol>
 
-                        <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
+                        <MDBCol md="4" lg="4" xl="4" className='mx-auto mb-md-0 mb-4'>
                             <h6 className='text-uppercase fw-bold mb-4'>Liên lạc</h6>
                             <p>
                                 <MDBIcon icon="home" className="me-2" />
-                                Hóc Môn, Tp.Hồ Chí Minh
+                                12 Nguyễn Văn Bảo, Gò Vấp, Tp.Hồ Chí Minh
                             </p>
                             <p>
                                 <MDBIcon icon="envelope" className="me-3" />
-                                thienminmedia@ldg.edu.vn
-
+                                minhvuong9a4@gmail.com
                             </p>
                             <p>
-                                <MDBIcon icon="phone" className="me-3" /> 0703427959
+                                <MDBIcon icon="envelope" className="me-3" />
+                                quangnguyen2001@gmail.com
+                            </p>
+
+                            <p>
+                                <MDBIcon icon="phone" className="me-3" /> 0363681128
+                            </p>
+                            <p>
+                                <MDBIcon icon="phone" className="me-3" /> 0366079538
                             </p>
 
                         </MDBCol>
@@ -88,9 +91,9 @@ export default function Footer() {
             </section>
 
             <div className='text-center p-4' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
-                © 2023 Copyright:
+                © 2024 Copyright:
                 <a className='text-reset fw-bold' href='/'>
-                    MinMedia                </a>
+                    Toeic Testing 247                </a>
             </div>
         </MDBFooter>
 

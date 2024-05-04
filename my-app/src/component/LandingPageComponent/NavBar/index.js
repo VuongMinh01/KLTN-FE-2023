@@ -58,8 +58,8 @@ function NavBar() {
 
                         <NavLink className='NavLinkCss' to="/"  >Trang chủ</NavLink>
                         <NavLink className='NavLinkCss' to="/tests">Đề thi thử</NavLink>
-                        <NavLink className='NavLinkCss' to="/tests">Ngữ pháp</NavLink>
-                        <NavLink className='NavLinkCss' to="/user/luyen-de">Từ vựng</NavLink>
+                        <NavLink className='NavLinkCss' to="/nguphap">Ngữ pháp</NavLink>
+                        <NavLink className='NavLinkCss' to="/tuvung">Từ vựng</NavLink>
                     </Nav>
                     {signedIn && <NavLink className='NavLinkCss' to="/login" >View profile</NavLink>}
                     {!signedIn && <NavLink className='NavLinkCss' to="/login">Đăng nhập</NavLink>}

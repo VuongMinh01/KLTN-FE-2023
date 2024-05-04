@@ -1,9 +1,9 @@
-import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
+import { Space, Table, Typography, Col, Form, Row, Modal } from "antd";
 import React, { useState, useEffect } from "react";
 import { deleteTest, getAllTestListening } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
@@ -17,6 +17,15 @@ export default function FullTest() {
     // const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
+
+
+    const showModalQuestion = (record) => {
+        setIsModalQuestionOpen(true);
+    }
+    const handleQuestionCancel = () => {
+        setIsModalQuestionOpen(false);
+    }
 
     // Modal
     const showModal = () => {
@@ -164,7 +173,7 @@ export default function FullTest() {
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách bài Test</Typography.Title>
+                <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
 
                 {/* Nút chức năng  */}
 
@@ -191,7 +200,7 @@ export default function FullTest() {
                         },
                         {
                             key: "4",
-                            title: "Thời gian làm bài",
+                            title: "Thời gian",
                             dataIndex: "timeline",
                         },
                         {
@@ -204,6 +213,8 @@ export default function FullTest() {
                                         />
 
                                         <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
+                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+
                                     </>
                                 )
                             }
@@ -306,6 +317,14 @@ export default function FullTest() {
                     </Row>
 
                 </Form>
+
+
+            </Modal>
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalQuestionOpen} onOk={''} onCancel={handleQuestionCancel}>
+
 
 
             </Modal>

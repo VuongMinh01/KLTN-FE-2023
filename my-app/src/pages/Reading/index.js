@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { deleteTest, getAllTestReading, addQuestion } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
 
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,8 @@ export default function Reading() {
     const [dataSource, setDataSource] = useState([])
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
+
     const [values, setValues] = useState({
         num_quest: 0,
         content: "",
@@ -28,12 +30,27 @@ export default function Reading() {
 
 
     // Modal
-    const showModal = async (e) => {
+    const showModal = (record) => {
+        // console.log("Clicked record:", record);
+        // // setTestId(record._id);
+        // console.log(record._id, '3232')
+        // setIsModalOpen(true);
+
+        console.log("Clicked record:", record);
+        setValues({
+            ...values,
+            test_id: record._id // Update the source_id in the valuesTest state
+        });
+        console.log(record._id, '333');
         setIsModalOpen(true);
-        setTestId(e._id);
-        setLoading(true);
-        console.log(testId, '3232')
+
     };
+    const showModalQuestion = (record) => {
+        setIsModalQuestionOpen(true);
+    }
+    const handleQuestionCancel = () => {
+        setIsModalQuestionOpen(false);
+    }
     useEffect(() => {
         setLoading(true);
         getAllTest();
@@ -45,7 +62,6 @@ export default function Reading() {
 
     }
     const getAllTest = () => {
-        console.log('lan 1')
         axios.get(getAllTestReading, {
             params: {
                 limit: 10,
@@ -59,9 +75,38 @@ export default function Reading() {
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     }
+
+
+
+
     const clickButton = (e) => {
-        setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
-        console.log(values, 'duoi');
+        // code anh Minh huong dan
+        // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
+        // // console.log(values, 'duoi');
+
+        console.log("Clicked value:", e.target.value);
+        // console.log("Current answers:", values['answers']);
+        // const correctAnswer = values['answers'].find(item => item.order_answer === e.target.value);
+        // console.log("Found correct answer:", correctAnswer);
+
+        // setValues({ ...values, correct_at: correctAnswer });
+
+        // console.log("Updated values:", values);
+
+        const order_answer = e.target.value; // Get the value of the clicked radio button
+        const content_answer = e.target.nextElementSibling.value; // Get the content of the answer corresponding to the clicked radio button
+
+        // Update correct_at with the selected answer
+        setValues({
+            ...values,
+            correct_at: {
+                order_answer,
+                content_answer
+            }
+        });
+
+        console.log("Clicked value:", order_answer);
+        console.log("Content of the answer:", content_answer);
     }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
@@ -80,6 +125,7 @@ export default function Reading() {
     const handleCancel = () => {
         setIsModalOpen(false);
     }
+
     const updateTable = (data) => {
         setDataSource(previousState => {
             setLoading(false)
@@ -127,8 +173,7 @@ export default function Reading() {
     const onDeleteService = async (e) => {
         console.log(e._id, '1');
         console.log(e.source_id, '2');
-        // const test_id = e._id;
-        // const source_id = e.source_id;
+
         axios.delete(deleteTest, {
             data: {
                 test_id: e._id, source_id: e.source_id
@@ -139,10 +184,10 @@ export default function Reading() {
         updateTable();
         console.log('deleted');
     }
+
+
     const handleAddQuestion = async (e) => {
         e.preventDefault();
-        console.log(values, 'valuessss');
-        console.log('jhasjdhas', values);
         values['answers'] = [{
             order_answer: "A",
             content_answer: values.content_answer_1,
@@ -157,17 +202,20 @@ export default function Reading() {
             content_answer: values.content_answer_4,
         }]
 
+
         try {
             const { data } = await axios.post(addQuestion, {
                 ...values
-            }, headers)
+            }, { headers })
+            setIsModalOpen(false);
 
         } catch (error) {
             console.log(error);
         }
 
+
     }
-    const [testId, setTestId] = useState('');
+
 
 
 
@@ -176,7 +224,7 @@ export default function Reading() {
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách bài Test</Typography.Title>
+                <Typography.Title level={4}>Danh sách bài Reading Test</Typography.Title>
 
 
 
@@ -204,7 +252,7 @@ export default function Reading() {
                         },
                         {
                             key: "4",
-                            title: "Thời gian làm bài",
+                            title: "Thời gian",
                             dataIndex: "timeline",
                         },
                         {
@@ -224,6 +272,7 @@ export default function Reading() {
                                         />
 
                                         <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
+                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
                                     </div>
                                 )
                             }
@@ -247,18 +296,24 @@ export default function Reading() {
                 open={isModalOpen} onOk={handleAddQuestion} onCancel={handleCancel}
             >
                 <Form  >
-                    <Row vertical>
+                    <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 label="Mã bài thi"
                                 rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
-                                    type="text"
-                                    onChange={handleOnChange}
+                                    // type="text"
+                                    // onChange={(e) => handleOnChange(e)}
                                     // value={testId}
+                                    // name="test_id"
+                                    // placeholder="Nhập mã test" 
+                                    onChange={(e) => handleOnChange(e)}
+                                    type="text"
+                                    value={values.test_id}
                                     name="test_id"
-                                    placeholder="Nhập mã test" />
+                                    placeholder="Nhập mã test"
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24} >
@@ -317,8 +372,7 @@ export default function Reading() {
                             // Khi radio button đc chọn, set correct at order_answer , content_answer ??
                             // answer gửi thẳng 4 order_answer , content_answer gửi input 
                             */}
-                            <div name="answers">
-
+                            <div>
                                 <div className="divQuestion" >
                                     <input type="radio" id="A" onClick={clickButton} name="order_answer" value="A" />
                                     <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_1" />
@@ -349,7 +403,11 @@ export default function Reading() {
                     </Row>
 
                 </Form>
-
+            </Modal>
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalQuestionOpen} onOk={''} onCancel={handleQuestionCancel}>
 
             </Modal>
         </div >

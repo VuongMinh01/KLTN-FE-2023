@@ -189,10 +189,18 @@ export default function Courses() {
     //     setLoading(true);
     // };
     const showModal = (record) => {
-        console.log("Clicked record:", record);
-        setCoursesId(record._id);
-        console.log(record._id, '333');
+        // console.log("Clicked record:", record);
+        // setCoursesId(record._id);
+        // console.log(record._id, '333');
 
+        // setIsModalOpen(true);
+
+        console.log("Clicked record:", record);
+        setValuesTest({
+            ...valuesTest,
+            source_id: record._id // Update the source_id in the valuesTest state
+        });
+        console.log(record._id, '333');
         setIsModalOpen(true);
     };
 
@@ -252,8 +260,7 @@ export default function Courses() {
                         render: (record) => {
                             return (
                                 <>
-                                    <PlusOutlined onClick={() => showModal(record)}
-                                    />
+                                    <PlusOutlined onClick={() => showModal(record)} />
 
                                     <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
 
@@ -290,7 +297,8 @@ export default function Courses() {
                                 <Input
                                     onChange={(e) => handleOnChangeNumber(e)}
                                     name="type"
-                                    placeholder="Nhập mã bài thi" />
+                                    placeholder="Nhập mã bài thi"
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -357,7 +365,6 @@ export default function Courses() {
                 </Space>
             </Drawer>
 
-            {isModalOpen}
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
@@ -373,11 +380,17 @@ export default function Courses() {
                                     rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                                 >
                                     <Input
+                                        // onChange={(e) => handleOnChangeTest(e)}
+                                        // type="text"
+                                        // value={coursesId}
+                                        // name="source_id"
+                                        // placeholder="Nhập mã bài thi"
                                         onChange={(e) => handleOnChangeTest(e)}
                                         type="text"
-                                        value={coursesId}
+                                        value={valuesTest.source_id}
                                         name="source_id"
-                                        placeholder="Nhập mã bài thi" />
+                                        placeholder="Nhập mã bài thi"
+                                    />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>

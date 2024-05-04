@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { } from "react";
 import PageContent from "../../component/UserPage/PageContent";
 import SideMenu from "../../component/UserPage/SideMenu";
 import { Container, Row, Col } from "react-bootstrap";

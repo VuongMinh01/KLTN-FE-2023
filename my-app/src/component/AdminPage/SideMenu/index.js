@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Menu } from "antd"
-import { AppstoreOutlined, LogoutOutlined, ShoppingCartOutlined, TagOutlined, UserOutlined, TeamOutlined } from "@ant-design/icons";
+import { HomeOutlined, LogoutOutlined, UserOutlined, CheckCircleOutlined, ReadOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Card } from 'antd';
 export default function SideMenu() {
@@ -68,30 +68,30 @@ export default function SideMenu() {
                 items={[
                     {
                         label: "Dashboard",
-                        icon: <AppstoreOutlined />,
+                        icon: <HomeOutlined />,
                         key: '/admin/dashboard',
 
                     },
                     {
                         label: "Courses",
-                        icon: <ShoppingCartOutlined />,
+                        icon: <ReadOutlined />,
                         key: '/admin/courses',
 
                     },
                     {
                         label: "Listening",
                         key: '/admin/listening',
-                        icon: <UserOutlined />
+                        icon: <ReadOutlined />
                     },
                     {
                         label: "Reading",
                         key: '/admin/reading',
-                        icon: <UserOutlined />
+                        icon: <ReadOutlined />
                     },
                     {
                         label: "Full Test",
                         key: '/admin/fulltest',
-                        icon: <UserOutlined />
+                        icon: <ReadOutlined />
                     },
 
                     {
@@ -104,7 +104,7 @@ export default function SideMenu() {
                     {
                         label: "Xác minh",
                         key: '/admin/verify',
-                        icon: <LogoutOutlined />,
+                        icon: <CheckCircleOutlined />,
                     },
 
                     {

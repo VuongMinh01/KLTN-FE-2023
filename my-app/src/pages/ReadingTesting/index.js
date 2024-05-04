@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SideMenu from "../../component/TestsPage/SideMenu";
-import PageContent from "../../component/TestsPage/PageContent";
 import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
@@ -13,11 +11,14 @@ export default function ReadingTesting() {
     const changePage = (page) => {
         setCurrentPage(page);
     };
+    const console = async (e) => {
+        console.log(e._id);
+    }
 
     return (
         <div className="App">
             <Header />
-
+            <button onClick={console}>click me</button>
             <div className="sidebar">
                 <ul>
                     <li><button onClick={() => changePage('part 1')}>Part 1</button></li>
@@ -27,17 +28,23 @@ export default function ReadingTesting() {
                 </ul>
             </div>
             <div className="main-content">
-                {currentPage === 'part 1' && <Part1 />}
-                {currentPage === 'part 2' && <Part2 />}
-                {currentPage === 'part 3' && <Part3 />}
-                {currentPage === 'part 4' && <Part4 />}
+                {currentPage === 'part 1' && <Part1 changePage={changePage} />}
+                {currentPage === 'part 2' && <Part2 changePage={changePage} />}
+                {currentPage === 'part 3' && <Part3 changePage={changePage} />}
+                {currentPage === 'part 4' && <Part4 changePage={changePage} />}
 
             </div>
+
         </div>
+
     );
 }
 
-function Part1() {
+function Part1(props) {
+    const handleClick = () => {
+        // Call changePage function to change the page
+        props.changePage('part 2');
+    };
     return (
         <Container fluid>
 
@@ -72,12 +79,19 @@ function Part1() {
                     </div>
                 </Col>
             </Row>
-            <Button>Next Part</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 }
 
-function Part2() {
+function Part2(props) {
+    const handleClick = () => {
+        // Call changePage function to change the page
+        props.changePage('part 3');
+    };
+    const handlePreviousClick = () => {
+        props.changePage('part 1');
+    };
     return (
         <Container fluid>
             <h1>Part 2</h1>
@@ -112,14 +126,21 @@ function Part2() {
                     </div>
                 </Col>
             </Row>
-            <Button>Previous Part</Button>
+            <Button onClick={handlePreviousClick}>Previous Part</Button>
 
-            <Button>Next Part</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 }
 
-function Part3() {
+function Part3(props) {
+    const handleClick = () => {
+        // Call changePage function to change the page
+        props.changePage('part 4');
+    };
+    const handlePreviousClick = () => {
+        props.changePage('part 2');
+    };
     return (
         <Container fluid>
             <h1>Part 3</h1>
@@ -155,15 +176,19 @@ function Part3() {
                     </div>
                 </Col>
             </Row>
-            <Button>Previous Part</Button>
+            <Button onClick={handlePreviousClick}>Previous Part</Button>
 
-            <Button>Next Part</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 
 }
 
-function Part4() {
+function Part4(props) {
+
+    const handlePreviousClick = () => {
+        props.changePage('part 3');
+    };
     return (
         <Container>
             <Row>
@@ -199,8 +224,7 @@ function Part4() {
                     </div>
                 </Col>
             </Row>
-            <Button>Previous Part</Button>
-
+            <Button onClick={handlePreviousClick}>Previous Part</Button>
             <Button>Submit</Button>
         </Container>
     );

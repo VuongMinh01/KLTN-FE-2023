@@ -5,7 +5,8 @@ import { Card } from "antd"
 import { getAllTestReading, getAllTestListening, getAllFullTest } from "../../utils/APIRoutes";
 import axios from "axios";
 import { Link } from 'react-router-dom'; // Import Link
-import '../../css/TestingPage.css'
+import '../../css/TestingPage.css';
+
 export default function TestsingPage() {
     const { Meta } = Card;
     const [loading, setLoading] = useState(false)
@@ -60,12 +61,11 @@ export default function TestsingPage() {
     return (
 
         <>
-            <Header />
 
 
 
             <Container>
-                <h1>Reading Tests</h1>
+                <h1 className="h1Text">Reading Tests</h1>
                 <Row gutter={16}>
                     {Array.isArray(dataSource) && dataSource.length > 0 ? (
                         dataSource.map(item => (
@@ -87,7 +87,7 @@ export default function TestsingPage() {
                         <p>No data available</p>
                     )}
                 </Row>
-                <h1>Listening Tests</h1>
+                <h1 className="h1Text">Listening Tests</h1>
 
                 <Row gutter={16}>
                     {Array.isArray(dataSource1) && dataSource1.length > 0 ? (
@@ -110,7 +110,7 @@ export default function TestsingPage() {
                         <p>No data available</p>
                     )}
                 </Row>
-                <h1>Full Tests</h1>
+                <h1 className="h1Text">Full Tests</h1>
 
                 <Row gutter={16}>
                     {Array.isArray(dataSource2) && dataSource2.length > 0 ? (

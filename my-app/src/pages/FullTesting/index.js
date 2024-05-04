@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SideMenu from "../../component/TestsPage/SideMenu";
-import PageContent from "../../component/TestsPage/PageContent";
 import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';

@@ -1,5 +1,6 @@
-h1 {
+.h1Text {
     color: #FF6347;
     margin-bottom: 10px;
     margin-top: 10px;
+    text-align: left;
 }

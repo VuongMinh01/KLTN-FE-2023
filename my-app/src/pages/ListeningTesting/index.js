@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
-import { Button, Input } from "antd";
+import { Button } from "antd";
 export default function ListeningTesting() {
 
     const [currentPage, setCurrentPage] = useState('part 5');
@@ -24,15 +24,19 @@ export default function ListeningTesting() {
                 </ul>
             </div>
             <div className="main-content">
-                {currentPage === 'part 5' && <Part5 />}
-                {currentPage === 'part 6' && <Part6 />}
-                {currentPage === 'part 7' && <Part7 />}
+                {currentPage === 'part 5' && <Part5 changePage={changePage} />}
+                {currentPage === 'part 6' && <Part6 changePage={changePage} />}
+                {currentPage === 'part 7' && <Part7 changePage={changePage} />}
             </div>
         </div>
     );
 }
 
-function Part5() {
+function Part5(props) {
+    const handleClick = () => {
+        // Call changePage function to change the page
+        props.changePage('part 6');
+    };
     return (
         <Container fluid>
 
@@ -67,12 +71,19 @@ function Part5() {
                     </div>
                 </Col>
             </Row>
-            <Button>Next Part</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 }
 
-function Part6() {
+function Part6(props) {
+    const handleClick = () => {
+        // Call changePage function to change the page
+        props.changePage('part 7');
+    };
+    const handlePreviousClick = () => {
+        props.changePage('part 5');
+    };
     return (
         <Container fluid>
             <h1>Part 6</h1>
@@ -108,9 +119,9 @@ function Part6() {
                     </div>
                 </Col>
             </Row>
-            <Button>Previous Part</Button>
+            <Button onClick={handlePreviousClick}>Previous Part</Button>
 
-            <Button>Next Part</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 
@@ -118,7 +129,10 @@ function Part6() {
 
 
 
-function Part7() {
+function Part7(props) {
+    const handlePreviousClick = () => {
+        props.changePage('part 6');
+    };
     return (
         <Container fluid>
             <h1>Part 7</h1>
@@ -154,6 +168,7 @@ function Part7() {
                     </div>
                 </Col>
             </Row>
+            <Button onClick={handlePreviousClick}>Previous Part</Button>
 
             <Button>Submit</Button>
         </Container>
