@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
+import { getQuestionList } from "../../utils/APIRoutes";
 import { Button, Input } from "antd";
 export default function ReadingTesting() {
 
@@ -15,7 +16,11 @@ export default function ReadingTesting() {
         console.log(e._id);
     }
 
+
+
     return (
+
+
         <div className="App">
             <Header />
             <button onClick={console}>click me</button>
@@ -54,14 +59,9 @@ function Part1(props) {
                 <Col xs={12}>
                     <div style={{ border: '1px solid black' }}>
                         <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu 1</h3>
-
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-
                             <audio controls="true" src={'audio'} ></audio>
                         </div>
-
-
                         <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
                             <img alt="preview " src={'image'} style={{ width: 300 }} />
                         </div>

@@ -20,4 +20,4 @@ export const deleteTest = `${host}/tests/delete`
 
 export const getUser = `${host}/users/me`;
 
-export const getQuestionList = `${host}/questions/list/:test_id`
+export const getQuestionList = `${host}/questions/list`
