@@ -6,7 +6,7 @@ import { getAllTestReading, getAllTestListening, getAllFullTest } from "../../ut
 import axios from "axios";
 import { Link } from 'react-router-dom'; // Import Link
 import '../../css/TestingPage.css';
-
+import Image from '../../assets/test.avif'
 export default function TestsingPage() {
     const { Meta } = Card;
     const [loading, setLoading] = useState(false)
@@ -75,7 +75,7 @@ export default function TestsingPage() {
                                     <Card
                                         hoverable
                                         style={{ marginBottom: '16px' }}
-                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                        cover={<img alt={item.name} src={Image} />}
                                     >
                                         <Meta title={item.title} description={item.description} />
                                     </Card>
@@ -98,7 +98,7 @@ export default function TestsingPage() {
                                     <Card
                                         hoverable
                                         style={{ marginBottom: '16px' }}
-                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                        cover={<img alt={item.name} src={Image} />}
                                     >
                                         <Meta title={item.title} description={item.description} />
                                     </Card>
@@ -121,7 +121,7 @@ export default function TestsingPage() {
                                     <Card
                                         hoverable
                                         style={{ marginBottom: '16px' }}
-                                        cover={<img alt={item.name} src={item.imageUrl} />}
+                                        cover={<img alt={item.name} src={Image} />}
                                     >
                                         <Meta title={item.title} description={item.description} />
                                     </Card>
