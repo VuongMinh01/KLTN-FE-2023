@@ -19,7 +19,24 @@ export default function TestsingPage() {
         getAllFullTests();
     }, [loading]);
 
+    const calculateSpan = (length) => {
+        // Define the number of items per row when there's only one item
+        const itemsPerRowForSingleItem = 4;
 
+        // Set the default span value for multiple items
+        let span = 12; // This corresponds to 1/2 width when there are 2 items per row
+
+        // If there's only one item, set the span to occupy the full width
+        if (length === 1) {
+            span = 24; // This corresponds to full width when there's only one item
+        } else if (length === 2) {
+            span = 12; // This corresponds to 1/2 width when there are 2 items per row
+        } else if (length === 3) {
+            span = 8; // This corresponds to 1/3 width when there are 3 items per row
+        } // Add more conditions as needed for different scenarios
+
+        return span;
+    };
 
     const getAllReadingTests = () => {
         axios.get(getAllTestReading, {
@@ -115,9 +132,10 @@ export default function TestsingPage() {
                 <Row gutter={16}>
                     {Array.isArray(dataSource2) && dataSource2.length > 0 ? (
                         dataSource2.map(item => (
-                            <Col span={8} key={item._id}>
-                                <Link to={`/study/full-test/${item._id}`}>
+                            // <Col span={calculateSpan(dataSource2.length)} key={item._id}>
+                            <Col span={24} key={item._id}>
 
+                                <Link to={`/study/full-test/${item._id}`}>
                                     <Card
                                         hoverable
                                         style={{ marginBottom: '16px' }}
@@ -126,7 +144,6 @@ export default function TestsingPage() {
                                         <Meta title={item.title} description={item.description} />
                                     </Card>
                                 </Link>
-
                             </Col>
                         ))
                     ) : (

@@ -12,46 +12,43 @@ import { getUser } from "../../utils/APIRoutes";
 export default function Admin() {
 
     const navigate = useNavigate();
-    // useEffect(() => {
-    //     if (localStorage.getItem('user')) {
-    //         navigate('/admin')
-    //     }
-    // }, [])
-    // const navigate = useNavigate();
+
     useEffect(() => {
         checkLogout()
     }, []);
-    const checkLogout = async (e) => {
+    const checkLogout = async () => {
         try {
-
-            const token = localStorage.getItem("user");
-            if (token === null)
+            const token = await localStorage.getItem("user");
+            if (token === null) {
                 navigate('/login');
-
-        } catch (e) {
-            console.error();
+            }
+        } catch (error) {
+            console.error('Error checking logout:', error);
         }
-
     }
     const [logOut, setLogout] = useState(false)
-    let name1 = '';
-    let verify1 = '';
     const token = localStorage.getItem("user").replace(/"/g, '');
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
-    axios.get(getUser
-        ,
-        config
-    ).then((response) => {
-        const checkToken = response.data.result.name;
-        console.log(checkToken);
-        name1 = checkToken;
-        localStorage.setItem("verify", JSON.stringify(response.data.result.verify));
-        console.log(response.data);
-        console.log(response.data.result.verify);
 
-    });
+    axios.get(getUser, config)
+        .then((response) => {
+            localStorage.setItem("verify", JSON.stringify(response.data.result.verify));
+        })
+        .catch((error) => {
+            // Handle error
+            console.error('Error:', error);
+            // Display a toast alert with the error message
+            showToast('Phiên đăng nhập hết hạn ');
+        });
+
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     return (
 
         <Container fluid>

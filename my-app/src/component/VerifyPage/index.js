@@ -14,18 +14,28 @@ export default function Verify() {
     const [loading, setLoading] = useState(false)
 
     const [verify, setVerify] = useState('');
-    const onSend = (e) => {
+    const onSend = async (e) => {
         e.preventDefault();
-        axios.post(verifyEmail, verify);
-        console.log(verify);
-    }
+        try {
+            const response = await axios.post(verifyEmail, verify);
+            if (response.data.status === 'success') {
+                setVerifyAccount(true); // Account verified
+            } else {
+                console.error('Verification failed:', response.data.error);
+                // Handle verification failure (e.g., display error message)
+            }
+        } catch (error) {
+            console.error('Error verifying email:', error);
+            // Handle error (e.g., display error message)
+        }
+    };
 
     const verify1 = localStorage.getItem("verify");
     const [verifyAccount, setVerifyAccount] = useState(false);
     useEffect(() => {
         setLoading(true);
         checkVerify();
-    }, [loading]);
+    }, [loading, verifyAccount]);
     const checkVerify = async (e) => {
         try {
 

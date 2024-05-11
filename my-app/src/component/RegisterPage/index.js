@@ -42,28 +42,57 @@ export default function RegisterPage() {
         return true;
     };
 
+    // const onButtonClick = async (e) => {
+    //     e.preventDefault();
+    //     if (handleValidation()) {
+    //         console.log("in validtaion", registerRoute);
+    //         const { password, confirm_password, email, name, date_of_birth } = values;
+    //         const { data } = await axios.post(registerRoute, {
+    //             name,
+    //             email,
+    //             password,
+    //             confirm_password,
+    //             date_of_birth,
+    //         });
+    //         console.log(values);
+    //         if (data.status === false) {
+    //             toast.error(data.msg, toastOptions);
+    //         }
+    //         if (data.message === "Register success") {
+    //             localStorage.setItem("user", JSON.stringify(data.user));
+    //             navigate("/user/verify")
+    //         }
+    //     }
+    // }
+    // code moi
     const onButtonClick = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission behavior
+        // Perform client-side validation
         if (handleValidation()) {
-            console.log("in validtaion", registerRoute);
-            const { password, confirm_password, email, name, date_of_birth } = values;
-            const { data } = await axios.post(registerRoute, {
-                name,
-                email,
-                password,
-                confirm_password,
-                date_of_birth,
-            });
-            console.log(values);
-            if (data.status === false) {
-                toast.error(data.msg, toastOptions);
-            }
-            if (data.message === "Register success") {
-                localStorage.setItem("user", JSON.stringify(data.user));
-                navigate("/user/verify")
+            // Parse the input date string and convert it to the desired format
+            const dobParts = values.date_of_birth.split('/'); // Split the input by '/'
+            const formattedDOB = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`; // Format as "yyyy-mm-dd"
+            const isoFormattedDOB = new Date(formattedDOB).toISOString(); // Convert to ISO string format
+
+            // Make the POST request with the formatted date of birth
+            try {
+                const { data } = await axios.post(registerRoute, {
+                    ...values,
+                    date_of_birth: isoFormattedDOB, // Use the formatted date of birth
+                });
+                if (data.status === false) {
+                    toast.error(data.msg);
+                } else if (data.message === "Register success") {
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    navigate("/user/verify")
+                }
+            } catch (error) {
+                console.error('Error registering user:', error);
+                toast.error('An error occurred. Please try again later.');
             }
         }
-    }
+    };
+
 
     const [values, setValues] = useState({
         name: "",

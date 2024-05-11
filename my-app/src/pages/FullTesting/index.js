@@ -4,7 +4,7 @@ import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input } from "antd";
-import { getQuestionList } from "../../utils/APIRoutes";
+import { getQuestionList, submitTest } from "../../utils/APIRoutes";
 import { useLocation } from 'react-router-dom';
 
 import axios from "axios";
@@ -19,6 +19,11 @@ export default function FullTesting() {
     };
     const [dataSource, setDataSource] = useState([])
     const [selectedAnswersPart, setSelectedAnswersPart] = useState(Array.from({ length: 200 }).fill(null));
+
+
+    const [questions, setQuestions] = useState([]); // State to store complete question data
+    const [totalMarks, setTotalMarks] = useState(null); // Initialize totalMarks state
+
 
 
     useEffect(() => {
@@ -39,16 +44,20 @@ export default function FullTesting() {
     const [modifiedDataSource, setModifiedDataSource] = useState([]);
 
     const handleRadioChangePart = (index, value) => {
-        console.log("handleRadioChangePart called"); // Add this line
+        console.log("handleRadioChangePart called");
         const updatedSelectedAnswers = [...selectedAnswersPart];
         updatedSelectedAnswers[index] = value;
         setSelectedAnswersPart(updatedSelectedAnswers);
+
         const selectedAnswer = dataSource[index]?.answers.find(answer => answer.order_answer === value);
         if (selectedAnswer) {
-            // Extract content_answer and order_answer from the selected answer object
             const { content_answer, order_answer } = selectedAnswer;
-            // Update selected answer information in the dataSource
-            const updatedDataSource = [...dataSource];
+            const updatedDataSource = [...modifiedDataSource];
+
+            if (!updatedDataSource[index]) {
+                updatedDataSource[index] = {}; // Initialize object if it doesn't exist
+            }
+
             updatedDataSource[index] = {
                 ...updatedDataSource[index],
                 selected_at: {
@@ -56,18 +65,16 @@ export default function FullTesting() {
                     order_answer
                 }
             };
+
             setModifiedDataSource(updatedDataSource);
             console.log("Data at index ", index, updatedDataSource[index]);
-
         }
-
-
     };
 
 
 
     const getListQuestion = (test_id) => {
-        const host = window.location.origin; // Get the base URL of the current page
+        const host = window.location.origin;
         const getQuestionList1 = `${getQuestionList}/${test_id}`;
         axios.get(getQuestionList1, {
             params: {
@@ -76,12 +83,62 @@ export default function FullTesting() {
             }, headers
         }).then((response) => {
             const questions = response.data.result.questions;
-            setDataSource(questions); // Update dataSource state
-            console.log(questions, 'data list'); // Use the updated data directly
+            setDataSource(questions);
+            setQuestions(questions); // Update questions state
+            console.log(questions, 'data list');
         }).catch((error) => {
             console.error('Error fetching list of questions:', error);
         });
     }
+
+
+
+    const handleSubmit = () => {
+        // Ensure questions and modifiedDataSource have data
+        console.log('Questions length:', questions.length);
+        console.log('ModifiedDataSource length:', modifiedDataSource.length);
+        if (questions.length === 0 || modifiedDataSource.length === 0) {
+            console.error('Questions or modifiedDataSource is empty.');
+            return;
+        }
+
+        // Construct the testData object with selected answers
+        const testData = {
+            total_time: 111, // Example value, replace with actual total time
+            test_id: getTestIdFromURL(location.pathname), // Use the test ID obtained from the URL
+            questions: questions.map((question, index) => ({
+                _id: question._id, // Add question ID
+                test_id: question.test_id, // Add test ID
+                num_quest: question.num_quest, // Add question number
+                description: question.description, // Add question description
+                content: question.content, // Add question content
+                score: question.score, // Add question score
+                created_at: question.created_at, // Add creation date
+                updated_at: question.updated_at, // Add last update date
+                answers: question.answers, // Add answer options
+                correct_at: question.correct_at, // Add correct answer
+                selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null // Add selected answer object or null
+            }))
+        };
+
+        // Make a POST request to submit the test data
+        axios.post(submitTest, testData, { headers })
+            .then(response => {
+                // Handle successful response
+                const { total_marks } = response.data.result;
+                setTotalMarks(total_marks); // Update totalMarks state
+                setCurrentPage('finish');
+
+                // You can display a success message or perform any other actions here
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error submitting test:', error);
+                // You can display an error message or perform any other error handling here
+            });
+
+    };
+
 
     return (
         <div className="App">
@@ -136,8 +193,11 @@ export default function FullTesting() {
                     dataSource={dataSource}
                     selectedAnswers={selectedAnswersPart}
                     onRadioChange={handleRadioChangePart} />}
+                {currentPage === 'finish' && <Finish totalMarks={totalMarks} />}
+
             </div>
 
+            <Button onClick={handleSubmit}>Submit Test</Button>
 
         </div>
     );
@@ -155,7 +215,6 @@ function Part1(props) {
         props.onRadioChange(index, value); // Call the parent component's handler
     };
 
-    const [selectedAnswers, setSelectedAnswers] = useState(props.selectedAnswers);
 
     return (
         <Container fluid>
@@ -807,4 +866,16 @@ function Part7(props) {
     );
 
 }
-
+function Finish({ totalMarks }) {
+    return (
+        <Container fluid>
+            <Row style={{ backgroundColor: 'cyan', border: '1px solid ', borderRadius: '10px', width: '70vw', height: '70vh', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Col>
+                    <h1 style={{}}>Test Submitted Successfully</h1>
+                    <p>Thank you for completing the test.</p>
+                    <p>Total Marks: {totalMarks}</p>
+                </Col>
+            </Row>
+        </Container>
+    );
+}

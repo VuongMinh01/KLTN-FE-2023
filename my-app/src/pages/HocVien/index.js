@@ -64,7 +64,14 @@ export default function HocVien() {
                     title: "Email",
                     dataIndex: "email",
                 },
-
+                {
+                    key: '3',
+                    title: "Xác nhận tài khoản",
+                    dataIndex: "verify",
+                    render: (verify) => {
+                        return verify === 0 ? 'No' : 'Yes';
+                    },
+                },
                 {
                     key: '4',
                     title: "Actions",

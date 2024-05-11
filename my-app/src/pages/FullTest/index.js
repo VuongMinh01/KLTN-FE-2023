@@ -1,106 +1,130 @@
-import { Space, Table, Typography, Col, Form, Row, Modal } from "antd";
+import { Space, Table, Typography, Col, Form, Row, Modal, Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import { deleteTest, getAllTestListening } from "../../utils/APIRoutes";
+import { deleteTest, getAllFullTest, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
 
-import { ToastContainer, toast } from 'react-toastify';
-import { Navigate, useNavigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import '../../css/Reading.css'
+import Column from "antd/es/table/Column";
+const { TextArea } = Input;
 
 export default function FullTest() {
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
-
-
-    // const [search, setSearch] = useState();
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
 
+    const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
+    const [imageFile, setImageFile] = useState(null);
+    const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
 
-    const showModalQuestion = (record) => {
-        setIsModalQuestionOpen(true);
-    }
+    const [values, setValues] = useState({
+        num_quest: 0,
+        content: "",
+        description: "",
+        test_id: "",
+        score: 0,
+        answers: [],
+        correct_at: {},
+    });
+    const [questionList, setQuestionList] = useState([]); // State variable to store the question list
+
+
+    // Modal
+    const showModal = (record) => {
+        // console.log("Clicked record:", record);
+        // // setTestId(record._id);
+        // console.log(record._id, '3232')
+        // setIsModalOpen(true);
+
+        console.log("Clicked record:", record);
+        setValues({
+            ...values,
+            test_id: record._id // Update the source_id in the valuesTest state
+        });
+        console.log(record._id, '333');
+        setIsModalOpen(true);
+
+    };
+
     const handleQuestionCancel = () => {
         setIsModalQuestionOpen(false);
     }
-
-    // Modal
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    // Drawer
-    const showDrawer = () => {
-        // Navigate('/admin/minitest/add')
-        setOpen(true);
-
-    };
-    const onClose = () => {
-        setOpen(false);
-    };
     useEffect(() => {
         setLoading(true);
         getAllTest();
     }, [loading]);
     // Load data from db
 
+    const handleOnChangeNumber = (e) => {
+        setValues({ ...values, [e.target.name]: parseInt(e.target.value) });
+
+    }
     const getAllTest = () => {
-        console.log('lan 1')
-        axios.get(getAllTestListening, {
+        axios.get(getAllFullTest, {
             params: {
                 limit: 10,
                 page: 1,
             }
         }).then((response) => {
-            console.log(response.data.result.tests, '1');
-
             setDataSource(response.data.result.tests);
-
-
         });
 
     }
-    const updateTable = (data) => {
-        setDataSource(previousState => {
-            setLoading(false)
-            return previousState
-        });
+    const handleOnChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
     }
 
-    // const handleOnChange = (e) => {
-    //     setValues({ ...values, [e.target.name]: e.target.value });
 
-    // }
+    const handleContentTypeChange = (e) => {
+        setContentType(e.target.value);
+    };
+    const handleContentTypeChange1 = (e) => {
+        setContentType1(e.target.value);
+    };
+    // Function to handle image upload
+    const handleImageUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+        }
+    };
+
+    const clickButton = (e) => {
+        // code huong dan
+        // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
+        // // console.log(values, 'duoi');
+
+        console.log("Clicked value:", e.target.value);
+
+        const order_answer = e.target.value; // Get the value of the clicked radio button
+        const content_answer = e.target.nextElementSibling.value; // Get the content of the answer corresponding to the clicked radio button
+
+        // Update correct_at with the selected answer
+        setValues({
+            ...values,
+            correct_at: {
+                order_answer,
+                content_answer
+            }
+        });
+
+        console.log("Clicked value:", order_answer);
+        console.log("Content of the answer:", content_answer);
+    }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
+
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     };
 
-    // const handleClick = async (e) => {
-    //     console.log(config);
-    //     e.preventDefault();
-    //     if (handleValidation()) {
-    //         const { source_id, title, description, timeline } = values;
-    //         const { data } = await axios.post(addCustomer, {
-    //             source_id, title, description, timeline,
 
-    //         }, config)
-    //         if (data.status === false) {
-    //             console.log("Thêm thất bại");
-    //         }
-    //         if (data.status === true) {
-    //             setLoading(true)
-    //             // updateTable(data.customer)
-    //             console.log(dataSource);
-    //             console.log("Thêm thành công");
-    //             onClose();
-    //         }
-    //     }
-    // };
     // Modal button
     const handleOk = async () => {
         setIsModalOpen(false);
@@ -110,7 +134,12 @@ export default function FullTest() {
         setIsModalOpen(false);
     }
 
-
+    const updateTable = (data) => {
+        setDataSource(previousState => {
+            setLoading(false)
+            return previousState
+        });
+    }
 
 
     // Valid khi thêm
@@ -143,18 +172,7 @@ export default function FullTest() {
         theme: "dark"
     };
 
-    const [audio, setAudio] = useState();
-    const onAudioChange = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setAudio(URL.createObjectURL(event.target.files[0]));
-        }
-    }
-    const [image, setImage] = useState(null);
-    const onImageChange = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setImage(URL.createObjectURL(event.target.files[0]));
-        }
-    }
+
     const onDeleteService = async (e) => {
         console.log(e._id, '1');
         console.log(e.source_id, '2');
@@ -169,13 +187,151 @@ export default function FullTest() {
         updateTable();
         console.log('deleted');
     }
+
+
+    const handleAddQuestion = async (e) => {
+        e.preventDefault();
+        values['answers'] = [{
+            order_answer: "A",
+            content_answer: values.content_answer_1,
+        }, {
+            order_answer: "B",
+            content_answer: values.content_answer_2,
+        }, {
+            order_answer: "C",
+            content_answer: values.content_answer_3,
+        }, {
+            order_answer: "D",
+            content_answer: values.content_answer_4,
+        }]
+
+
+        try {
+            const { data } = await axios.post(addQuestion, {
+                ...values
+            }, { headers })
+            setIsModalOpen(false);
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }
+
+
+
+    const [audioFile, setAudioFile] = useState(null);
+
+
+
+
+    const handleAudioUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setAudioFile(event.target.files[0]);
+        }
+    };
+
+    // const handleAddQuestion = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         let imageData = null;
+    //         let audioData = null;
+    //         // Upload image
+    //         if (imageFile) {
+    //             const formData = new FormData();
+    //             formData.append("image", imageFile);
+
+    //             const response = await axios.post(uploadImageEndpoint, formData, {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                     ...headers,
+    //                 },
+    //             });
+
+    //             imageData = response.data.url;
+    //         }
+
+    //         // Upload audio
+    //         if (audioFile) {
+    //             const formDataAudio = new FormData();
+    //             formDataAudio.append("audio", audioFile);
+
+    //             const responseAudio = await axios.post(uploadAudioEndpoint, formDataAudio, {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                     ...headers,
+    //                 },
+    //             });
+
+    //             audioData = responseAudio.data.url;
+    //         }
+
+    //         // Keep existing answers in the values object
+    //         const answers = [{
+    //             order_answer: "A",
+    //             content_answer: values.content_answer_1,
+    //         }, {
+    //             order_answer: "B",
+    //             content_answer: values.content_answer_2,
+    //         }, {
+    //             order_answer: "C",
+    //             content_answer: values.content_answer_3,
+    //         }, {
+    //             order_answer: "D",
+    //             content_answer: values.content_answer_4,
+    //         }];
+
+    //         // Construct form data including file URLs and answers
+    //         const formData = {
+    //             ...values,
+    //             answers,
+    //             image_url: imageData,
+    //             audio_url: audioData,
+    //         };
+
+    //         // Send form data to the server
+    //         const { data } = await axios.post(addQuestion, formData, { headers });
+
+    //         // Close the modal after successful submission
+    //         setIsModalOpen(false);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+    // }
+
+
+    const fetchQuestionList = async (testId) => {
+        try {
+            const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
+                params: {
+                    limit: 10, // Set your desired limit value here
+                    page: 1 // Set your desired page value here
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setQuestionList(response.data.result.questions); // Update questionList state with the fetched data
+        } catch (error) {
+            console.error("Error fetching question list:", error);
+        }
+    };
+
+    const showModalQuestion = (record) => {
+        setIsModalQuestionOpen(true);
+        fetchQuestionList(record._id); // Fetch question list for the clicked test_id
+    };
     return (
+
         <div>
             <Space size={20} direction={"vertical"}>
 
                 <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
 
-                {/* Nút chức năng  */}
+
 
                 {/* Table thông tin khách hàng */}
                 <Table
@@ -186,6 +342,7 @@ export default function FullTest() {
                             title: "Mã bài test",
                             dataIndex: "_id",
                         },
+
                         {
                             key: "2",
                             title: "Tiêu dề",
@@ -205,23 +362,29 @@ export default function FullTest() {
                         },
                         {
                             key: "5",
+                            title: "Mã courses",
+                            dataIndex: "source_id",
+                        },
+                        {
+                            key: "6",
                             title: "Actions",
+
                             render: (record) => {
                                 return (
-                                    <>
+                                    <div>
+
                                         <PlusOutlined onClick={() => showModal(record)}
                                         />
 
                                         <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
                                         <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
-
-                                    </>
+                                    </div>
                                 )
                             }
                         },
                     ]}
                     dataSource={dataSource}
-                    rowKey="test_id"
+                    rowKey="_id"
                     pagination={
                         {
                             pageSize: 10,
@@ -235,99 +398,183 @@ export default function FullTest() {
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalOpen} onOk={''} onCancel={handleCancel}
+                open={isModalOpen} onOk={handleAddQuestion} onCancel={handleCancel}
             >
                 <Form  >
-                    <Row vertical>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Mã bài thi"
+                                rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                            >
+                                <Input
+                                    // type="text"
+                                    // onChange={(e) => handleOnChange(e)}
+                                    // value={testId}
+                                    // name="test_id"
+                                    // placeholder="Nhập mã test" 
+                                    onChange={(e) => handleOnChange(e)}
+                                    type="text"
+                                    value={values.test_id}
+                                    name="test_id"
+                                    placeholder="Nhập mã test"
+                                />
+                            </Form.Item>
+                        </Col>
                         <Col span={24} >
                             <Form.Item
                                 label="Num quest"
                                 rules={[{ required: true, message: 'Num quest không được để trống' }]}
                             >
                                 <Input
-
+                                    onChange={handleOnChangeNumber}
                                     name="num_quest"
                                     placeholder="Nhập num quest" />
                             </Form.Item>
                         </Col>
 
-                        <Col span={24} >
-                            <Form.Item
 
-                                label="Mô tả"
-                                rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                        {/* // test */}
+
+
+                        <Col span={24}>
+                            <Form.Item
+                                label="Content Type"
+                                rules={[{ required: true, message: 'Please select content type' }]}
                             >
-                                <Input
-                                    name="description"
-                                    placeholder="Mô tả" />
+                                <Radio.Group onChange={handleContentTypeChange1} value={contentType1}>
+                                    <Radio value="text">Type Content</Radio>
+                                    <Radio value="audio">Upload Audio</Radio>
+                                </Radio.Group>
                             </Form.Item>
                         </Col>
-                        <Col span={24} >
-                            <Form.Item
+                        {contentType1 === 'text' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Mô tả"
+                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                                >
+                                    <TextArea
+                                        rows={4}
+                                        onChange={handleOnChange}
+                                        name="description"
+                                        placeholder="Mô tả"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        )}
+                        {contentType1 === 'audio' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Upload Audio"
+                                    rules={[{ required: true, message: 'Please upload an audio file' }]}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={handleAudioUpload}
+                                        className="filetype"
+                                        style={{ marginBottom: "10px" }}
+                                    />
+                                    <br />
+                                    {audioFile && <audio controls><source src={URL.createObjectURL(audioFile)} type="audio/mpeg" /></audio>}
+                                </Form.Item>
+                            </Col>
+                        )}
 
-                                label="Content"
-                                rules={[{ required: true, message: 'Content không được để trống' }]}
+                        <Col span={24}>
+                            <Form.Item
+                                label="Content Type"
+                                rules={[{ required: true, message: 'Please select content type' }]}
                             >
-                                <Input
-                                    name="content"
-                                    placeholder="Nhập content câu hỏi"
-                                />
+                                <Radio.Group onChange={handleContentTypeChange} value={contentType}>
+                                    <Radio value="text">Type Content</Radio>
+                                    <Radio value="image">Upload Image</Radio>
+                                </Radio.Group>
                             </Form.Item>
                         </Col>
-                        <Col style={{ padding: '10px' }}>
-                            <label>Question:</label> <br />
-                            <div className="divQuestion">
-                                <input type="radio" id="A" name="order_answer" value="A" />
-                                <input className="inputArea" type="text" name="content_answer" />
-                            </div>
-                            <div className="divQuestion">
+                        {contentType === 'text' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Content"
+                                    rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                >
+                                    <TextArea
+                                        rows={4}
+                                        onChange={handleOnChange}
+                                        name="content"
+                                        placeholder="Type content here"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        )}
+                        {contentType === 'image' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Upload Image"
+                                    rules={[{ required: true, message: 'Please upload an image' }]}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={handleImageUpload}
+                                        className="filetype"
+                                        style={{ marginBottom: "10px" }}
+                                    />
+                                    {imageFile && <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />}
+                                </Form.Item>
+                            </Col>
+                        )}
 
-                                <input type="radio" id="B" name="order_answer" value="B" />
-                                <input className="inputArea" type="text" name="content_answer" />
-                            </div>
 
-                            <div className="divQuestion">
+                        <Col span={24} style={{ padding: '10px' }}>
+                            <label>Answers:</label> <br />
+                            <div>
+                                <div className="divQuestion" >
+                                    <input type="radio" id="A" onClick={clickButton} name="order_answer" value="A" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_1" />
+                                </div>
+                                <div className="divQuestion">
 
-                                <input type="radio" id="C" name="order_answer" value="C" />
-                                <input className="inputArea" type="text" name="content_answer" />
-                            </div>
-                            <div className="divQuestion">
-                                <input type="radio" id="D" name="order_answer" value="D" />
-                                <input className="inputArea" type="text" name="content_answer" />
+                                    <input type="radio" onClick={clickButton} id="B" name="order_answer" value="B" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_2" />
+                                </div>
+
+                                <div className="divQuestion">
+
+                                    <input type="radio" onClick={clickButton} id="C" name="order_answer" value="C" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_3" />
+                                </div>
+                                <div className="divQuestion">
+                                    <input type="radio" onClick={clickButton} id="D" name="order_answer" value="D" />
+                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_4" />
+                                </div>
                             </div>
                         </Col>
+
                         <Col span={24} >
-
-                            <label>Audio:</label>
-                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                                <input name='audio' type="file" onChange={onAudioChange} className="filetype" style={{ marginBottom: '10px' }} />
-                                <audio controls="true" src={audio} ></audio>
-                            </div>
+                            <label>Score</label> <br />
+                            <input onChange={handleOnChangeNumber} type='number' name='score' placeholder="Nhập điểm câu hỏi"></input>
                         </Col>
-                        <Col span={24} >
 
-                            <label>Image:</label>
-                            <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                                <input type="file" onChange={onImageChange} className="filetype" style={{ marginBottom: '10px' }} />
-                                <img alt="preview " src={image} style={{ width: 300 }} />
-                            </div>
-                        </Col>
                     </Row>
 
                 </Form>
-
-
             </Modal>
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalQuestionOpen} onOk={''} onCancel={handleQuestionCancel}>
+                open={isModalQuestionOpen}
+                onCancel={() => setIsModalQuestionOpen(false)}
+                footer={null}
+            >
 
-
+                <Table dataSource={questionList} pagination={false} rowKey="_id" >
+                    <Table.Column title="Question ID" dataIndex="_id" key="_id" />
+                    <Table.Column title="Description" dataIndex="description" key="description" />
+                    <Table.Column title="Content" dataIndex="content" key="content" />
+                    <Table.Column title="Score" dataIndex="score" key="score" />
+                </Table>
 
             </Modal>
-        </div>
+        </div >
     )
 }

@@ -28,6 +28,11 @@ export default function SideMenu() {
                 }}
                 items={[
                     {
+                        label: "Thông tin tài khoản",
+                        key: '/user/informUser',
+                        icon: <UserOutlined />,
+                    },
+                    {
                         label: "Thay đổi mật khẩu",
                         key: '/user/changePassword',
                         icon: <UserOutlined />,
