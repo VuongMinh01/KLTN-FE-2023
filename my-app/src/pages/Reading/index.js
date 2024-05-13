@@ -1,6 +1,6 @@
-import { Space, Table, Typography, Col, Form, Row, Modal } from "antd";
+import { Space, Table, Typography, Col, Form, Row, Modal, Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import { deleteTest, getAllTestReading, addQuestion } from "../../utils/APIRoutes";
+import { deleteTest, getAllTestReading, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
+import Column from "antd/es/table/Column";
 const { TextArea } = Input;
 
 export default function Reading() {
@@ -18,6 +19,10 @@ export default function Reading() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
 
+    const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
+    const [imageFile, setImageFile] = useState(null);
+    const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
+
     const [values, setValues] = useState({
         num_quest: 0,
         content: "",
@@ -27,6 +32,7 @@ export default function Reading() {
         answers: [],
         correct_at: {},
     });
+    const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
 
     // Modal
@@ -45,9 +51,7 @@ export default function Reading() {
         setIsModalOpen(true);
 
     };
-    const showModalQuestion = (record) => {
-        setIsModalQuestionOpen(true);
-    }
+
     const handleQuestionCancel = () => {
         setIsModalQuestionOpen(false);
     }
@@ -77,21 +81,23 @@ export default function Reading() {
     }
 
 
+    const handleContentTypeChange = (e) => {
+        setContentType(e.target.value);
+    };
+    const handleContentTypeChange1 = (e) => {
+        setContentType1(e.target.value);
+    };
+    // Function to handle image upload
+
+
 
 
     const clickButton = (e) => {
-        // code anh Minh huong dan
+        // code huong dan
         // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
         // // console.log(values, 'duoi');
 
         console.log("Clicked value:", e.target.value);
-        // console.log("Current answers:", values['answers']);
-        // const correctAnswer = values['answers'].find(item => item.order_answer === e.target.value);
-        // console.log("Found correct answer:", correctAnswer);
-
-        // setValues({ ...values, correct_at: correctAnswer });
-
-        // console.log("Updated values:", values);
 
         const order_answer = e.target.value; // Get the value of the clicked radio button
         const content_answer = e.target.nextElementSibling.value; // Get the content of the answer corresponding to the clicked radio button
@@ -156,19 +162,7 @@ export default function Reading() {
     //     return true;
     // }
     // css thông báo
-    const toastOptions = {
-        position: "bottom-right",
-        autoClose: 8000,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "dark"
-    };
-    const [image, setImage] = useState(null);
-    const onImageChange = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setImage(URL.createObjectURL(event.target.files[0]));
-        }
-    }
+
 
     const onDeleteService = async (e) => {
         console.log(e._id, '1');
@@ -186,45 +180,148 @@ export default function Reading() {
     }
 
 
+    // const handleAddQuestion = async (e) => {
+    //     e.preventDefault();
+    //     values['answers'] = [{
+    //         order_answer: "A",
+    //         content_answer: values.content_answer_1,
+    //     }, {
+    //         order_answer: "B",
+    //         content_answer: values.content_answer_2,
+    //     }, {
+    //         order_answer: "C",
+    //         content_answer: values.content_answer_3,
+    //     }, {
+    //         order_answer: "D",
+    //         content_answer: values.content_answer_4,
+    //     }]
+
+
+    //     try {
+    //         const { data } = await axios.post(addQuestion, {
+    //             ...values
+    //         }, { headers })
+    //         setIsModalOpen(false);
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+
+    // }
+
+
+    const handleImageUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+
+            // If an image is selected, update content to the image URL
+            setValues({
+                ...values,
+                content: URL.createObjectURL(event.target.files[0])
+            });
+        }
+    };
+
+
     const handleAddQuestion = async (e) => {
         e.preventDefault();
-        values['answers'] = [{
-            order_answer: "A",
-            content_answer: values.content_answer_1,
-        }, {
-            order_answer: "B",
-            content_answer: values.content_answer_2,
-        }, {
-            order_answer: "C",
-            content_answer: values.content_answer_3,
-        }, {
-            order_answer: "D",
-            content_answer: values.content_answer_4,
-        }]
 
+        // Prepare answers
+        const answers = [
+            { order_answer: "A", content_answer: values.content_answer_1 },
+            { order_answer: "B", content_answer: values.content_answer_2 },
+            { order_answer: "C", content_answer: values.content_answer_3 },
+            { order_answer: "D", content_answer: values.content_answer_4 }
+        ];
 
-        try {
-            const { data } = await axios.post(addQuestion, {
-                ...values
-            }, { headers })
-            setIsModalOpen(false);
+        // Prepare data to send
+        let requestData = {
+            ...values,
+            answers
+        };
 
-        } catch (error) {
-            console.log(error);
+        // Check if there's an image file selected
+        if (imageFile) {
+            try {
+                // Create FormData object
+                const formData = new FormData();
+                formData.append('file', imageFile);
+
+                // Upload image to your server
+                const { data: { result } } = await axios.post(uploadImageEndpoint, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data', // Ensure correct content type
+                        ...headers
+                    }
+                });
+
+                // Add image URL to content
+                if (result && result.length > 0) {
+                    requestData = {
+                        ...requestData,
+                        content: result[0].url // Set content to image URL
+                    };
+                }
+            } catch (error) {
+                console.log('Error uploading image:', error);
+                // Handle error
+            }
         }
 
+        try {
+            // Send request with updated data
+            const { data } = await axios.post(addQuestion, requestData, { headers });
+            setIsModalOpen(false);
+        } catch (error) {
+            console.log('Error adding question:', error);
+            // Handle error
+        }
+    };
 
-    }
+
+
+
+    const [audioFile, setAudioFile] = useState(null);
 
 
 
 
+    const handleAudioUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setAudioFile(event.target.files[0]);
+        }
+    };
+
+
+    const fetchQuestionList = async (testId) => {
+        try {
+            const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
+                params: {
+                    limit: 10, // Set your desired limit value here
+                    page: 1 // Set your desired page value here
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setQuestionList(response.data.result.questions); // Update questionList state with the fetched data
+        } catch (error) {
+            console.error("Error fetching question list:", error);
+        }
+    };
+
+    const showModalQuestion = (record) => {
+        setIsModalQuestionOpen(true);
+        fetchQuestionList(record._id); // Fetch question list for the clicked test_id
+    };
     return (
 
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách bài Reading Test</Typography.Title>
+                <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
 
 
 
@@ -303,11 +400,6 @@ export default function Reading() {
                                 rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
-                                    // type="text"
-                                    // onChange={(e) => handleOnChange(e)}
-                                    // value={testId}
-                                    // name="test_id"
-                                    // placeholder="Nhập mã test" 
                                     onChange={(e) => handleOnChange(e)}
                                     type="text"
                                     value={values.test_id}
@@ -328,50 +420,100 @@ export default function Reading() {
                             </Form.Item>
                         </Col>
 
-                        <Col span={24} >
-                            <Form.Item
 
-                                label="Mô tả"
-                                rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                        {/* // test */}
+
+
+                        <Col span={24}>
+                            <Form.Item
+                                label="Content Type"
+                                rules={[{ required: true, message: 'Please select content type' }]}
                             >
-                                <TextArea rows={4}
-                                    onChange={handleOnChange}
-                                    name="description"
-                                    placeholder="Mô tả" />
+                                <Radio.Group onChange={handleContentTypeChange1} value={contentType1}>
+                                    <Radio value="text">Type Content</Radio>
+                                    <Radio value="audio">Upload Audio</Radio>
+                                </Radio.Group>
                             </Form.Item>
                         </Col>
-                        <Col span={24} >
-                            <Form.Item
-
-                                label="Content"
-                                rules={[{ required: true, message: 'Content không được để trống' }]}
-                            >
-                                <TextArea rows={4}
-                                    onChange={handleOnChange}
-                                    name="content"
-                                    placeholder="Nhập content câu hỏi"
-                                />
-
-                            </Form.Item>
-                            <Col span={24} >
-
-                                <label>Image:</label>
-                                <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-
-                                    <input type="file" onChange={onImageChange} className="filetype" style={{ marginBottom: '10px' }} />
-                                    <img alt="preview " src={image} style={{ width: 300 }} />
-                                </div>
+                        {contentType1 === 'text' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Mô tả"
+                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                                >
+                                    <TextArea
+                                        rows={4}
+                                        onChange={handleOnChange}
+                                        name="description"
+                                        placeholder="Mô tả"
+                                    />
+                                </Form.Item>
                             </Col>
-                        </Col>
-                        <Col span={24} style={{ padding: '10px' }}>
+                        )}
+                        {contentType1 === 'audio' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Upload Audio"
+                                    rules={[{ required: true, message: 'Please upload an audio file' }]}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={handleAudioUpload}
+                                        className="filetype"
+                                        style={{ marginBottom: "10px" }}
+                                    />
+                                    <br />
+                                    {audioFile && <audio controls><source src={URL.createObjectURL(audioFile)} type="audio/mpeg" /></audio>}
+                                </Form.Item>
+                            </Col>
+                        )}
 
+                        <Col span={24}>
+                            <Form.Item
+                                label="Content Type"
+                                rules={[{ required: true, message: 'Please select content type' }]}
+                            >
+                                <Radio.Group onChange={handleContentTypeChange} value={contentType}>
+                                    <Radio value="text">Type Content</Radio>
+                                    <Radio value="image">Upload Image</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </Col>
+                        {contentType === 'text' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Content"
+                                    rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                >
+                                    <TextArea
+                                        rows={4}
+                                        onChange={handleOnChange}
+                                        name="content"
+                                        placeholder="Type content here"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        )}
+                        {contentType === 'image' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Upload Image"
+                                    rules={[{ required: true, message: 'Please upload an image' }]}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={handleImageUpload}
+                                        className="filetype"
+                                        style={{ marginBottom: "10px" }}
+                                    />
+                                    {imageFile && <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />}
+                                </Form.Item>
+                            </Col>
+                        )}
+
+
+                        <Col span={24} style={{ padding: '10px' }}>
                             <label>Answers:</label> <br />
-                            {/* answers gửi order va content , gửi cả 4 */}
-                            {/* correct gửi 1 */}
-                            {/* 
-                            // Khi radio button đc chọn, set correct at order_answer , content_answer ??
-                            // answer gửi thẳng 4 order_answer , content_answer gửi input 
-                            */}
                             <div>
                                 <div className="divQuestion" >
                                     <input type="radio" id="A" onClick={clickButton} name="order_answer" value="A" />
@@ -407,7 +549,17 @@ export default function Reading() {
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalQuestionOpen} onOk={''} onCancel={handleQuestionCancel}>
+                open={isModalQuestionOpen}
+                onCancel={() => setIsModalQuestionOpen(false)}
+                footer={null}
+            >
+
+                <Table dataSource={questionList} pagination={false} rowKey="_id" >
+                    <Table.Column title="Question ID" dataIndex="_id" key="_id" />
+                    <Table.Column title="Description" dataIndex="description" key="description" />
+                    <Table.Column title="Content" dataIndex="content" key="content" />
+                    <Table.Column title="Score" dataIndex="score" key="score" />
+                </Table>
 
             </Modal>
         </div >

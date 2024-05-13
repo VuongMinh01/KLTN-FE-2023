@@ -106,7 +106,11 @@ export default function SideMenu() {
                         key: '/admin/verify',
                         icon: <CheckCircleOutlined />,
                     },
-
+                    {
+                        label: "Kiểm tra",
+                        key: '/admin/kiemtra',
+                        icon: <CheckCircleOutlined />,
+                    },
                     {
                         label: "Đăng xuất",
                         key: '/signout',

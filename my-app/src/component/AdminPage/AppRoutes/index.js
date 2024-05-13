@@ -8,6 +8,7 @@ import Verify from "../../VerifyPage";
 import Listening from "../../../pages/Listening";
 import HocVien from "../../../pages/HocVien";
 import DashBoard from "../../../pages/DashBoard";
+import KiemTra from "../../../pages/KiemTra";
 export default function AppRoutes() {
     return (
         <Routes>
@@ -20,6 +21,7 @@ export default function AppRoutes() {
             <Route path="/courses" element={<Courses />}></Route>
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/hocvien" element={<HocVien />}></Route>
+            <Route path="/kiemtra" element={<KiemTra />}></Route>
 
         </Routes>
     )

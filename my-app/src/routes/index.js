@@ -16,7 +16,6 @@ import QuaKhuHoanThanh from '../component/NguPhapTongHop/QuaKhuHoanThanh';
 import TuongLai from '../component/NguPhapTongHop/TuongLai';
 import HienTaiHoanThanhTiepDien from '../component/NguPhapTongHop/HienTaiHoanThanhTiepDien';
 import QuaKhuHoanThanhTiepDien from '../component/NguPhapTongHop/QuaKhuHoanThanhTiepDien';
-
 const publicRoute = [
     { path: '/', component: LandingPage },
     { path: '/login', component: Login },
@@ -35,7 +34,6 @@ const publicRoute = [
     { path: '/nguphap/qua-khu-hoan-thanh', component: QuaKhuHoanThanh },
     { path: '/nguphap/qua-khu-hoan-thanh-tiep-dien', component: QuaKhuHoanThanhTiepDien },
     { path: '/nguphap/tuong-lai', component: TuongLai },
-
 ]
 
 const privateRoute = [

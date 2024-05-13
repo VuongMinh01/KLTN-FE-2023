@@ -23,6 +23,7 @@ export default function FullTesting() {
 
     const [questions, setQuestions] = useState([]); // State to store complete question data
     const [totalMarks, setTotalMarks] = useState(null); // Initialize totalMarks state
+    const [totalCorrect, setTotalCorrect] = useState(null);
 
 
 
@@ -126,6 +127,8 @@ export default function FullTesting() {
             .then(response => {
                 // Handle successful response
                 const { total_marks } = response.data.result;
+                const { total_correct } = response.data.result;
+                setTotalCorrect(total_correct);
                 setTotalMarks(total_marks); // Update totalMarks state
                 setCurrentPage('finish');
 
@@ -193,7 +196,7 @@ export default function FullTesting() {
                     dataSource={dataSource}
                     selectedAnswers={selectedAnswersPart}
                     onRadioChange={handleRadioChangePart} />}
-                {currentPage === 'finish' && <Finish totalMarks={totalMarks} />}
+                {currentPage === 'finish' && <Finish totalMarks={totalMarks} totalCorrect={totalCorrect} />}
 
             </div>
 
@@ -629,10 +632,10 @@ function Part5(props) {
 function Part6(props) {
     const handleClick = () => {
         // Call changePage function to change the page
-        props.changePage('part 5');
+        props.changePage('part 7');
     };
     const handlePreviousClick = () => {
-        props.changePage('part 3');
+        props.changePage('part 5');
     };
 
     const handleRadioChangePart6 = (index, value) => {
@@ -866,13 +869,14 @@ function Part7(props) {
     );
 
 }
-function Finish({ totalMarks }) {
+function Finish({ totalMarks, totalCorrect }) {
     return (
         <Container fluid>
             <Row style={{ backgroundColor: 'cyan', border: '1px solid ', borderRadius: '10px', width: '70vw', height: '70vh', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Col>
                     <h1 style={{}}>Test Submitted Successfully</h1>
                     <p>Thank you for completing the test.</p>
+                    <p>Total correct: {totalCorrect}/200</p>
                     <p>Total Marks: {totalMarks}</p>
                 </Col>
             </Row>

@@ -9,9 +9,12 @@ import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
 import Column from "antd/es/table/Column";
+
 const { TextArea } = Input;
 
 export default function FullTest() {
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
@@ -35,12 +38,11 @@ export default function FullTest() {
     const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
 
+
+
     // Modal
     const showModal = (record) => {
-        // console.log("Clicked record:", record);
-        // // setTestId(record._id);
-        // console.log(record._id, '3232')
-        // setIsModalOpen(true);
+
 
         console.log("Clicked record:", record);
         setValues({
@@ -88,11 +90,9 @@ export default function FullTest() {
         setContentType1(e.target.value);
     };
     // Function to handle image upload
-    const handleImageUpload = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setImageFile(event.target.files[0]);
-        }
-    };
+
+
+
 
     const clickButton = (e) => {
         // code huong dan
@@ -123,7 +123,10 @@ export default function FullTest() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     };
-
+    const headersForImage = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data' // Update content type for file upload
+    };
 
     // Modal button
     const handleOk = async () => {
@@ -164,13 +167,6 @@ export default function FullTest() {
     //     return true;
     // }
     // css thông báo
-    const toastOptions = {
-        position: "bottom-right",
-        autoClose: 8000,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "dark"
-    };
 
 
     const onDeleteService = async (e) => {
@@ -189,42 +185,99 @@ export default function FullTest() {
     }
 
 
+    // const handleAddQuestion = async (e) => {
+    //     e.preventDefault();
+    //     values['answers'] = [{
+    //         order_answer: "A",
+    //         content_answer: values.content_answer_1,
+    //     }, {
+    //         order_answer: "B",
+    //         content_answer: values.content_answer_2,
+    //     }, {
+    //         order_answer: "C",
+    //         content_answer: values.content_answer_3,
+    //     }, {
+    //         order_answer: "D",
+    //         content_answer: values.content_answer_4,
+    //     }]
+
+
+    //     try {
+    //         const { data } = await axios.post(addQuestion, {
+    //             ...values
+    //         }, { headers })
+    //         setIsModalOpen(false);
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+
+    // }
     const handleAddQuestion = async (e) => {
-        e.preventDefault();
-        values['answers'] = [{
-            order_answer: "A",
-            content_answer: values.content_answer_1,
-        }, {
-            order_answer: "B",
-            content_answer: values.content_answer_2,
-        }, {
-            order_answer: "C",
-            content_answer: values.content_answer_3,
-        }, {
-            order_answer: "D",
-            content_answer: values.content_answer_4,
-        }]
-
-
-        try {
-            const { data } = await axios.post(addQuestion, {
-                ...values
-            }, { headers })
-            setIsModalOpen(false);
-
-        } catch (error) {
-            console.log(error);
+        if (e) {
+            e.preventDefault(); // Prevent default form submission behavior if event object exists
         }
 
+        // Check if values object is defined
+        if (!values || typeof values !== 'object') {
+            console.log("Values object is undefined or not an object");
+            return;
+        }
 
-    }
+        // Check if the content field is empty
+        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+            console.log("Content must not be empty");
+            return; // Prevent further execution if content is empty
+        }
+
+        // Construct the answers array
+        const answers = [
+            { order_answer: "A", content_answer: values.content_answer_1 },
+            { order_answer: "B", content_answer: values.content_answer_2 },
+            { order_answer: "C", content_answer: values.content_answer_3 },
+            { order_answer: "D", content_answer: values.content_answer_4 }
+        ];
+
+        try {
+            // Make the POST request to add the question
+            const response = await axios.post(addQuestion, { ...values, answers }, { headers });
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                // Extract the URL from the response data
+                const imageUrl = response.data.data[0].url;
+
+                // Update values.content with the image URL
+                setValues({ ...values, content: imageUrl });
+
+                // Close the modal
+                setIsModalOpen(false);
+            } else {
+                // Handle other response statuses if needed
+                console.log('loi');
+            }
+        } catch (error) {
+            console.log(error);
+            // Handle error here, such as showing an error message to the user
+        }
+        setIsModalOpen(false)
+    };
+
+
+
+
+
+    const handleImageUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+        }
+    };
+
 
 
 
     const [audioFile, setAudioFile] = useState(null);
-
-
-
 
     const handleAudioUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -232,82 +285,14 @@ export default function FullTest() {
         }
     };
 
-    // const handleAddQuestion = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         let imageData = null;
-    //         let audioData = null;
-    //         // Upload image
-    //         if (imageFile) {
-    //             const formData = new FormData();
-    //             formData.append("image", imageFile);
-
-    //             const response = await axios.post(uploadImageEndpoint, formData, {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                     ...headers,
-    //                 },
-    //             });
-
-    //             imageData = response.data.url;
-    //         }
-
-    //         // Upload audio
-    //         if (audioFile) {
-    //             const formDataAudio = new FormData();
-    //             formDataAudio.append("audio", audioFile);
-
-    //             const responseAudio = await axios.post(uploadAudioEndpoint, formDataAudio, {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                     ...headers,
-    //                 },
-    //             });
-
-    //             audioData = responseAudio.data.url;
-    //         }
-
-    //         // Keep existing answers in the values object
-    //         const answers = [{
-    //             order_answer: "A",
-    //             content_answer: values.content_answer_1,
-    //         }, {
-    //             order_answer: "B",
-    //             content_answer: values.content_answer_2,
-    //         }, {
-    //             order_answer: "C",
-    //             content_answer: values.content_answer_3,
-    //         }, {
-    //             order_answer: "D",
-    //             content_answer: values.content_answer_4,
-    //         }];
-
-    //         // Construct form data including file URLs and answers
-    //         const formData = {
-    //             ...values,
-    //             answers,
-    //             image_url: imageData,
-    //             audio_url: audioData,
-    //         };
-
-    //         // Send form data to the server
-    //         const { data } = await axios.post(addQuestion, formData, { headers });
-
-    //         // Close the modal after successful submission
-    //         setIsModalOpen(false);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-
-    // }
 
 
-    const fetchQuestionList = async (testId) => {
+    const fetchQuestionList = async (testId, page) => {
         try {
             const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
                 params: {
-                    limit: 10, // Set your desired limit value here
-                    page: 1 // Set your desired page value here
+                    limit: 10,
+                    page: page,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -319,11 +304,69 @@ export default function FullTest() {
             console.error("Error fetching question list:", error);
         }
     };
-
     const showModalQuestion = (record) => {
         setIsModalQuestionOpen(true);
         fetchQuestionList(record._id); // Fetch question list for the clicked test_id
     };
+    // const handleClick = (e) => {
+    //     if (imageFile) {
+    //         const formData = new FormData(); // Create FormData object to send the file
+    //         formData.append('image', imageFile); // Append the image file to the FormData object
+
+    //         axios.post(uploadImageEndpoint, formData, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'multipart/form-data' // Update content type for file upload
+    //             }
+    //         }) // Send the POST request with the FormData and headers
+    //             .then(response => {
+    //                 console.log('Image uploaded successfully:', response);
+    //                 // Handle success response here
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error uploading image:', error);
+    //                 // Handle error response here
+    //             });
+    //     } else {
+    //         console.warn('No image selected.');
+    //         // Handle case where no image is selected
+    //     }
+    // };
+    const handleClick = (e) => {
+        if (imageFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('image', imageFile); // Append the image file to the FormData object
+
+            axios.post(uploadImageEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Image upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const imageUrl = responseData.data[0].url;
+                        console.log('Image URL:', imageUrl);
+                        // Update values.content with the image URL
+                        setValues({ ...values, content: imageUrl });
+                    } else {
+                        console.error('Image URL not found in response data:', responseData);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No image selected.');
+            // Handle case where no image is selected
+        }
+    };
+
+
+
     return (
 
         <div>
@@ -408,11 +451,6 @@ export default function FullTest() {
                                 rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
-                                    // type="text"
-                                    // onChange={(e) => handleOnChange(e)}
-                                    // value={testId}
-                                    // name="test_id"
-                                    // placeholder="Nhập mã test" 
                                     onChange={(e) => handleOnChange(e)}
                                     type="text"
                                     value={values.test_id}
@@ -513,13 +551,15 @@ export default function FullTest() {
                                     label="Upload Image"
                                     rules={[{ required: true, message: 'Please upload an image' }]}
                                 >
-                                    <input
-                                        type="file"
-                                        onChange={handleImageUpload}
-                                        className="filetype"
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    {imageFile && <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />}
+                                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+
+                                    {imageFile && (
+                                        <div>
+                                            <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />
+                                            {/* Render the button only if an image file is selected */}
+                                            {imageFile && <button onClick={handleClick}>Upload Image</button>}
+                                        </div>
+                                    )}
                                 </Form.Item>
                             </Col>
                         )}
@@ -566,13 +606,20 @@ export default function FullTest() {
                 onCancel={() => setIsModalQuestionOpen(false)}
                 footer={null}
             >
+                <Table
+                    dataSource={questionList}
+                    pagination={{
+                        pageSize: 10,
+                        // Callback to update currentPage
+                    }}
+                    rowKey={record => record._id}                >
 
-                <Table dataSource={questionList} pagination={false} rowKey="_id" >
+
                     <Table.Column title="Question ID" dataIndex="_id" key="_id" />
                     <Table.Column title="Description" dataIndex="description" key="description" />
                     <Table.Column title="Content" dataIndex="content" key="content" />
                     <Table.Column title="Score" dataIndex="score" key="score" />
-                </Table>
+                </Table >
 
             </Modal>
         </div >
