@@ -182,6 +182,7 @@ export default function FullTest() {
         setLoading(true)
         updateTable();
         console.log('deleted');
+        showToast('Xoá thành công')
     }
 
 
@@ -214,6 +215,59 @@ export default function FullTest() {
 
 
     // }
+    // const handleAddQuestion = async (e) => {
+    //     if (e) {
+    //         e.preventDefault(); // Prevent default form submission behavior if event object exists
+    //     }
+
+    //     // Check if values object is defined
+    //     if (!values || typeof values !== 'object') {
+    //         console.log("Values object is undefined or not an object");
+    //         return;
+    //     }
+
+    //     // Check if the content field is empty
+    //     if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+    //         console.log("Content must not be empty");
+    //         return; // Prevent further execution if content is empty
+    //     }
+    //     if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+    //         console.log("Description must not be empty");
+    //         return; // Prevent further execution if content is empty
+    //     }
+
+    //     // Construct the answers array
+    //     const answers = [
+    //         { order_answer: "A", content_answer: values.content_answer_1 },
+    //         { order_answer: "B", content_answer: values.content_answer_2 },
+    //         { order_answer: "C", content_answer: values.content_answer_3 },
+    //         { order_answer: "D", content_answer: values.content_answer_4 }
+    //     ];
+
+    //     try {
+    //         // Make the POST request to add the question
+    //         const response = await axios.post(addQuestion, { ...values, answers }, { headers });
+
+    //         // Check if the request was successful
+    //         if (response.status === 200) {
+    //             // Extract the URL from the response data
+    //             const imageUrl = response.data.data[0].url;
+    //             const audioUrl = response.data.data[0].url;
+    //             // Update values.content with the image URL
+    //             setValues({ ...values, content: imageUrl });
+
+    //             // Close the modal
+    //             setIsModalOpen(false);
+    //         } else {
+    //             // Handle other response statuses if needed
+    //             console.log('loi');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         // Handle error here, such as showing an error message to the user
+    //     }
+    //     setIsModalOpen(false)
+    // };
     const handleAddQuestion = async (e) => {
         if (e) {
             e.preventDefault(); // Prevent default form submission behavior if event object exists
@@ -222,13 +276,24 @@ export default function FullTest() {
         // Check if values object is defined
         if (!values || typeof values !== 'object') {
             console.log("Values object is undefined or not an object");
+            showToast('Values object is undefined or not an object')
+
             return;
         }
 
         // Check if the content field is empty
         if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
             console.log("Content must not be empty");
+            showToast('Content must not be empty')
             return; // Prevent further execution if content is empty
+        }
+
+        // Check if the description field is empty
+        if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+            console.log("Description must not be empty");
+            showToast('Description must not be empty')
+
+            return; // Prevent further execution if description is empty
         }
 
         // Construct the answers array
@@ -246,16 +311,26 @@ export default function FullTest() {
             // Check if the request was successful
             if (response.status === 200) {
                 // Extract the URL from the response data
-                const imageUrl = response.data.data[0].url;
+                const responseData = response.data.data[0];
+                let imageUrl, audioUrl;
 
-                // Update values.content with the image URL
-                setValues({ ...values, content: imageUrl });
+                // Check the type to distinguish between image and audio URLs
+                if (responseData.type === 'image') {
+                    imageUrl = responseData.url;
+                } else if (responseData.type === 'audio') {
+                    audioUrl = responseData.url;
+                }
 
+                // Update values.content with the image URL if available
+                // and values.description with the audio URL if available
+                setValues({ ...values, content: imageUrl, description: audioUrl });
+                showToast('thêm audio thành công');
                 // Close the modal
                 setIsModalOpen(false);
             } else {
                 // Handle other response statuses if needed
                 console.log('loi');
+                showToast('thêm audio không thành công')
             }
         } catch (error) {
             console.log(error);
@@ -287,12 +362,12 @@ export default function FullTest() {
 
 
 
-    const fetchQuestionList = async (testId, page) => {
+    const fetchQuestionList = async (testId) => {
         try {
             const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
                 params: {
                     limit: 10,
-                    page: page,
+                    page: 1,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -308,30 +383,7 @@ export default function FullTest() {
         setIsModalQuestionOpen(true);
         fetchQuestionList(record._id); // Fetch question list for the clicked test_id
     };
-    // const handleClick = (e) => {
-    //     if (imageFile) {
-    //         const formData = new FormData(); // Create FormData object to send the file
-    //         formData.append('image', imageFile); // Append the image file to the FormData object
 
-    //         axios.post(uploadImageEndpoint, formData, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'multipart/form-data' // Update content type for file upload
-    //             }
-    //         }) // Send the POST request with the FormData and headers
-    //             .then(response => {
-    //                 console.log('Image uploaded successfully:', response);
-    //                 // Handle success response here
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error uploading image:', error);
-    //                 // Handle error response here
-    //             });
-    //     } else {
-    //         console.warn('No image selected.');
-    //         // Handle case where no image is selected
-    //     }
-    // };
     const handleClick = (e) => {
         if (imageFile) {
             const formData = new FormData(); // Create FormData object to send the file
@@ -351,12 +403,18 @@ export default function FullTest() {
                         console.log('Image URL:', imageUrl);
                         // Update values.content with the image URL
                         setValues({ ...values, content: imageUrl });
+                        showToast('Upload hình ảnh thành công');
+
                     } else {
                         console.error('Image URL not found in response data:', responseData);
+                        showToast('Upload hình ảnh thất bại');
+
                     }
                 })
                 .catch(error => {
                     console.error('Error uploading image:', error);
+                    showToast('Upload hình ảnh thất bại');
+
                     // Handle error response here
                 });
         } else {
@@ -365,8 +423,51 @@ export default function FullTest() {
         }
     };
 
+    const handleAudioClick = () => {
+        if (audioFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('audio', audioFile); // Append the audio file to the FormData object
 
+            axios.post(uploadAudioEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Audio upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const audioUrl = responseData.data[0].url;
+                        console.log('Audio URL:', audioUrl);
+                        // Update values.description with the audio URL
+                        setValues({ ...values, description: audioUrl });
+                        showToast('Upload audio thành công');
 
+                    } else {
+                        console.error('Audio URL not found in response data:', responseData);
+                        showToast('Upload audio thất bại');
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading audio:', error);
+                    showToast('Upload audio thất bại');
+
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No audio selected.');
+            // Handle case where no audio is selected
+        }
+    };
+
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     return (
 
         <div>
@@ -514,7 +615,14 @@ export default function FullTest() {
                                         style={{ marginBottom: "10px" }}
                                     />
                                     <br />
-                                    {audioFile && <audio controls><source src={URL.createObjectURL(audioFile)} type="audio/mpeg" /></audio>}
+                                    {audioFile &&
+                                        <>
+                                            <audio controls>
+                                                <source src={URL.createObjectURL(audioFile)} type="audio/mp3" />
+                                            </audio>
+                                            <button onClick={handleAudioClick}>Upload audio</button>
+                                        </>
+                                    }
                                 </Form.Item>
                             </Col>
                         )}

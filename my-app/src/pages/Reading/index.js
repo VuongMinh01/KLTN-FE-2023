@@ -214,20 +214,28 @@ export default function Reading() {
     const handleImageUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
             setImageFile(event.target.files[0]);
-
-            // If an image is selected, update content to the image URL
-            setValues({
-                ...values,
-                content: URL.createObjectURL(event.target.files[0])
-            });
         }
     };
 
 
     const handleAddQuestion = async (e) => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault(); // Prevent default form submission behavior if event object exists
+        }
 
-        // Prepare answers
+        // Check if values object is defined
+        if (!values || typeof values !== 'object') {
+            console.log("Values object is undefined or not an object");
+            return;
+        }
+
+        // Check if the content field is empty
+        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+            console.log("Content must not be empty");
+            return; // Prevent further execution if content is empty
+        }
+
+        // Construct the answers array
         const answers = [
             { order_answer: "A", content_answer: values.content_answer_1 },
             { order_answer: "B", content_answer: values.content_answer_2 },
@@ -235,52 +243,76 @@ export default function Reading() {
             { order_answer: "D", content_answer: values.content_answer_4 }
         ];
 
-        // Prepare data to send
-        let requestData = {
-            ...values,
-            answers
-        };
-
-        // Check if there's an image file selected
-        if (imageFile) {
-            try {
-                // Create FormData object
-                const formData = new FormData();
-                formData.append('file', imageFile);
-
-                // Upload image to your server
-                const { data: { result } } = await axios.post(uploadImageEndpoint, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data', // Ensure correct content type
-                        ...headers
-                    }
-                });
-
-                // Add image URL to content
-                if (result && result.length > 0) {
-                    requestData = {
-                        ...requestData,
-                        content: result[0].url // Set content to image URL
-                    };
-                }
-            } catch (error) {
-                console.log('Error uploading image:', error);
-                // Handle error
-            }
-        }
-
         try {
-            // Send request with updated data
-            const { data } = await axios.post(addQuestion, requestData, { headers });
-            setIsModalOpen(false);
+            // Make the POST request to add the question
+            const response = await axios.post(addQuestion, { ...values, answers }, { headers });
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                // Extract the URL from the response data
+                const imageUrl = response.data.data[0].url;
+
+                // Update values.content with the image URL
+                setValues({ ...values, content: imageUrl });
+
+                // Close the modal
+                setIsModalOpen(false);
+            } else {
+                // Handle other response statuses if needed
+                console.log('loi');
+            }
         } catch (error) {
-            console.log('Error adding question:', error);
-            // Handle error
+            console.log(error);
+            // Handle error here, such as showing an error message to the user
         }
+        setIsModalOpen(false)
     };
 
 
+    const handleClick = (e) => {
+        if (imageFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('image', imageFile); // Append the image file to the FormData object
 
+            axios.post(uploadImageEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Image upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const imageUrl = responseData.data[0].url;
+                        console.log('Image URL:', imageUrl);
+                        // Update values.content with the image URL
+                        setValues({ ...values, content: imageUrl });
+                        showToast('Upload hình ảnh thành công');
+
+                    } else {
+                        console.error('Image URL not found in response data:', responseData);
+                        showToast('Upload hình ảnh thất bại');
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    showToast('Upload hình ảnh thất bại');
+
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No image selected.');
+            // Handle case where no image is selected
+        }
+    };
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
 
     const [audioFile, setAudioFile] = useState(null);
 
@@ -316,6 +348,7 @@ export default function Reading() {
         setIsModalQuestionOpen(true);
         fetchQuestionList(record._id); // Fetch question list for the clicked test_id
     };
+
     return (
 
         <div>
@@ -500,13 +533,15 @@ export default function Reading() {
                                     label="Upload Image"
                                     rules={[{ required: true, message: 'Please upload an image' }]}
                                 >
-                                    <input
-                                        type="file"
-                                        onChange={handleImageUpload}
-                                        className="filetype"
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    {imageFile && <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />}
+                                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+
+                                    {imageFile && (
+                                        <div>
+                                            <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />
+                                            {/* Render the button only if an image file is selected */}
+                                            {imageFile && <button onClick={handleClick}>Upload Image</button>}
+                                        </div>
+                                    )}
                                 </Form.Item>
                             </Col>
                         )}

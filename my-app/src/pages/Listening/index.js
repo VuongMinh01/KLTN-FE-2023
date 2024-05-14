@@ -8,10 +8,11 @@ import { PlusOutlined, DeleteOutlined, InfoOutlined } from '@ant-design/icons';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
-import Column from "antd/es/table/Column";
+
 const { TextArea } = Input;
 
 export default function Listening() {
+
     const Navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
@@ -35,12 +36,11 @@ export default function Listening() {
     const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
 
+
+
     // Modal
     const showModal = (record) => {
-        // console.log("Clicked record:", record);
-        // // setTestId(record._id);
-        // console.log(record._id, '3232')
-        // setIsModalOpen(true);
+
 
         console.log("Clicked record:", record);
         setValues({
@@ -121,7 +121,10 @@ export default function Listening() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     };
-
+    const headersForImage = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data' // Update content type for file upload
+    };
 
     // Modal button
     const handleOk = async () => {
@@ -177,49 +180,177 @@ export default function Listening() {
         setLoading(true)
         updateTable();
         console.log('deleted');
+        showToast('Xoá thành công')
     }
 
 
+    // const handleAddQuestion = async (e) => {
+    //     e.preventDefault();
+    //     values['answers'] = [{
+    //         order_answer: "A",
+    //         content_answer: values.content_answer_1,
+    //     }, {
+    //         order_answer: "B",
+    //         content_answer: values.content_answer_2,
+    //     }, {
+    //         order_answer: "C",
+    //         content_answer: values.content_answer_3,
+    //     }, {
+    //         order_answer: "D",
+    //         content_answer: values.content_answer_4,
+    //     }]
+
+
+    //     try {
+    //         const { data } = await axios.post(addQuestion, {
+    //             ...values
+    //         }, { headers })
+    //         setIsModalOpen(false);
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+
+
+    // }
+    // const handleAddQuestion = async (e) => {
+    //     if (e) {
+    //         e.preventDefault(); // Prevent default form submission behavior if event object exists
+    //     }
+
+    //     // Check if values object is defined
+    //     if (!values || typeof values !== 'object') {
+    //         console.log("Values object is undefined or not an object");
+    //         return;
+    //     }
+
+    //     // Check if the content field is empty
+    //     if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+    //         console.log("Content must not be empty");
+    //         return; // Prevent further execution if content is empty
+    //     }
+    //     if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+    //         console.log("Description must not be empty");
+    //         return; // Prevent further execution if content is empty
+    //     }
+
+    //     // Construct the answers array
+    //     const answers = [
+    //         { order_answer: "A", content_answer: values.content_answer_1 },
+    //         { order_answer: "B", content_answer: values.content_answer_2 },
+    //         { order_answer: "C", content_answer: values.content_answer_3 },
+    //         { order_answer: "D", content_answer: values.content_answer_4 }
+    //     ];
+
+    //     try {
+    //         // Make the POST request to add the question
+    //         const response = await axios.post(addQuestion, { ...values, answers }, { headers });
+
+    //         // Check if the request was successful
+    //         if (response.status === 200) {
+    //             // Extract the URL from the response data
+    //             const imageUrl = response.data.data[0].url;
+    //             const audioUrl = response.data.data[0].url;
+    //             // Update values.content with the image URL
+    //             setValues({ ...values, content: imageUrl });
+
+    //             // Close the modal
+    //             setIsModalOpen(false);
+    //         } else {
+    //             // Handle other response statuses if needed
+    //             console.log('loi');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         // Handle error here, such as showing an error message to the user
+    //     }
+    //     setIsModalOpen(false)
+    // };
     const handleAddQuestion = async (e) => {
-        e.preventDefault();
-        values['answers'] = [{
-            order_answer: "A",
-            content_answer: values.content_answer_1,
-        }, {
-            order_answer: "B",
-            content_answer: values.content_answer_2,
-        }, {
-            order_answer: "C",
-            content_answer: values.content_answer_3,
-        }, {
-            order_answer: "D",
-            content_answer: values.content_answer_4,
-        }]
-
-
-        try {
-            const { data } = await axios.post(addQuestion, {
-                ...values
-            }, { headers })
-            setIsModalOpen(false);
-
-        } catch (error) {
-            console.log(error);
+        if (e) {
+            e.preventDefault(); // Prevent default form submission behavior if event object exists
         }
 
+        // Check if values object is defined
+        if (!values || typeof values !== 'object') {
+            console.log("Values object is undefined or not an object");
+            showToast('Values object is undefined or not an object')
 
-    }
+            return;
+        }
+
+        // Check if the content field is empty
+        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+            console.log("Content must not be empty");
+            showToast('Content must not be empty')
+            return; // Prevent further execution if content is empty
+        }
+
+        // Check if the description field is empty
+        if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+            console.log("Description must not be empty");
+            showToast('Description must not be empty')
+
+            return; // Prevent further execution if description is empty
+        }
+
+        // Construct the answers array
+        const answers = [
+            { order_answer: "A", content_answer: values.content_answer_1 },
+            { order_answer: "B", content_answer: values.content_answer_2 },
+            { order_answer: "C", content_answer: values.content_answer_3 },
+            { order_answer: "D", content_answer: values.content_answer_4 }
+        ];
+
+        try {
+            // Make the POST request to add the question
+            const response = await axios.post(addQuestion, { ...values, answers }, { headers });
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                // Extract the URL from the response data
+                const responseData = response.data.data[0];
+                let imageUrl, audioUrl;
+
+                // Check the type to distinguish between image and audio URLs
+                if (responseData.type === 'image') {
+                    imageUrl = responseData.url;
+                } else if (responseData.type === 'audio') {
+                    audioUrl = responseData.url;
+                }
+
+                // Update values.content with the image URL if available
+                // and values.description with the audio URL if available
+                setValues({ ...values, content: imageUrl, description: audioUrl });
+                showToast('thêm audio thành công');
+                // Close the modal
+                setIsModalOpen(false);
+            } else {
+                // Handle other response statuses if needed
+                console.log('loi');
+                showToast('thêm audio không thành công')
+            }
+        } catch (error) {
+            console.log(error);
+            // Handle error here, such as showing an error message to the user
+        }
+        setIsModalOpen(false)
+    };
 
 
 
+
+
+    const handleImageUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+        }
+    };
 
 
 
 
     const [audioFile, setAudioFile] = useState(null);
-
-
-
 
     const handleAudioUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -228,12 +359,13 @@ export default function Listening() {
     };
 
 
+
     const fetchQuestionList = async (testId) => {
         try {
             const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
                 params: {
-                    limit: 10, // Set your desired limit value here
-                    page: 1 // Set your desired page value here
+                    limit: 10,
+                    page: 1,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -245,11 +377,95 @@ export default function Listening() {
             console.error("Error fetching question list:", error);
         }
     };
-
     const showModalQuestion = (record) => {
         setIsModalQuestionOpen(true);
         fetchQuestionList(record._id); // Fetch question list for the clicked test_id
     };
+
+    const handleClick = (e) => {
+        if (imageFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('image', imageFile); // Append the image file to the FormData object
+
+            axios.post(uploadImageEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Image upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const imageUrl = responseData.data[0].url;
+                        console.log('Image URL:', imageUrl);
+                        // Update values.content with the image URL
+                        setValues({ ...values, content: imageUrl });
+                        showToast('Upload hình ảnh thành công');
+
+                    } else {
+                        console.error('Image URL not found in response data:', responseData);
+                        showToast('Upload hình ảnh thất bại');
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    showToast('Upload hình ảnh thất bại');
+
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No image selected.');
+            // Handle case where no image is selected
+        }
+    };
+
+    const handleAudioClick = () => {
+        if (audioFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('audio', audioFile); // Append the audio file to the FormData object
+
+            axios.post(uploadAudioEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Audio upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const audioUrl = responseData.data[0].url;
+                        console.log('Audio URL:', audioUrl);
+                        // Update values.description with the audio URL
+                        setValues({ ...values, description: audioUrl });
+                        showToast('Upload audio thành công');
+
+                    } else {
+                        console.error('Audio URL not found in response data:', responseData);
+                        showToast('Upload audio thất bại');
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading audio:', error);
+                    showToast('Upload audio thất bại');
+
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No audio selected.');
+            // Handle case where no audio is selected
+        }
+    };
+
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     return (
 
         <div>
@@ -397,27 +613,62 @@ export default function Listening() {
                                         style={{ marginBottom: "10px" }}
                                     />
                                     <br />
-                                    {audioFile && <audio controls><source src={URL.createObjectURL(audioFile)} type="audio/mpeg" /></audio>}
+                                    {audioFile &&
+                                        <>
+                                            <audio controls>
+                                                <source src={URL.createObjectURL(audioFile)} type="audio/mp3" />
+                                            </audio>
+                                            <button onClick={handleAudioClick}>Upload audio</button>
+                                        </>
+                                    }
                                 </Form.Item>
                             </Col>
                         )}
 
-
                         <Col span={24}>
                             <Form.Item
-                                label="Content"
-                                rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                label="Content Type"
+                                rules={[{ required: true, message: 'Please select content type' }]}
                             >
-                                <TextArea
-                                    rows={4}
-                                    onChange={handleOnChange}
-                                    name="content"
-                                    placeholder="Type content here"
-                                />
+                                <Radio.Group onChange={handleContentTypeChange} value={contentType}>
+                                    <Radio value="text">Type Content</Radio>
+                                    <Radio value="image">Upload Image</Radio>
+                                </Radio.Group>
                             </Form.Item>
                         </Col>
+                        {contentType === 'text' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Content"
+                                    rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                >
+                                    <TextArea
+                                        rows={4}
+                                        onChange={handleOnChange}
+                                        name="content"
+                                        placeholder="Type content here"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        )}
+                        {contentType === 'image' && (
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Upload Image"
+                                    rules={[{ required: true, message: 'Please upload an image' }]}
+                                >
+                                    <input type="file" accept="image/*" onChange={handleImageUpload} />
 
-
+                                    {imageFile && (
+                                        <div>
+                                            <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />
+                                            {/* Render the button only if an image file is selected */}
+                                            {imageFile && <button onClick={handleClick}>Upload Image</button>}
+                                        </div>
+                                    )}
+                                </Form.Item>
+                            </Col>
+                        )}
 
 
                         <Col span={24} style={{ padding: '10px' }}>
@@ -461,13 +712,20 @@ export default function Listening() {
                 onCancel={() => setIsModalQuestionOpen(false)}
                 footer={null}
             >
+                <Table
+                    dataSource={questionList}
+                    pagination={{
+                        pageSize: 10,
+                        // Callback to update currentPage
+                    }}
+                    rowKey={record => record._id}                >
 
-                <Table dataSource={questionList} pagination={false} rowKey="_id" >
+
                     <Table.Column title="Question ID" dataIndex="_id" key="_id" />
                     <Table.Column title="Description" dataIndex="description" key="description" />
                     <Table.Column title="Content" dataIndex="content" key="content" />
                     <Table.Column title="Score" dataIndex="score" key="score" />
-                </Table>
+                </Table >
 
             </Modal>
         </div >

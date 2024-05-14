@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
-import { Button, Input } from "antd";
+import { Button, Input, Image } from "antd";
 import { getQuestionList, submitTest } from "../../utils/APIRoutes";
 import { useLocation } from 'react-router-dom';
 
@@ -211,14 +211,11 @@ function Part1(props) {
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 1}</h3>
-                            {/* <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 1}. {props.dataSource[index] && props.dataSource[index].content}</h3> */}
-
-
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <audio controls={true} src={'audio'}></audio>
+                                <audio controls={true} src={props.dataSource[index]?.description}></audio>
                             </div>
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <img alt="preview " src={'image'} style={{ width: 300 }} />
+                                <Image alt="preview" src={props.dataSource[index]?.content} style={{ width: 300 }} />
                             </div>
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
                                 <input
@@ -303,11 +300,9 @@ function Part2(props) {
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 7}</h3>
-
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <audio controls={true} src={'audio'}></audio>
+                                <audio controls={true} src={props.dataSource[index]?.description}></audio>
                             </div>
-
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
                                 <input
                                     type="radio"
@@ -379,11 +374,9 @@ function Part3(props) {
                 <Row gutter={24} key={index}>
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
-                            {/* <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 31}</h3> */}
                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 32}. {props.dataSource[index + 31] && props.dataSource[index + 31].content}</h3>
-
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <audio controls={true} src={'audio'}></audio>
+                                <audio controls={true} src={props.dataSource[index]?.description}></audio>
                             </div>
 
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
@@ -460,10 +453,10 @@ function Part4(props) {
             groups.push(
                 <div key={i / 3} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                        <audio controls={true} src="dummy_audio_url.mp3"></audio>
+                        {props.dataSource[i] && <audio controls={true} src={props.dataSource[i].description}></audio>}
                     </div>
                     <div style={{ display: 'grid' }}>
-                        {slicedDataSource.slice(i, i + 3).map((item, index) => (
+                        {props.dataSource.slice(i, i + 3).map((item, index) => (
                             <div key={index} style={{ marginRight: '20px' }}>
                                 <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 71}. {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].content}</h3>
                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
