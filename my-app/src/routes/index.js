@@ -6,7 +6,7 @@ import Tests from '../pages/Tests'
 import AppTest from '../pages/AppTest';
 import TuVung from "../pages/TuVung";
 import NguPhap from "../pages/NguPhap"
-
+import ForgetPassword from '../pages/ForgetPassword';
 import HienTaiDon from '../component/NguPhapTongHop/HienTaiDon';
 import HienTaiTiepDien from '../component/NguPhapTongHop/HienTaiTiepDien';
 import HienTaiHoanThanh from '../component/NguPhapTongHop/HienTaiHoanThanh';
@@ -16,10 +16,16 @@ import QuaKhuHoanThanh from '../component/NguPhapTongHop/QuaKhuHoanThanh';
 import TuongLai from '../component/NguPhapTongHop/TuongLai';
 import HienTaiHoanThanhTiepDien from '../component/NguPhapTongHop/HienTaiHoanThanhTiepDien';
 import QuaKhuHoanThanhTiepDien from '../component/NguPhapTongHop/QuaKhuHoanThanhTiepDien';
+import { SubmitTokenPage, ResetPasswordPage } from '../component/ForgetPasswordPage';
+
 const publicRoute = [
     { path: '/', component: LandingPage },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
+    { path: '/forgetPassword', component: ForgetPassword },
+    { path: '/submit-token', component: SubmitTokenPage },
+    { path: '/reset-password', component: ResetPasswordPage },
+
     { path: '/tests', component: Tests },
     { path: '/app', component: AppTest },
     { path: '/nguphap', component: NguPhap },

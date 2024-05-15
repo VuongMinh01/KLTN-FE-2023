@@ -32,20 +32,25 @@ export default function LoginPage() {
                 email,
                 password,
             });
-            console.log(data.result.access_token);
-
 
             if (data.message === "Login success") {
                 localStorage.setItem("user", JSON.stringify(data.result.access_token));
-
-
-                navigate("/admin");
+                navigate("/user"); // Redirect to the user path
             }
+
             if (data.message === "Request failed with status code 422") {
                 toast.error(data.msg, toastOptions);
+                showToast('Tài khoản hoặc mật khẩu không chính xác');
             }
         }
+    }
 
+
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
     }
     const onButtonClickGmail = async (e) => {
         e.preventDefault();
@@ -109,9 +114,15 @@ export default function LoginPage() {
 
 
                 </div>
-                <div style={{ display: 'flex' }}>
-                    <h4>Don't have an account?</h4>
-                    <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/register">Register</NavLink></h4>
+                <div style={{ display: 'grid' }}>
+                    <div style={{ display: 'flex' }}>
+                        <h4>Don't have an account?</h4>
+                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/register">Register</NavLink></h4>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <h4>Forget your password?</h4>
+                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/forgetPassword">Forget Password</NavLink></h4>
+                    </div>
 
                 </div>
                 <ToastContainer />

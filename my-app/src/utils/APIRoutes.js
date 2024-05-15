@@ -19,8 +19,10 @@ export const deleteCourses = `${host}/courses/delete`
 export const deleteTest = `${host}/tests/delete`
 
 export const getUser = `${host}/users/me`;
-export const changePassword = `${host}/users/change-password`
-export const verifyPassword = `${host}/users/verify-forgot-password`;
+export const changePassword = `${host}/users/change-password`;
+export const forgotPassword = `${host}/users/forgot-password`;
+export const verifyForgotPassword = `${host}/users/verify-forgot-password`;
+export const resetPassword = `${host}/users/reset-password`;
 export const getQuestionList = `${host}/questions/list`
 export const getQuestionListId = `${host}/questions/list/:test_id`
 

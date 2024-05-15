@@ -14,7 +14,8 @@ export default function Admin() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        checkLogout()
+        checkLogout();
+        checkAdmin();
     }, []);
     const checkLogout = async () => {
         try {
@@ -31,6 +32,29 @@ export default function Admin() {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
+
+    const checkAdmin = async () => {
+        try {
+            const token = localStorage.getItem("user").replace(/"/g, '');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            const response = await axios.get(getUser, config);
+            const rule = response.data.result.rule;
+
+            if (rule === 1) {
+                // If rule is 1, user shouldn't have access to /admin
+                navigate('/user');
+            }
+        } catch (error) {
+            // Handle error
+            console.error('Error:', error);
+            // Display a toast alert with the error message
+            showToast('Bạn không có quyền truy cập admin ');
+        }
+    }
+
 
     axios.get(getUser, config)
         .then((response) => {

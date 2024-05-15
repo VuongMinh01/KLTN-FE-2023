@@ -21,7 +21,7 @@ export default function RegisterPage() {
     };
 
     const handleValidation = () => {
-        const { password, confirm_password, email, name, date_of_birth } = values;
+        const { password, confirm_password, email, name } = values;
         if (password !== confirm_password) {
             toast.error("password và confirmpassword phải giống nhau.", toastOptions);
             return false;
@@ -42,28 +42,7 @@ export default function RegisterPage() {
         return true;
     };
 
-    // const onButtonClick = async (e) => {
-    //     e.preventDefault();
-    //     if (handleValidation()) {
-    //         console.log("in validtaion", registerRoute);
-    //         const { password, confirm_password, email, name, date_of_birth } = values;
-    //         const { data } = await axios.post(registerRoute, {
-    //             name,
-    //             email,
-    //             password,
-    //             confirm_password,
-    //             date_of_birth,
-    //         });
-    //         console.log(values);
-    //         if (data.status === false) {
-    //             toast.error(data.msg, toastOptions);
-    //         }
-    //         if (data.message === "Register success") {
-    //             localStorage.setItem("user", JSON.stringify(data.user));
-    //             navigate("/user/verify")
-    //         }
-    //     }
-    // }
+
     // code moi
     const onButtonClick = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
