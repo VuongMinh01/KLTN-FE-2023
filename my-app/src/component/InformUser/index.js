@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { getUser, updateUser } from "../../utils/APIRoutes";
 import { useState, useEffect } from "react";
-import { Input, DatePicker, Button } from "antd";
+import { Input, DatePicker, Button, Image } from "antd";
 import moment from 'moment';
 
 export default function InformUser() {
@@ -64,6 +64,10 @@ export default function InformUser() {
         <div>
             <h1>User Profile</h1>
             <div>
+                <Image width={400} src={userData.avatar} />
+
+            </div>
+            <div>
                 <label>Name:</label>
                 <Input name="name" value={userData.name} onChange={handleChange} />
             </div>
@@ -91,7 +95,7 @@ export default function InformUser() {
                 <label>Cover Photo:</label>
                 <Input name="cover_photo" value={userData.cover_photo} onChange={handleChange} />
             </div>
-            <Button onClick={handleSubmit}>Save Changes</Button>
+            <Button style={{ background: 'cornflowerblue', marginTop: '10px', borderRadius: '20px', color: 'white' }} onClick={handleSubmit}>Save Changes</Button>
         </div>
     );
 }

@@ -1,38 +1,54 @@
-import React, { } from "react";
+import React, { useEffect, useState } from "react";
 import PageContent from "../../component/UserPage/PageContent";
 import SideMenu from "../../component/UserPage/SideMenu";
 import { Container, Row, Col } from "react-bootstrap";
 import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getUser } from "../../utils/APIRoutes";
+
 export default function User() {
+    const navigate = useNavigate();
+    const [logOut, setLogout] = useState(false)
+    const [userData, setUserData] = useState(null);
 
-    // useEffect(() => {
-    //     if (localStorage.getItem('user')) {
-    //         navigate('/admin')
-    //     }
-    // }, [])
-    // const navigate = useNavigate();
-    // useEffect(() => {
-    //     checkLogout()
-    // }, []);
-    // const checkLogout = async (e) => {
-    //     try {
+    useEffect(() => {
+        checkLogout();
+        checkUser();
 
-    //         const token = localStorage.getItem("user");
-    //         if (
-    //             token === null) {
-    //             console.log(token);
-    //             setLogout(true)
-    //         }
-    //     } catch (e) {
-    //         setLogout(false)
-    //     }
-    //     if (setLogout)
-    //         navigate("/login")
+    }, []);
+    const checkLogout = async () => {
+        try {
+            const token = await localStorage.getItem("user");
+            if (token === null) {
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error('Error checking logout:', error);
+        }
+    }
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    const checkUser = async () => {
+        try {
+            const token = localStorage.getItem("user").replace(/"/g, '');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
 
-    // }
-    // const [logOut, setLogout] = useState(false)
+            const response = await axios.get(getUser, config);
+            const userData = response.data.result;
+            setUserData(userData);
+
+        } catch (error) {
+            // Handle error
+            console.error('Error:', error);
+            // Display a toast alert with the error message
+        }
+    }
 
     return (
 
@@ -41,7 +57,7 @@ export default function User() {
 
             <Row>
                 <Col xs={3} sm={2}>
-                    <SideMenu></SideMenu>
+                    <SideMenu userData={userData} />
                 </Col>
                 <Col xs={9} sm={10}>
                     <PageContent></PageContent>

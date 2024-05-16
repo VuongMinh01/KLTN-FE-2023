@@ -50,7 +50,7 @@ export default function ChangePassword() {
     }
     return (
         <Container>
-            <h1>Thay đổi mật khẩu</h1>
+            <h1 style={{ color: 'cornflowerblue' }}>Thay đổi mật khẩu</h1>
 
             <Row>
                 <Input
@@ -58,23 +58,26 @@ export default function ChangePassword() {
                     value={values.old_password}
                     onChange={handleOnChange}
                     placeholder="Nhập mật khẩu cũ"
+                    style={{ marginBottom: '10px' }}
                 />
                 <Input
                     name="password"
                     value={values.password}
                     onChange={handleOnChange}
                     placeholder="Nhập mật khẩu mới"
+                    style={{ marginBottom: '10px' }}
+
                 />
                 <Input
                     name="confirm_password"
                     value={values.confirm_password}
                     onChange={handleOnChange}
                     placeholder="Xác nhận mật khẩu mới"
+                    style={{ marginBottom: '10px' }}
+
                 />
             </Row>
-            <Row>
-                <Button style={{ marginTop: '10px' }} onClick={submit}>Đổi mật khẩu</Button>
-            </Row>
+            <Button style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', background: 'cornflowerblue', color: 'white', borderRadius: '20px' }} onClick={submit}>Đổi mật khẩu</Button>
         </Container>
     )
 }

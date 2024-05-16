@@ -3,23 +3,11 @@ import { Menu } from "antd"
 import { HomeOutlined, LogoutOutlined, UserOutlined, CheckCircleOutlined, ReadOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Card } from 'antd';
-export default function SideMenu() {
-    let name1 = '';
+export default function SideMenu({ userData }) {
     const { Meta } = Card;
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate();
-    const [name, setName] = useState('');
-    // useEffect(() => {
-    //     setLoading(true);
-    //     setName(name1);
-
-    // }, [loading]);
-
-    const handleOnChange = (e) => {
-        setName({ ...name, [e.target.name]: e.target.value });
-
-    }
 
     const token = localStorage.getItem("user").replace(/"/g, '');
     const config = {
@@ -33,24 +21,13 @@ export default function SideMenu() {
     return (
         <div className="SideMenu">
 
-            <Card
-                style={{ width: '100%' }}
-            // cover={
-            //     <img
-            //         alt="example"
-            //         src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            //     />
-            // }
-            >
-
-
-                {/* <Meta
-                    avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8"
-                    />}
-                    name="name"
-                    tittle={`${name}`}
-                /> */}
-                {/* <input name="name" onChange={handleOnChange} /> */}
+            <Card style={{ width: '100%' }}>
+                {userData && (
+                    <Meta
+                        avatar={<Avatar src={userData.avatar} />}
+                        title={userData.name} // Display user's name here
+                    />
+                )}
             </Card>
             <Menu
                 // theme="dark"
@@ -107,8 +84,8 @@ export default function SideMenu() {
                         icon: <CheckCircleOutlined />,
                     },
                     {
-                        label: "Kiểm tra",
-                        key: '/admin/kiemtra',
+                        label: "Update Questions",
+                        key: '/admin/updatequestion',
                         icon: <CheckCircleOutlined />,
                     },
                     {

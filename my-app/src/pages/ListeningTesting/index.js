@@ -4,7 +4,7 @@ import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input, Image } from "antd";
-import { getQuestionList, submitTest, getTestId } from "../../utils/APIRoutes";
+import { getQuestionList, submitTest, getTestId, getScore } from "../../utils/APIRoutes";
 import { useLocation } from 'react-router-dom';
 import StopPage from "../../component/StopPage";
 import StartPage from "../../component/StartPage";

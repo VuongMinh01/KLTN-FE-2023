@@ -12,10 +12,13 @@ import { getUser } from "../../utils/APIRoutes";
 export default function Admin() {
 
     const navigate = useNavigate();
+    const [logOut, setLogout] = useState(false)
+    const [userData, setUserData] = useState(null); // State to store user data
 
     useEffect(() => {
         checkLogout();
         checkAdmin();
+
     }, []);
     const checkLogout = async () => {
         try {
@@ -27,7 +30,6 @@ export default function Admin() {
             console.error('Error checking logout:', error);
         }
     }
-    const [logOut, setLogout] = useState(false)
     const token = localStorage.getItem("user").replace(/"/g, '');
     const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -42,7 +44,8 @@ export default function Admin() {
 
             const response = await axios.get(getUser, config);
             const rule = response.data.result.rule;
-
+            const userData = response.data.result;
+            setUserData(userData);
             if (rule === 1) {
                 // If rule is 1, user shouldn't have access to /admin
                 navigate('/user');
@@ -80,7 +83,7 @@ export default function Admin() {
 
             <Row>
                 <Col xs={3} sm={2}>
-                    <SideMenu></SideMenu>
+                    <SideMenu userData={userData} />
                 </Col>
                 <Col xs={9} sm={10}>
                     <PageContent></PageContent>

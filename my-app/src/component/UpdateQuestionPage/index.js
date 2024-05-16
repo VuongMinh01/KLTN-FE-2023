@@ -1,24 +1,83 @@
-import { Space, Table, Typography, Col, Form, Row, Modal, Radio } from "antd";
-import React, { useState, useEffect } from "react";
-import { deleteTest, getAllFullTest, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint, deleteQuestion } from "../../utils/APIRoutes";
-import Input from "antd/es/input/Input";
+import React, { useState } from "react";
 import axios from "axios";
-import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-design/icons';
-
-import { ToastContainer } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
-import '../../css/Reading.css'
-import Column from "antd/es/table/Column";
-
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { getQuestionList, deleteQuestion, uploadAudioEndpoint, uploadImageEndpoint, updateQuestion } from "../../utils/APIRoutes";
+import { Table, Col, Form, Row, Modal, Radio, Input, Button } from "antd";
 const { TextArea } = Input;
 
-export default function FullTest() {
-
-    const Navigate = useNavigate();
-    const [loading, setLoading] = useState(false)
-    const [dataSource, setDataSource] = useState([])
+const UpdateQuestionPage = () => {
+    // State variables
+    const [questionList, setQuestionList] = useState([]);
+    const [testId, setTestId] = useState("");
+    const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
+
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
+
+    // Function to handle the form submission
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            // Make the API call to fetch the question list based on the test ID
+            const response = await axios.get(`${getQuestionList}/${testId}`, {
+                params: {
+                    limit: 10,
+                    page: 1,
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            // Update the questionList state with the fetched data
+            setQuestionList(response.data.result.questions);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching question list:", error);
+            setLoading(false);
+        }
+    };
+    const onDeleteQuestion = async (e) => {
+        axios.delete(deleteQuestion, {
+            data: {
+                question_id: e._id, test_id: e.test_id
+            }
+            , headers
+        }).then((res) => console.log(res.data))
+        setLoading(true)
+        console.log('deleted');
+        showToast('Xoá thành công')
+    }
+
+
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
+    const showModal = (record) => {
+
+
+
+        console.log("Clicked record:", record);
+        setValues({
+            ...values,
+            question_id: record._id // Update the source_id in the valuesTest state
+        });
+        console.log(record._id, '333');
+        setIsModalOpen(true);
+
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    }
+
 
     const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
     const [imageFile, setImageFile] = useState(null);
@@ -28,72 +87,24 @@ export default function FullTest() {
         num_quest: 0,
         content: "",
         description: "",
-        test_id: "",
+        question_id: "",
         score: 0,
         answers: [],
         correct_at: {},
     });
-    const [questionList, setQuestionList] = useState([]); // State variable to store the question list
-
-
-
-
-    // Modal
-    const showModal = (record) => {
-
-
-        console.log("Clicked record:", record);
-        setValues({
-            ...values,
-            test_id: record._id // Update the source_id in the valuesTest state
-        });
-        console.log(record._id, '333');
-        setIsModalOpen(true);
-
-    };
-
-    const handleQuestionCancel = () => {
-        setIsModalQuestionOpen(false);
-    }
-    useEffect(() => {
-        setLoading(true);
-        getAllTest();
-    }, [loading]);
-    // Load data from db
-
     const handleOnChangeNumber = (e) => {
         setValues({ ...values, [e.target.name]: parseInt(e.target.value) });
-
-    }
-
-    const getAllTest = () => {
-        axios.get(getAllFullTest, {
-            params: {
-                limit: 10,
-                page: 1,
-            }
-        }).then((response) => {
-            setDataSource(response.data.result.tests);
-        });
 
     }
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     }
-
-
-
     const handleContentTypeChange = (e) => {
         setContentType(e.target.value);
     };
     const handleContentTypeChange1 = (e) => {
         setContentType1(e.target.value);
     };
-    // Function to handle image upload
-
-
-
-
     const clickButton = (e) => {
         // code huong dan
         // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
@@ -117,167 +128,12 @@ export default function FullTest() {
         console.log("Content of the answer:", content_answer);
     }
 
-    const token = localStorage.getItem("user").replace(/"/g, '');
-
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-
-
-    // Modal button
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    }
-
-    const updateTable = (data) => {
-        setDataSource(previousState => {
-            setLoading(false)
-            return previousState
-        });
-    }
-
-
-
-
-    const onDeleteService = async (e) => {
-        axios.delete(deleteTest, {
-            data: {
-                test_id: e._id, source_id: e.source_id
-            }
-            , headers
-        }).then((res) => console.log(res.data))
-        setLoading(true)
-        updateTable();
-        console.log('deleted');
-        showToast('Xoá thành công')
-    }
-    const onDeleteQuestion = async (e) => {
-        console.log(e._id, '1');
-        console.log(e.test_id, '2');
-
-        axios.delete(deleteQuestion, {
-            data: {
-                question_id: e._id, test_id: e.test_id
-            }
-            , headers
-        }).then((res) => console.log(res.data))
-        setLoading(true)
-        updateTableQuestion();
-        console.log('deleted');
-        showToast('Xoá thành công')
-    }
-
-    // const handleAddQuestion = async (e) => {
-    //     e.preventDefault();
-    //     values['answers'] = [{
-    //         order_answer: "A",
-    //         content_answer: values.content_answer_1,
-    //     }, {
-    //         order_answer: "B",
-    //         content_answer: values.content_answer_2,
-    //     }, {
-    //         order_answer: "C",
-    //         content_answer: values.content_answer_3,
-    //     }, {
-    //         order_answer: "D",
-    //         content_answer: values.content_answer_4,
-    //     }]
-
-
-    //     try {
-    //         const { data } = await axios.post(addQuestion, {
-    //             ...values
-    //         }, { headers })
-    //         setIsModalOpen(false);
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-
-    const handleAddQuestion = async (e) => {
-        if (e) {
-            e.preventDefault(); // Prevent default form submission behavior if event object exists
-        }
-
-        // Check if values object is defined
-        if (!values || typeof values !== 'object') {
-            console.log("Values object is undefined or not an object");
-            showToast('Values object is undefined or not an object')
-
-            return;
-        }
-
-        // Check if the content field is empty
-        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
-            console.log("Content must not be empty");
-            showToast('Content must not be empty')
-            return; // Prevent further execution if content is empty
-        }
-
-        // Check if the description field is empty
-        if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
-            console.log("Description must not be empty");
-            showToast('Description must not be empty')
-
-            return; // Prevent further execution if description is empty
-        }
-
-        // Construct the answers array
-        const answers = [
-            { order_answer: "A", content_answer: values.content_answer_1 },
-            { order_answer: "B", content_answer: values.content_answer_2 },
-            { order_answer: "C", content_answer: values.content_answer_3 },
-            { order_answer: "D", content_answer: values.content_answer_4 }
-        ];
-
-        try {
-            // Make the POST request to add the question
-            const response = await axios.post(addQuestion, { ...values, answers }, { headers });
-
-            // Check if the request was successful
-            if (response.status === 200) {
-                // Extract the URL from the response data
-                const responseData = response.data.data[0];
-                let imageUrl, audioUrl;
-
-                // Check the type to distinguish between image and audio URLs
-                if (responseData.type === 'image') {
-                    imageUrl = responseData.url;
-                } else if (responseData.type === 'audio') {
-                    audioUrl = responseData.url;
-                }
-
-                // Update values.content with the image URL if available
-                // and values.description with the audio URL if available
-                setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('thêm audio thành công');
-                // Close the modal
-                setIsModalOpen(false);
-            } else {
-                // Handle other response statuses if needed
-                console.log('loi');
-                showToast('thêm audio không thành công')
-            }
-        } catch (error) {
-            console.log(error);
-            // Handle error here, such as showing an error message to the user
-        }
-        setIsModalOpen(false)
-    };
-
-
-
-
 
     const handleImageUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
             setImageFile(event.target.files[0]);
         }
     };
-
-
 
 
     const [audioFile, setAudioFile] = useState(null);
@@ -287,37 +143,6 @@ export default function FullTest() {
             setAudioFile(event.target.files[0]);
         }
     };
-
-
-
-    const fetchQuestionList = async (testId) => {
-        try {
-            const response = await axios.get(getQuestionListId.replace(":test_id", testId), {
-                params: {
-                    limit: 10,
-                    page: 1,
-                },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            setQuestionList(response.data.result.questions); // Update questionList state with the fetched data
-        } catch (error) {
-            console.error("Error fetching question list:", error);
-        }
-    };
-    const showModalQuestion = (record) => {
-        setIsModalQuestionOpen(true);
-        fetchQuestionList(record._id); // Fetch question list for the clicked test_id
-    };
-    const updateTableQuestion = (data) => {
-        setQuestionList(previousState => {
-            setLoading(false)
-            return previousState
-        });
-    }
-
     const handleClick = (e) => {
         if (imageFile) {
             const formData = new FormData(); // Create FormData object to send the file
@@ -396,101 +221,148 @@ export default function FullTest() {
         }
     };
 
-    function showToast(message) {
-        // Replace this with your toast alert implementation
-        // For example, if you're using react-toastify:
-        // toast.error(message);
-        alert(message);
-    }
+    const handleUpdate = async (e) => {
+        if (e) {
+            e.preventDefault(); // Prevent default form submission behavior if event object exists
+        }
+
+        // Check if values object is defined
+        if (!values || typeof values !== 'object') {
+            console.log("Values object is undefined or not an object");
+            showToast('Values object is undefined or not an object')
+
+            return;
+        }
+
+        // Check if the content field is empty
+        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
+            console.log("Content must not be empty");
+            showToast('Content must not be empty')
+            return; // Prevent further execution if content is empty
+        }
+
+        // Check if the description field is empty
+        if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+            console.log("Description must not be empty");
+            showToast('Description must not be empty')
+
+            return; // Prevent further execution if description is empty
+        }
+
+        // Construct the answers array
+        const answers = [
+            { order_answer: "A", content_answer: values.content_answer_1 },
+            { order_answer: "B", content_answer: values.content_answer_2 },
+            { order_answer: "C", content_answer: values.content_answer_3 },
+            { order_answer: "D", content_answer: values.content_answer_4 }
+        ];
+
+        try {
+            // Make the POST request to add the question
+            const response = await axios.patch(updateQuestion, { ...values, answers }, { headers });
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                // Extract the URL from the response data
+                const responseData = response.data.data[0];
+                let imageUrl, audioUrl;
+
+                // Check the type to distinguish between image and audio URLs
+                if (responseData.type === 'image') {
+                    imageUrl = responseData.url;
+                } else if (responseData.type === 'audio') {
+                    audioUrl = responseData.url;
+                }
+
+                // Update values.content with the image URL if available
+                // and values.description with the audio URL if available
+                setValues({ ...values, content: imageUrl, description: audioUrl });
+                showToast('thêm audio thành công');
+                // Close the modal
+                setIsModalOpen(false);
+            } else {
+                // Handle other response statuses if needed
+                console.log('loi');
+                showToast('thêm audio không thành công')
+            }
+        } catch (error) {
+            console.log(error);
+            // Handle error here, such as showing an error message to the user
+        }
+        setIsModalOpen(false)
+    };
+
+
     return (
-
         <div>
-            <Space size={20} direction={"vertical"}>
+            <Input
+                placeholder="Enter Test ID"
+                value={testId}
+                onChange={(e) => setTestId(e.target.value)}
+                style={{ width: 200, marginRight: 16 }}
+            />
+            <Button type="primary" onClick={handleSubmit}>
+                Submit
+            </Button>
 
-                <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
-
-
-
-                {/* Table thông tin khách hàng */}
-                <Table
-                    scroll={{ y: 'max-content', x: 'max-content' }}
-                    columns={[
-                        {
-                            key: "1",
-                            title: "Mã bài test",
-                            dataIndex: "_id",
-                        },
-
-                        {
-                            key: "2",
-                            title: "Tiêu dề",
-                            dataIndex: "title",
-
-                        },
-
-                        {
-                            key: "3",
-                            title: "Mô tả",
-                            dataIndex: "description",
-                        },
-                        {
-                            key: "4",
-                            title: "Thời gian",
-                            dataIndex: "timeline",
-                        },
-                        {
-                            key: "5",
-                            title: "Mã courses",
-                            dataIndex: "source_id",
-                        },
-                        {
-                            key: "6",
-                            title: "Actions",
-
-                            render: (record) => {
-                                return (
-                                    <div>
-
-                                        <PlusOutlined onClick={() => showModal(record)}
-                                        />
-
-                                        <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
-                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
-                                    </div>
-                                )
-                            }
-                        },
-                    ]}
-                    dataSource={dataSource}
-                    rowKey="_id"
-                    pagination={
-                        {
-                            pageSize: 10,
-                        }
-                    }
-                ></Table>
-            </Space>
-            <ToastContainer />
-
-
+            {/* Table to display the list of questions */}
+            <Table
+                scroll={{ y: "max-content", }}
+                columns={[
+                    {
+                        key: "1",
+                        title: "Mã câu hỏi",
+                        dataIndex: "_id",
+                    },
+                    {
+                        key: "2",
+                        title: "Description",
+                        dataIndex: "description",
+                    },
+                    {
+                        key: "3",
+                        title: "Content",
+                        dataIndex: "content",
+                    },
+                    {
+                        key: "4",
+                        title: "score",
+                        dataIndex: "score",
+                    },
+                    {
+                        key: "6",
+                        title: "Actions",
+                        render: (record) => (
+                            <div>
+                                <DeleteOutlined onClick={() => onDeleteQuestion(record)} style={{ color: "red", marginLeft: "12px" }} />
+                                <EditOutlined onClick={() => showModal(record)} style={{ color: "green", marginLeft: "12px" }} />
+                            </div>
+                        ),
+                    },
+                ]}
+                dataSource={questionList}
+                rowKey="_id"
+                pagination={{ pageSize: 10 }}
+                loading={loading} // Add loading state for the Table component
+            />
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
-                open={isModalOpen} onOk={handleAddQuestion} onCancel={handleCancel}
+                open={isModalOpen} onOk={handleUpdate} onCancel={handleCancel}
             >
                 <Form  >
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Mã bài thi"
+                                label="Mã câu hỏi"
                                 rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
                                     onChange={(e) => handleOnChange(e)}
                                     type="text"
-                                    value={values.test_id}
-                                    name="test_id"
-                                    placeholder="Nhập mã test"
+                                    value={values.question_id}
+                                    name="question_id"
+                                    placeholder="Nhập mã câu hỏi"
                                 />
                             </Form.Item>
                         </Col>
@@ -641,61 +513,9 @@ export default function FullTest() {
 
                 </Form>
             </Modal>
-            <Modal
-                width={900}
-                title="Thông tin chi tiết"
-                open={isModalQuestionOpen}
-                onCancel={() => setIsModalQuestionOpen(false)}
-                footer={null}
-            >
-                <Table
-                    scroll={{ y: 'max-content', x: 'max-content' }}
-                    columns={[
-                        {
-                            key: "1",
-                            title: "Mã câu hỏi",
-                            dataIndex: "_id",
-                        },
+        </div>
 
-                        {
-                            key: "2",
-                            title: "Description",
-                            dataIndex: "description",
-                        },
+    );
+};
 
-                        {
-                            key: "3",
-                            title: "Content",
-                            dataIndex: "content",
-                        },
-                        {
-                            key: "4",
-                            title: "score",
-                            dataIndex: "score",
-                        },
-                        {
-                            key: "6",
-                            title: "Actions",
-
-                            render: (record1) => {
-                                return (
-                                    <div>
-                                        <DeleteOutlined onClick={() => onDeleteQuestion(record1)} style={{ color: "red", marginLeft: "12px" }} />
-                                    </div>
-                                )
-                            }
-                        },
-                    ]}
-                    dataSource={questionList}
-                    rowKey="_id"
-                    pagination={
-                        {
-                            pageSize: 10,
-                        }
-                    }
-                ></Table>
-            </Modal >
-
-        </div >
-    )
-}
+export default UpdateQuestionPage;
