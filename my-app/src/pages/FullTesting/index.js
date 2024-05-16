@@ -138,6 +138,12 @@ export default function FullTesting() {
                 console.error('Error fetching test timeline:', error);
             });
     };
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
 
 
     const handleSubmit = () => {
@@ -146,6 +152,8 @@ export default function FullTesting() {
         console.log('ModifiedDataSource length:', modifiedDataSource.length);
         if (questions.length === 0 || modifiedDataSource.length === 0) {
             console.error('Questions or modifiedDataSource is empty.');
+            showToast('Ít nhất phải có một đáp án được chọn');
+
             return;
         }
 

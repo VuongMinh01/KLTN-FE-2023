@@ -4,14 +4,17 @@ import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input, Image } from "antd";
-import { getQuestionList, submitTest } from "../../utils/APIRoutes";
+import { getQuestionList, submitTest, getTestId } from "../../utils/APIRoutes";
 import { useLocation } from 'react-router-dom';
+import StopPage from "../../component/StopPage";
+import StartPage from "../../component/StartPage";
+import Logo from '../../assets/ToeicTesting.png'
 
 import axios from "axios";
 
 export default function ListeningTesting() {
 
-    const [currentPage, setCurrentPage] = useState('part 1');
+    const [currentPage, setCurrentPage] = useState('start');
     const location = useLocation();
     const changePage = (page) => {
         setCurrentPage(page);
@@ -24,13 +27,60 @@ export default function ListeningTesting() {
     const [totalMarks, setTotalMarks] = useState(null); // Initialize totalMarks state
     const [totalCorrect, setTotalCorrect] = useState(null);
 
+    // clock
+    const [totalTime, setTotalTime] = useState(0); // State to store total time
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [timer, setTimer] = useState(null);
 
+    //clock
+    const handleStartTest = () => {
+        setCurrentPage('part 1'); // Change page to the first part of the test
+        startTimer(); // Start the countdown timer
+    };
+    const startTimer = () => {
+        const newTimer = setInterval(() => {
+            setRemainingTime(prevTime => prevTime - 1);
+            if (remainingTime === 0) {
+                clearInterval(newTimer);
+                handleSubmit();
+            }
+        }, 60000); // Interval of 1 minute
+        setTimer(newTimer);
+    };
+    const stopTimerAndChangePage = () => {
+        clearInterval(timer); // Clear the interval timer
+        setCurrentPage('stop'); // Navigate to the StopPage
+    };
+
+    // Function to continue the test and resume the timer
+    const continueTest = () => {
+        setCurrentPage('part 1'); // Change page back to the first part of the test
+        startTimer(); // Resume the countdown timer
+    };
 
     useEffect(() => {
         const test_id = getTestIdFromURL(location.pathname);
         console.log(test_id, '12312') // Extract test ID from URL
         getListQuestion(test_id); // Fetch list of questions when component mounts
+        fetchTestTimeline(test_id); // Fetch test timeline when component mounts
+
     }, [location.pathname]);
+
+    //clock
+    const fetchTestTimeline = (test_id, headers) => {
+        // Fetch test timeline using axios
+        const testTimelineUrl = `${getTestId}/${test_id}`;
+        axios.get(testTimelineUrl, { headers })
+            .then(response => {
+                const total_time = response.data.result.timeline; // Access total_time from response.data.result.timeline
+                console.log(total_time, '1');
+                setTotalTime(total_time); // Set total time from data
+                setRemainingTime(total_time); // Initialize remaining time
+            })
+            .catch(error => {
+                console.error('Error fetching test timeline:', error);
+            });
+    };
 
     const getTestIdFromURL = (pathname) => {
         const parts = pathname.split('/');
@@ -92,6 +142,12 @@ export default function ListeningTesting() {
     }
 
 
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
 
     const handleSubmit = () => {
         // Ensure questions and modifiedDataSource have data
@@ -99,6 +155,8 @@ export default function ListeningTesting() {
         console.log('ModifiedDataSource length:', modifiedDataSource.length);
         if (questions.length === 0 || modifiedDataSource.length === 0) {
             console.error('Questions or modifiedDataSource is empty.');
+            showToast('Ít nhất phải có một đáp án được chọn');
+
             return;
         }
 
@@ -158,33 +216,55 @@ export default function ListeningTesting() {
                 </ul>
             </div>
             <div className="main-content">
-                {currentPage === 'part 1' && <Part1
-                    changePage={changePage}
-                    dataSource={dataSource}
-                    selectedAnswers={selectedAnswersPart}
-                    onRadioChange={handleRadioChangePart} />}
-                {currentPage === 'part 2' && <Part2
-                    changePage={changePage}
-                    dataSource={dataSource}
-                    selectedAnswers={selectedAnswersPart}
-                    onRadioChange={handleRadioChangePart} />}
-                {currentPage === 'part 3' && <Part3
-                    changePage={changePage}
-                    dataSource={dataSource}
-                    selectedAnswers={selectedAnswersPart}
-                    onRadioChange={handleRadioChangePart} />}
-                {currentPage === 'part 4' && <Part4
-                    changePage={changePage}
-                    dataSource={dataSource}
-                    selectedAnswers={selectedAnswersPart}
-                    onRadioChange={handleRadioChangePart} />}
+                {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
+                {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
+                {currentPage !== 'start' && (
+                    <div>
+                        {currentPage === 'part 1' && <Part1
+                            changePage={changePage}
+                            dataSource={dataSource}
+                            selectedAnswers={selectedAnswersPart}
+                            onRadioChange={handleRadioChangePart} />}
+                        {currentPage === 'part 2' && <Part2
+                            changePage={changePage}
+                            dataSource={dataSource}
+                            selectedAnswers={selectedAnswersPart}
+                            onRadioChange={handleRadioChangePart} />}
+                        {currentPage === 'part 3' && <Part3
+                            changePage={changePage}
+                            dataSource={dataSource}
+                            selectedAnswers={selectedAnswersPart}
+                            onRadioChange={handleRadioChangePart} />}
+                        {currentPage === 'part 4' && <Part4
+                            changePage={changePage}
+                            dataSource={dataSource}
+                            selectedAnswers={selectedAnswersPart}
+                            onRadioChange={handleRadioChangePart} />}
+                        {remainingTime > 0 && <h3 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Time remaining: {remainingTime} minutes</h3>}
+                    </div>
+                )}
 
                 {currentPage === 'finish' && <Finish totalMarks={totalMarks} totalCorrect={totalCorrect} />}
-
+                {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && (
+                    <Button onClick={stopTimerAndChangePage} style={{
+                        margin: '20px 20px 20px 20px',
+                        background: 'cornflowerblue',
+                        color: 'white',
+                        borderRadius: '20px',
+                        width: '90%',
+                    }}>Stop Test</Button>
+                )}
             </div>
 
-            <Button onClick={handleSubmit}>Submit Test</Button>
+            {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && (
 
+                <Button onClick={handleSubmit} style={{
+                    margin: '10px 10px 10px 10px',
+                    background: 'cornflowerblue',
+                    color: 'white',
+                    borderRadius: '20px',
+                }}>Submit Test</Button>
+            )}
         </div>
     );
 }
@@ -612,13 +692,15 @@ function Part4(props) {
 function Finish({ totalMarks, totalCorrect }) {
     return (
         <Container fluid>
-            <Row style={{ backgroundColor: 'cyan', border: '1px solid ', borderRadius: '10px', width: '70vw', height: '70vh', marginLeft: 'auto', marginRight: 'auto' }}>
+            <Row style={{ backgroundColor: 'cornflowerblue', color: 'white', border: '1px solid ', borderRadius: '10px', width: '70vw', height: '70vh', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Col>
-                    <h1 style={{}}>Test Submitted Successfully</h1>
-                    <p>Thank you for completing the test.</p>
-                    <p>Total correct: {totalCorrect}/100</p>
-
-                    <p>Total Marks: {totalMarks}</p>
+                    <h1 style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>Test Submitted Successfully</h1>
+                    <h3>Thank you for completing the test.</h3>
+                    <h3>Total correct: {totalCorrect}/200</h3>
+                    <h3>Total Marks: {totalMarks}</h3>
+                </Col>
+                <Col xs={12} style={{ textAlign: 'center' }}>
+                    <Image src={Logo} preview={false} />
                 </Col>
             </Row>
         </Container>
