@@ -11,13 +11,15 @@ export const getAllTestReading = `${host}/tests/list/660e9e7ebcacb7dfe482795f`;
 export const getAllTestListening = `${host}/tests/list/66101219bcacb7dfe4827987`;
 export const getAllFullTest = `${host}/tests/list/66191b699815e0b81e1de733`;
 export const getAllHocVien = `${host}/users/list`;
+export const getTestId = `${host}/tests/`;
+
 export const addCourses = `${host}/courses/`;
 export const addTest = `${host}/tests/`;
 export const addQuestion = `${host}/questions/`;
 
 export const deleteCourses = `${host}/courses/delete`
 export const deleteTest = `${host}/tests/delete`
-
+export const deleteQuestion = `${host}/questions/delete`
 export const getUser = `${host}/users/me`;
 export const changePassword = `${host}/users/change-password`;
 export const forgotPassword = `${host}/users/forgot-password`;

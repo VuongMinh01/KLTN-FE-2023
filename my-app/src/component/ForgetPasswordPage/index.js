@@ -4,12 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import axios from "axios";
 import "../../css/LoginRegisterPage.css";
+import { ToastContainer, toast } from 'react-toastify';
+
 import { resetPassword, verifyForgotPassword, forgotPassword } from "../../utils/APIRoutes";
 
 export default function ForgetPasswordPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
 
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -19,6 +28,7 @@ export default function ForgetPasswordPage() {
             navigate('/submit-token');
         } catch (error) {
             console.error('Error submitting email:', error);
+            toast.error('Gmail không được để trống');
             // Handle error, show error message to user
         }
     };
@@ -44,6 +54,8 @@ export default function ForgetPasswordPage() {
                 <div className={'inputContainer'}>
                     <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
                 </div>
+                <ToastContainer />
+
             </div>
         </div>
     );
@@ -51,7 +63,13 @@ export default function ForgetPasswordPage() {
 export function SubmitTokenPage() {
     const navigate = useNavigate();
     const [forgot_password_token, setForgot_password_token] = useState('');
-
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -65,6 +83,8 @@ export function SubmitTokenPage() {
             navigate('/reset-password');
         } catch (error) {
             console.error('Error submitting token:', error);
+            toast.error('Vui lòng nhập đúng token');
+
             // Handle error, show error message to user
         }
     };
@@ -91,6 +111,8 @@ export function SubmitTokenPage() {
                     <div className={'inputContainer'}>
                         <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
                     </div>
+                    <ToastContainer />
+
                 </div>
             </div>
         </div>
@@ -103,12 +125,18 @@ export function ResetPasswordPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (password !== confirmPassword) {
-                setError("Passwords do not match");
+                toast.error("Passwords do not match");
                 return;
             }
 
@@ -124,13 +152,14 @@ export function ResetPasswordPage() {
 
             // Assuming the resetPassword API returns a success message upon password reset
             console.log("Password reset successfully:", data.message);
+            toast.error('Password reset successfully');
 
             // Navigate to login page upon successful password reset
             navigate('/login');
         } catch (error) {
             console.error('Error resetting password:', error);
             // Handle error, show error message to user
-            setError("Error resetting password");
+            toast.error('Error resetting password');
         }
     };
 
@@ -175,6 +204,8 @@ export function ResetPasswordPage() {
                 <div className={'inputContainer'}>
                     <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
                 </div>
+                <ToastContainer />
+
             </div>
         </div>
     );

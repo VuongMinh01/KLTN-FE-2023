@@ -144,6 +144,8 @@ export default function RegisterPage() {
                 <div className={'inputContainer'}>
                     <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
                 </div>
+                <ToastContainer />
+
             </div>
         </div>
     )
