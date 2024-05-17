@@ -340,7 +340,7 @@ function Part1(props) {
                                     checked={props.selectedAnswers[index] === "B"}
                                     onChange={() => handleRadioChangePart1(index, "B")}
                                 />
-                                <label htmlFor={`A-${index}`}>.B </label><br />
+                                <label htmlFor={`B-${index}`}>.B </label><br />
                                 {/* <label htmlFor={`B-${index}`}>B. {props.dataSource[index].answers[1].content_answer}</label><br /> */}
 
                                 <input
@@ -351,7 +351,7 @@ function Part1(props) {
                                     checked={props.selectedAnswers[index] === "C"}
                                     onChange={() => handleRadioChangePart1(index, "C")}
                                 />
-                                <label htmlFor={`A-${index}`}>.C </label><br />
+                                <label htmlFor={`C-${index}`}>.C </label><br />
                                 {/* <label htmlFor={`C-${index}`}>C. {props.dataSource[index].answers[2].content_answer}</label><br /> */}
 
                                 <input
@@ -362,7 +362,7 @@ function Part1(props) {
                                     checked={props.selectedAnswers[index] === "D"}
                                     onChange={() => handleRadioChangePart1(index, "D")}
                                 />
-                                <label htmlFor={`A-${index}`}>.D </label><br />
+                                <label htmlFor={`D-${index}`}>.D </label><br />
                                 {/* <label htmlFor={`D-${index}`}>D. {props.dataSource[index].answers[3].content_answer}</label><br /> */}
 
                             </div>
@@ -404,7 +404,7 @@ function Part2(props) {
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 7}</h3>
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <audio controls={true} src={props.dataSource[index]?.description}></audio>
+                                <audio controls={true} src={props.dataSource[index + 6]?.description}></audio>
                             </div>
 
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
@@ -451,89 +451,6 @@ function Part2(props) {
         </Container>
     );
 }
-
-
-// function Part3(props) {
-//     const handleClick = () => {
-//         // Call changePage function to change the page
-//         props.changePage('part 4');
-//     };
-//     const handlePreviousClick = () => {
-//         props.changePage('part 2');
-//     };
-
-//     const handleRadioChangePart3 = (index, value) => {
-//         const updatedSelectedAnswers = [...props.selectedAnswers];
-//         updatedSelectedAnswers[index + 31] = value; // Adjust index to match Part 3's data
-//         props.onRadioChange(index + 31, value); // Call the parent component's handler
-//     };
-
-//     // Ensure that the dataSource has at least 39 items, otherwise, fill it with dummy items
-//     const slicedDataSource = props.dataSource.length >= 39 ? props.dataSource.slice(31, 69) : Array.from({ length: 39 });
-
-//     return (
-//         <Container fluid>
-//             <h1>Part 3</h1>
-//             {slicedDataSource.map((item, index) => (
-//                 <Row gutter={24} key={index}>
-//                     <Col xs={12}>
-//                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
-//                             {/* <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 31}</h3> */}
-//                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 32}. {props.dataSource[index + 31] && props.dataSource[index + 31].content}</h3>
-//                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-//                                 <audio controls={true} src={props.dataSource[index]?.description}></audio>
-//                             </div>
-
-//                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-//                                 <input
-//                                     type="radio"
-//                                     id={`A-${index}`}
-//                                     name={`Question-${index}`}
-//                                     value="A"
-//                                     checked={props.selectedAnswers[index + 31] === "A"}
-//                                     onChange={() => handleRadioChangePart3(index, "A")} />
-//                                 <label htmlFor={`D-${index}`}>
-//                                     .A {props.dataSource[index + 31] && props.dataSource[index + 31].answers && props.dataSource[index + 31].answers[0] && props.dataSource[index + 31].answers[0].content_answer}
-//                                 </label><br />
-//                                 <input
-//                                     type="radio"
-//                                     id={`B-${index}`}
-//                                     name={`Question-${index}`}
-//                                     value="B"
-//                                     checked={props.selectedAnswers[index + 31] === "B"}
-//                                     onChange={() => handleRadioChangePart3(index, "B")}
-//                                 />
-//                                 <label htmlFor={`D-${index}`}>
-//                                     .B {props.dataSource[index + 31] && props.dataSource[index + 31].answers && props.dataSource[index + 31].answers[1] && props.dataSource[index + 31].answers[1].content_answer}
-//                                 </label><br />                                <input
-//                                     type="radio"
-//                                     id={`C-${index}`}
-//                                     name={`Question-${index}`}
-//                                     value="C"
-//                                     checked={props.selectedAnswers[index + 31] === "C"}
-//                                     onChange={() => handleRadioChangePart3(index, "C")} />
-//                                 <label htmlFor={`D-${index}`}>
-//                                     .C {props.dataSource[index + 31] && props.dataSource[index + 31].answers && props.dataSource[index + 31].answers[2] && props.dataSource[index + 31].answers[2].content_answer}
-//                                 </label><br />                                <input
-//                                     type="radio"
-//                                     id={`D-${index}`}
-//                                     name={`Question-${index}`}
-//                                     value="D"
-//                                     checked={props.selectedAnswers[index + 31] === "D"}
-//                                     onChange={() => handleRadioChangePart3(index, "D")} />
-//                                 <label htmlFor={`D-${index}`}>
-//                                     .D {props.dataSource[index + 31] && props.dataSource[index + 31].answers && props.dataSource[index + 31].answers[3] && props.dataSource[index + 31].answers[3].content_answer}
-//                                 </label><br />
-//                             </div>
-//                         </div>
-//                     </Col>
-//                 </Row>
-//             ))}
-//             <Button onClick={handlePreviousClick}>Previous Part</Button>
-//             <Button onClick={handleClick}>Next Part</Button>
-//         </Container>
-//     );
-// }
 
 function Part3(props) {
     const handleClick = () => {
@@ -636,7 +553,7 @@ function Part3(props) {
                                         value="A"
                                         checked={selectedAnswers[i + index + 31] === "A"}
                                         onChange={() => handleRadioChangePart3(i + index + 31, "A")} />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`A-${index}`}>
                                         .A {dataSource[index + i + 31] && dataSource[index + i + 31].answers && dataSource[index + i + 31].answers[0] && dataSource[index + i + 31].answers[0].content_answer}
                                     </label><br />
                                     <input
@@ -647,7 +564,7 @@ function Part3(props) {
                                         checked={selectedAnswers[i + index + 31] === "B"}
                                         onChange={() => handleRadioChangePart3(i + index + 31, "B")}
                                     />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`B-${index}`}>
                                         .B {dataSource[index + i + 31] && dataSource[index + i + 31].answers && dataSource[index + i + 31].answers[1] && dataSource[index + i + 31].answers[1].content_answer}
                                     </label><br />
                                     <input
@@ -657,7 +574,7 @@ function Part3(props) {
                                         value="C"
                                         checked={selectedAnswers[i + index + 31] === "C"}
                                         onChange={() => handleRadioChangePart3(i + index + 31, "C")} />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`C-${index}`}>
                                         .C {dataSource[index + i + 31] && dataSource[index + i + 31].answers && dataSource[index + i + 31].answers[2] && dataSource[index + i + 31].answers[2].content_answer}
                                     </label><br />
                                     <input
@@ -694,10 +611,7 @@ function Part3(props) {
 }
 
 function Part4(props) {
-    const handleClick = () => {
-        // Call changePage function to change the page
-        props.changePage('part 5');
-    };
+
     const handlePreviousClick = () => {
         props.changePage('part 3');
     };
@@ -717,7 +631,7 @@ function Part4(props) {
             groups.push(
                 <div key={i / 3} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                        {props.dataSource[i] && <audio controls={true} src={props.dataSource[i].description}></audio>}
+                        {props.dataSource[i + 70] && <audio controls={true} src={props.dataSource[i + 70].description}></audio>}
                     </div>
                     <div style={{ display: 'grid' }}>
                         {props.dataSource.slice(i, i + 3).map((item, index) => (
@@ -731,7 +645,7 @@ function Part4(props) {
                                         value="A"
                                         checked={props.selectedAnswers[i + index + 70] === "A"}
                                         onChange={() => handleRadioChangePart4(i + index + 70, "A")} />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`A-${index}`}>
                                         .A {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].answers && props.dataSource[index + i + 70].answers[0] && props.dataSource[index + i + 70].answers[0].content_answer}
                                     </label><br />                                      <input
                                         type="radio"
@@ -741,7 +655,7 @@ function Part4(props) {
                                         checked={props.selectedAnswers[i + index + 70] === "B"}
                                         onChange={() => handleRadioChangePart4(i + index + 70, "B")}
                                     />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`B-${index}`}>
                                         .B {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].answers && props.dataSource[index + i + 70].answers[1] && props.dataSource[index + i + 70].answers[1].content_answer}
                                     </label><br />                                        <input
                                         type="radio"
@@ -750,7 +664,7 @@ function Part4(props) {
                                         value="C"
                                         checked={props.selectedAnswers[i + index + 70] === "C"}
                                         onChange={() => handleRadioChangePart4(i + index + 70, "C")} />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`C-${index}`}>
                                         .C {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].answers && props.dataSource[index + i + 70].answers[2] && props.dataSource[index + i + 70].answers[2].content_answer}
                                     </label><br />                                        <input
                                         type="radio"
@@ -772,12 +686,12 @@ function Part4(props) {
         return groups;
     };
 
+
     return (
         <Container fluid>
-            <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Part 4</h1>
+            <h1>Part 4</h1>
             {renderItemsInGroupsOfThree()}
             <Button onClick={handlePreviousClick}>Previous Part</Button>
-            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 }
@@ -861,6 +775,110 @@ function Part5(props) {
 }
 
 
+// function Part6(props) {
+//     const isUrl = (str) => {
+//         try {
+//             new URL(str);
+//             return true;
+//         } catch {
+//             return false;
+//         }
+//     };
+
+//     const handleClick = () => {
+//         // Call changePage function to change the page
+//         props.changePage('part 7');
+//     };
+//     const handlePreviousClick = () => {
+//         props.changePage('part 5');
+//     };
+
+//     const handleRadioChangePart6 = (index, value) => {
+//         const updatedSelectedAnswers = [...props.selectedAnswers];
+//         updatedSelectedAnswers[index + 130] = value; // Adjust index to match Part 4's data
+//         props.onRadioChange(index + 130, value); // Call the parent component's handler
+//     };
+
+//     const slicedDataSource = props.dataSource.length >= 16 ? props.dataSource.slice(130, 145) : Array.from({ length: 16 });
+//     const renderItemsInGroupsOfFour = () => {
+//         const groups = [];
+//         for (let i = 0; i < slicedDataSource.length; i += 4) {
+//             groups.push(
+//                 <div key={i / 4} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
+//                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+//                         {props.dataSource[i + 130]?.content && isUrl(props.dataSource[i + 130]?.content) ? (
+//                             <Image alt="preview" src={props.dataSource[i + 130]?.content} style={{ width: 300 }} />
+//                         ) : (
+//                             <span>{props.dataSource[i]?.content}</span>
+//                         )}
+//                     </div>
+//                     <div style={{ display: 'grid' }}>
+//                         {slicedDataSource.slice(i, i + 4).map((item, index) => (
+//                             <div key={index} style={{ marginRight: '20px' }}>
+//                                 <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 131}. {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].content}</h3>
+//                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
+//                                     <input
+//                                         type="radio"
+//                                         id={`A-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="A"
+//                                         checked={props.selectedAnswers[i + index + 130] === "A"}
+//                                         onChange={() => handleRadioChangePart6(i + index + 130, "A")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .A {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[0] && props.dataSource[index + i + 130].answers[0].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`B-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="B"
+//                                         checked={props.selectedAnswers[i + index + 130] === "B"}
+//                                         onChange={() => handleRadioChangePart6(i + index + 130, "B")}
+//                                     />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .B {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[1] && props.dataSource[index + i + 130].answers[1].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`C-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="C"
+//                                         checked={props.selectedAnswers[i + index + 130] === "C"}
+//                                         onChange={() => handleRadioChangePart6(i + index + 130, "C")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .C {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[2] && props.dataSource[index + i + 130].answers[2].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`D-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="D"
+//                                         checked={props.selectedAnswers[i + index + 130] === "D"}
+//                                         onChange={() => handleRadioChangePart6(i + index + 130, "D")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .D {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[3] && props.dataSource[index + i + 130].answers[3].content_answer}
+//                                     </label><br />
+//                                 </div>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 </div>
+//             );
+//         }
+//         return groups;
+//     };
+
+//     return (
+//         <Container fluid>
+//             <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Part 6</h1>
+//             {renderItemsInGroupsOfFour()}
+//             <Button onClick={handlePreviousClick}>Previous Part</Button>
+//             <Button onClick={handleClick}>Next Part</Button>
+//         </Container>
+//     );
+
+// }
+
 function Part6(props) {
     const isUrl = (str) => {
         try {
@@ -872,82 +890,86 @@ function Part6(props) {
     };
 
     const handleClick = () => {
-        // Call changePage function to change the page
         props.changePage('part 7');
     };
+
     const handlePreviousClick = () => {
         props.changePage('part 5');
     };
 
     const handleRadioChangePart6 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 130] = value; // Adjust index to match Part 4's data
-        props.onRadioChange(index + 130, value); // Call the parent component's handler
+        updatedSelectedAnswers[index + 130] = value;
+        props.onRadioChange(index + 130, value);
     };
 
     const slicedDataSource = props.dataSource.length >= 16 ? props.dataSource.slice(130, 145) : Array.from({ length: 16 });
+
     const renderItemsInGroupsOfFour = () => {
         const groups = [];
         for (let i = 0; i < slicedDataSource.length; i += 4) {
+            const groupItems = slicedDataSource.slice(i, i + 4);
+            const groupElements = groupItems.map((item, index) => {
+                const dataIndex = i + index + 130;
+                return (
+                    <div key={index} style={{ marginRight: '20px' }}>
+                        <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+                            {props.dataSource[index + i + 130]?.description && isUrl(props.dataSource[index + i + 130]?.description) ? (
+                                <Image alt="preview" src={props.dataSource[index + i + 130]?.description} style={{ width: 300 }} />
+                            ) : (
+                                <span>{props.dataSource[index + i + 130]?.description}</span>
+                            )}
+                        </div>
+                        <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 131}. {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].content}</h3>
+                        <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
+                            <input
+                                type="radio"
+                                id={`A-${index}`}
+                                name={`Question-${index}`}
+                                value="A"
+                                checked={props.selectedAnswers[i + index + 130] === "A"}
+                                onChange={() => handleRadioChangePart6(i + index + 130, "A")} />
+                            <label htmlFor={`A-${index}`}>
+                                .A {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[0] && props.dataSource[index + i + 130].answers[0].content_answer}
+                            </label><br />
+                            <input
+                                type="radio"
+                                id={`B-${index}`}
+                                name={`Question-${index}`}
+                                value="B"
+                                checked={props.selectedAnswers[i + index + 130] === "B"}
+                                onChange={() => handleRadioChangePart6(i + index + 130, "B")}
+                            />
+                            <label htmlFor={`B-${index}`}>
+                                .B {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[1] && props.dataSource[index + i + 30].answers[1].content_answer}
+                            </label><br />
+                            <input
+                                type="radio"
+                                id={`C-${index}`}
+                                name={`Question-${index}`}
+                                value="C"
+                                checked={props.selectedAnswers[i + index + 130] === "C"}
+                                onChange={() => handleRadioChangePart6(i + index + 130, "C")} />
+                            <label htmlFor={`C-${index}`}>
+                                .C {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[2] && props.dataSource[index + i + 30].answers[2].content_answer}
+                            </label><br />
+                            <input
+                                type="radio"
+                                id={`D-${index}`}
+                                name={`Question-${index}`}
+                                value="D"
+                                checked={props.selectedAnswers[i + index + 130] === "D"}
+                                onChange={() => handleRadioChangePart6(i + index + 130, "D")} />
+                            <label htmlFor={`D-${index}`}>
+                                .D {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[3] && props.dataSource[index + i + 30].answers[3].content_answer}
+                            </label><br />
+                        </div>
+                    </div>
+                );
+            });
             groups.push(
                 <div key={i / 4} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
-                    <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                        {props.dataSource[i]?.content && isUrl(props.dataSource[i]?.content) ? (
-                            <Image alt="preview" src={props.dataSource[i]?.content} style={{ width: 300 }} />
-                        ) : (
-                            <span>{props.dataSource[i]?.content}</span>
-                        )}
-                    </div>
-                    <div style={{ display: 'grid' }}>
-                        {slicedDataSource.slice(i, i + 4).map((item, index) => (
-                            <div key={index} style={{ marginRight: '20px' }}>
-                                <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 131}. {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].content}</h3>
-                                <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
-                                    <input
-                                        type="radio"
-                                        id={`A-${index}`}
-                                        name={`Question-${index}`}
-                                        value="A"
-                                        checked={props.selectedAnswers[i + index + 130] === "A"}
-                                        onChange={() => handleRadioChangePart6(i + index + 130, "A")} />
-                                    <label htmlFor={`D-${index}`}>
-                                        .A {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[0] && props.dataSource[index + i + 130].answers[0].content_answer}
-                                    </label><br />
-                                    <input
-                                        type="radio"
-                                        id={`B-${index}`}
-                                        name={`Question-${index}`}
-                                        value="B"
-                                        checked={props.selectedAnswers[i + index + 130] === "B"}
-                                        onChange={() => handleRadioChangePart6(i + index + 130, "B")}
-                                    />
-                                    <label htmlFor={`D-${index}`}>
-                                        .B {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[1] && props.dataSource[index + i + 130].answers[1].content_answer}
-                                    </label><br />
-                                    <input
-                                        type="radio"
-                                        id={`C-${index}`}
-                                        name={`Question-${index}`}
-                                        value="C"
-                                        checked={props.selectedAnswers[i + index + 130] === "C"}
-                                        onChange={() => handleRadioChangePart6(i + index + 130, "C")} />
-                                    <label htmlFor={`D-${index}`}>
-                                        .C {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[2] && props.dataSource[index + i + 130].answers[2].content_answer}
-                                    </label><br />
-                                    <input
-                                        type="radio"
-                                        id={`D-${index}`}
-                                        name={`Question-${index}`}
-                                        value="D"
-                                        checked={props.selectedAnswers[i + index + 130] === "D"}
-                                        onChange={() => handleRadioChangePart6(i + index + 130, "D")} />
-                                    <label htmlFor={`D-${index}`}>
-                                        .D {props.dataSource[index + i + 130] && props.dataSource[index + i + 130].answers && props.dataSource[index + i + 130].answers[3] && props.dataSource[index + i + 130].answers[3].content_answer}
-                                    </label><br />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    {groupElements}
                 </div>
             );
         }
@@ -956,17 +978,186 @@ function Part6(props) {
 
     return (
         <Container fluid>
-            <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Part 6</h1>
+            <h1>Part 6</h1>
             {renderItemsInGroupsOfFour()}
             <Button onClick={handlePreviousClick}>Previous Part</Button>
-            <Button onClick={handleClick}>Next Part</Button>
+            <Button onClick={handleClick}>Submit</Button>
         </Container>
     );
-
 }
 
 
 
+
+// function Part7(props) {
+//     const isUrl = (str) => {
+//         try {
+//             new URL(str);
+//             return true;
+//         } catch {
+//             return false;
+//         }
+//     };
+//     const handlePreviousClick = () => {
+//         props.changePage('part 6');
+//     };
+//     const handleClick = () => {
+
+//     }
+//     const handleRadioChangePart7 = (index, value) => {
+//         const updatedSelectedAnswers = [...props.selectedAnswers];
+//         updatedSelectedAnswers[index + 146] = value;
+//         props.onRadioChange(index + 146, value);
+//     };
+//     const slicedDataSourceTwo = props.dataSource.length >= 10 ? props.dataSource.slice(146, 155) : Array.from({ length: 10 });
+//     const slicedDataSourceFour = props.dataSource.length >= 40 ? props.dataSource.slice(156, 199) : Array.from({ length: 44 });
+
+//     const renderItemsInGroupsOfTwo = () => {
+//         const groups = [];
+//         for (let i = 0; i < slicedDataSourceTwo.length; i += 2) {
+//             groups.push(
+//                 <div key={i / 2} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
+//                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+//                         {props.dataSource[i + 146]?.content && isUrl(props.dataSource[i + 146]?.content) ? (
+//                             <Image alt="preview" src={props.dataSource[i + 146]?.content} style={{ width: 300 }} />
+//                         ) : (
+//                             <span>{props.dataSource[i + 146]?.content}</span>
+//                         )}
+//                     </div>
+//                     <div style={{ display: 'grid' }}>
+//                         {slicedDataSourceTwo.slice(i, i + 2).map((item, index) => (
+//                             <div key={index} style={{ marginRight: '20px' }}>
+//                                 <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 147}. {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].content}</h3>
+//                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
+//                                     <input
+//                                         type="radio"
+//                                         id={`A-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="A"
+//                                         checked={props.selectedAnswers[i + index + 146] === "A"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 146, "A")} />
+//                                     <label htmlFor={`A-${index}`}>
+//                                         .A {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[0] && props.dataSource[index + i + 146].answers[0].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`B-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="B"
+//                                         checked={props.selectedAnswers[i + index + 146] === "B"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 146, "B")}
+//                                     />
+//                                     <label htmlFor={`B-${index}`}>
+//                                         .B {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[1] && props.dataSource[index + i + 146].answers[1].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`C-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="C"
+//                                         checked={props.selectedAnswers[i + index + 146] === "C"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 146, "C")} />
+//                                     <label htmlFor={`C-${index}`}>
+//                                         .C {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[2] && props.dataSource[index + i + 146].answers[2].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`D-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="D"
+//                                         checked={props.selectedAnswers[i + index + 146] === "D"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 146, "D")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .D {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[3] && props.dataSource[index + i + 146].answers[3].content_answer}
+//                                     </label><br />
+//                                 </div>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 </div>
+//             );
+//         }
+//         return groups;
+//     };
+//     const renderItemsInGroupsOfFour = () => {
+//         const groups = [];
+//         for (let i = 0; i < slicedDataSourceFour.length; i += 4) {
+//             groups.push(
+//                 <div key={i / 4} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
+//                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
+//                         {props.dataSource[i + 156]?.content && isUrl(props.dataSource[i + 156]?.content) ? (
+//                             <Image alt="preview" src={props.dataSource[i + 156]?.content} style={{ width: 300 }} />
+//                         ) : (
+//                             <span>{props.dataSource[i + 156]?.content}</span>
+//                         )}
+//                     </div>
+//                     <div style={{ display: 'grid' }}>
+//                         {slicedDataSourceFour.slice(i, i + 4).map((item, index) => (
+//                             <div key={index} style={{ marginRight: '20px' }}>
+//                                 <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 157}. {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].content}</h3>
+//                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
+//                                     <input
+//                                         type="radio"
+//                                         id={`A-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="A"
+//                                         checked={props.selectedAnswers[i + index + 156] === "A"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 156, "A")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .A {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[0] && props.dataSource[index + i + 156].answers[0].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`B-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="B"
+//                                         checked={props.selectedAnswers[i + index + 156] === "B"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 156, "B")}
+//                                     />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .B {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[1] && props.dataSource[index + i + 156].answers[1].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`C-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="C"
+//                                         checked={props.selectedAnswers[i + index + 156] === "C"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 156, "C")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .C {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[2] && props.dataSource[index + i + 156].answers[2].content_answer}
+//                                     </label><br />
+//                                     <input
+//                                         type="radio"
+//                                         id={`D-${index}`}
+//                                         name={`Question-${index}`}
+//                                         value="D"
+//                                         checked={props.selectedAnswers[i + index + 156] === "D"}
+//                                         onChange={() => handleRadioChangePart7(i + index + 156, "D")} />
+//                                     <label htmlFor={`D-${index}`}>
+//                                         .D {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[3] && props.dataSource[index + i + 156].answers[3].content_answer}
+//                                     </label><br />
+//                                 </div>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 </div>
+//             );
+//         }
+//         return groups;
+//     };
+
+//     return (
+//         <Container fluid>
+//             <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Part 7</h1>
+//             {renderItemsInGroupsOfTwo()}
+//             {renderItemsInGroupsOfFour()}
+//             <Button onClick={handlePreviousClick}>Previous Part</Button>
+//             <Button onClick={handleClick}>Submit</Button>
+//         </Container>
+//     );
+
+// }
 function Part7(props) {
     const isUrl = (str) => {
         try {
@@ -976,19 +1167,23 @@ function Part7(props) {
             return false;
         }
     };
+
     const handlePreviousClick = () => {
         props.changePage('part 6');
     };
-    const handleClick = () => {
 
-    }
+    const handleClick = () => {
+        // Handle submit logic here
+    };
+
     const handleRadioChangePart7 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 146] = value;
-        props.onRadioChange(index + 146, value);
+        updatedSelectedAnswers[index + 146] = value; // Adjusted index for part 7
+        props.onRadioChange(index + 146, value); // Adjusted index for part 7
     };
-    const slicedDataSourceTwo = props.dataSource.length >= 10 ? props.dataSource.slice(146, 155) : Array.from({ length: 10 });
-    const slicedDataSourceFour = props.dataSource.length >= 40 ? props.dataSource.slice(156, 199) : Array.from({ length: 44 });
+
+    const slicedDataSourceTwo = props.dataSource.length >= 10 ? props.dataSource.slice(146, 156) : Array.from({ length: 10 });
+    const slicedDataSourceFour = props.dataSource.length >= 56 ? props.dataSource.slice(156) : [];
 
     const renderItemsInGroupsOfTwo = () => {
         const groups = [];
@@ -996,10 +1191,10 @@ function Part7(props) {
             groups.push(
                 <div key={i / 2} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                        {props.dataSource[i]?.content && isUrl(props.dataSource[i]?.content) ? (
-                            <Image alt="preview" src={props.dataSource[i]?.content} style={{ width: 300 }} />
+                        {props.dataSource[i + 146]?.description && isUrl(props.dataSource[i + 146]?.description) ? (
+                            <Image alt="preview" src={props.dataSource[i + 146]?.description} style={{ width: 300 }} />
                         ) : (
-                            <span>{props.dataSource[i]?.content}</span>
+                            <span>{props.dataSource[i + 146]?.description}</span>
                         )}
                     </div>
                     <div style={{ display: 'grid' }}>
@@ -1012,20 +1207,20 @@ function Part7(props) {
                                         id={`A-${index}`}
                                         name={`Question-${index}`}
                                         value="A"
-                                        checked={props.selectedAnswers[i + index + 146] === "A"}
-                                        onChange={() => handleRadioChangePart7(i + index + 146, "A")} />
-                                    <label htmlFor={`D-${index}`}>
+                                        checked={props.selectedAnswers[i + index + 46] === "A"}
+                                        onChange={() => handleRadioChangePart7(i + index + 46, "A")} />
+                                    <label htmlFor={`A-${index}`}>
                                         .A {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[0] && props.dataSource[index + i + 146].answers[0].content_answer}
                                     </label><br />
+                                    {/* Repeat input elements for options B, C, D */}
                                     <input
                                         type="radio"
                                         id={`B-${index}`}
                                         name={`Question-${index}`}
                                         value="B"
                                         checked={props.selectedAnswers[i + index + 146] === "B"}
-                                        onChange={() => handleRadioChangePart7(i + index + 146, "B")}
-                                    />
-                                    <label htmlFor={`D-${index}`}>
+                                        onChange={() => handleRadioChangePart7(i + index + 146, "B")} />
+                                    <label htmlFor={`B-${index}`}>
                                         .B {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[1] && props.dataSource[index + i + 146].answers[1].content_answer}
                                     </label><br />
                                     <input
@@ -1035,7 +1230,7 @@ function Part7(props) {
                                         value="C"
                                         checked={props.selectedAnswers[i + index + 146] === "C"}
                                         onChange={() => handleRadioChangePart7(i + index + 146, "C")} />
-                                    <label htmlFor={`D-${index}`}>
+                                    <label htmlFor={`C-${index}`}>
                                         .C {props.dataSource[index + i + 146] && props.dataSource[index + i + 146].answers && props.dataSource[index + i + 146].answers[2] && props.dataSource[index + i + 146].answers[2].content_answer}
                                     </label><br />
                                     <input
@@ -1057,16 +1252,17 @@ function Part7(props) {
         }
         return groups;
     };
+
     const renderItemsInGroupsOfFour = () => {
         const groups = [];
         for (let i = 0; i < slicedDataSourceFour.length; i += 4) {
             groups.push(
                 <div key={i / 4} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px', border: '1px solid black', borderRadius: '20px', padding: '10px' }}>
                     <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                        {props.dataSource[i]?.content && isUrl(props.dataSource[i]?.content) ? (
-                            <Image alt="preview" src={props.dataSource[i]?.content} style={{ width: 300 }} />
+                        {props.dataSource[i + 156]?.description && isUrl(props.dataSource[i + 156]?.description) ? (
+                            <Image alt="preview" src={props.dataSource[i + 56]?.description} style={{ width: 300 }} />
                         ) : (
-                            <span>{props.dataSource[i]?.content}</span>
+                            <span>{props.dataSource[i + 156]?.description}</span>
                         )}
                     </div>
                     <div style={{ display: 'grid' }}>
@@ -1081,18 +1277,18 @@ function Part7(props) {
                                         value="A"
                                         checked={props.selectedAnswers[i + index + 156] === "A"}
                                         onChange={() => handleRadioChangePart7(i + index + 156, "A")} />
-                                    <label htmlFor={`D-${index}`}>
-                                        .A {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[0] && props.dataSource[index + i + 156].answers[0].content_answer}
+                                    <label htmlFor={`A-${index}`}>
+                                        .A {props.dataSource[index + i + 56] && props.dataSource[index + i + 56].answers && props.dataSource[index + i + 156].answers[0] && props.dataSource[index + i + 156].answers[0].content_answer}
                                     </label><br />
+                                    {/* Repeat input elements for options B, C, D */}
                                     <input
                                         type="radio"
                                         id={`B-${index}`}
                                         name={`Question-${index}`}
                                         value="B"
-                                        checked={props.selectedAnswers[i + index + 156] === "B"}
-                                        onChange={() => handleRadioChangePart7(i + index + 156, "B")}
-                                    />
-                                    <label htmlFor={`D-${index}`}>
+                                        checked={props.selectedAnswers[i + index + 56] === "B"}
+                                        onChange={() => handleRadioChangePart7(i + index + 56, "B")} />
+                                    <label htmlFor={`B-${index}`}>
                                         .B {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[1] && props.dataSource[index + i + 156].answers[1].content_answer}
                                     </label><br />
                                     <input
@@ -1100,9 +1296,9 @@ function Part7(props) {
                                         id={`C-${index}`}
                                         name={`Question-${index}`}
                                         value="C"
-                                        checked={props.selectedAnswers[i + index + 156] === "C"}
-                                        onChange={() => handleRadioChangePart7(i + index + 156, "C")} />
-                                    <label htmlFor={`D-${index}`}>
+                                        checked={props.selectedAnswers[i + index + 156] === "A"}
+                                        onChange={() => handleRadioChangePart7(i + index + 156, "A")} />
+                                    <label htmlFor={`C-${index}`}>
                                         .C {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[2] && props.dataSource[index + i + 156].answers[2].content_answer}
                                     </label><br />
                                     <input
@@ -1110,8 +1306,8 @@ function Part7(props) {
                                         id={`D-${index}`}
                                         name={`Question-${index}`}
                                         value="D"
-                                        checked={props.selectedAnswers[i + index + 156] === "D"}
-                                        onChange={() => handleRadioChangePart7(i + index + 156, "D")} />
+                                        checked={props.selectedAnswers[i + index + 156] === "A"}
+                                        onChange={() => handleRadioChangePart7(i + index + 156, "A")} />
                                     <label htmlFor={`D-${index}`}>
                                         .D {props.dataSource[index + i + 156] && props.dataSource[index + i + 156].answers && props.dataSource[index + i + 156].answers[3] && props.dataSource[index + i + 156].answers[3].content_answer}
                                     </label><br />
@@ -1124,17 +1320,15 @@ function Part7(props) {
         }
         return groups;
     };
-
     return (
         <Container fluid>
-            <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Part 7</h1>
+            <h1>Part 7</h1>
             {renderItemsInGroupsOfTwo()}
             {renderItemsInGroupsOfFour()}
             <Button onClick={handlePreviousClick}>Previous Part</Button>
             <Button onClick={handleClick}>Submit</Button>
         </Container>
     );
-
 }
 function Finish({ totalMarks, totalCorrect }) {
     return (

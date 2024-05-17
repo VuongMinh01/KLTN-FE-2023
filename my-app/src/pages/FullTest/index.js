@@ -649,7 +649,7 @@ export default function FullTest() {
                 footer={null}
             >
                 <Table
-                    scroll={{ y: 'max-content', x: 'max-content' }}
+                    scroll={{ y: 'max-content' }}
                     columns={[
                         {
                             key: "1",
