@@ -27,7 +27,7 @@ const UpdateQuestionPage = () => {
             const response = await axios.get(`${getQuestionList}/${testId}`, {
                 params: {
                     limit: 10,
-                    page: 1,
+                    page: pagination.current,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -62,9 +62,6 @@ const UpdateQuestionPage = () => {
         alert(message);
     }
     const showModal = (record) => {
-
-
-
         console.log("Clicked record:", record);
         setValues({
             ...values,
@@ -292,7 +289,25 @@ const UpdateQuestionPage = () => {
         setIsModalOpen(false)
     };
 
+    const handleTableChange = (newPagination) => {
+        setPagination(newPagination);
+    };
 
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+    });
+
+    const changePage = () => {
+        const newCurrentPage = pagination.current + 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        handleSubmit();
+    };
+    const changePage1 = () => {
+        const newCurrentPage = pagination.current - 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        handleSubmit();
+    };
     return (
         <div>
             <Input
@@ -342,9 +357,16 @@ const UpdateQuestionPage = () => {
                 ]}
                 dataSource={questionList}
                 rowKey="_id"
-                pagination={{ pageSize: 10 }}
-                loading={loading} // Add loading state for the Table component
+                pagination={false}
+                onChange={handleTableChange}
+                loading={loading}
             />
+            <div>
+
+                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={changePage1}>Prev Page</Button>
+                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', marginRight: '20px' }} type="primary" onClick={changePage}>Next Page</Button>
+            </div>
+
             <Modal
                 width={900}
                 title="Thông tin chi tiết"
