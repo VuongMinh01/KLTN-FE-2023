@@ -27,9 +27,16 @@ export default function Verify() {
         } catch (error) {
             console.error('Error verifying email:', error);
             // Handle error (e.g., display error message)
+            showToast('Mã xác minh không dúng');
+
         }
     };
-
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     const verify1 = localStorage.getItem("verify");
     const [verifyAccount, setVerifyAccount] = useState(false);
     useEffect(() => {

@@ -49,7 +49,23 @@ export default function User() {
             // Display a toast alert with the error message
         }
     }
+    axios.get(getUser, config)
+        .then((response) => {
+            localStorage.setItem("verify", JSON.stringify(response.data.result.verify));
+        })
+        .catch((error) => {
+            // Handle error
+            console.error('Error:', error);
+            // Display a toast alert with the error message
+            showToast('Phiên đăng nhập hết hạn ');
+        });
 
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     return (
 
         <Container fluid>

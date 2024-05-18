@@ -30,9 +30,9 @@ export const getQuestionListId = `${host}/questions/list/:test_id`
 
 export const updateUser = `${host}/users/me`;
 export const updateQuestion = `${host}/questions/update`;
-
-export const submitTest = `${host}/scorecards/`
-export const getScore = `${host}/scorecards`
+export const updateTest = `${host}/tests/update`;
+export const submitTest = `${host}/scorecards/`;
+export const getScore = `${host}/scorecards`;
 
 export const uploadImageEndpoint = `${host}/medias/upload-image`;
 export const uploadAudioEndpoint = `${host}/medias/upload-audio`

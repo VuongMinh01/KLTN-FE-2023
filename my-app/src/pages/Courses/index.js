@@ -156,19 +156,27 @@ export default function Courses() {
 
     const handleAddTest = async (e) => {
         e.preventDefault();
-        if (handleAddTestValidation()) {
-            const { source_id, title, description, timeline } = valuesTest;
-            const { dataTest } = await axios.post(addTest, {
-                source_id, title, description, timeline,
+        try {
+            if (handleAddTestValidation()) {
+                const { source_id, title, description, timeline } = valuesTest;
+                const { dataTest } = await axios.post(addTest, {
+                    source_id, title, description, timeline,
 
-            }, config)
+                }, config)
 
-            if (dataTest === 'Test created successfully') {
+                if (dataTest === 'Test created successfully') {
+                    setLoading(true)
+                    console.log("Thêm thành công");
+                }
                 setLoading(true)
-                console.log("Thêm thành công");
+                setIsModalOpen(false);
             }
-            setLoading(true)
-            setIsModalOpen(false);
+        } catch (error) {
+            // Handle the error here
+            console.error("Error adding test:", error);
+            toast.error('Có lỗi trong việc thêm')
+            setLoading(false); // Ensure loading state is set to false in case of error
+            // Optionally, you can display an error message or perform other actions
         }
     };
     const onDeleteService = async (e) => {
@@ -179,21 +187,8 @@ export default function Courses() {
         console.log('deleted');
     }
 
-    const [coursesId, setCoursesId] = useState('');
 
-    // Modal
-    // const showModal = async (e) => {
-    //     setCoursesId(e._id);
-    //     console.log(coursesId, '3232')
-    //     setIsModalOpen(true);
-    //     setLoading(true);
-    // };
     const showModal = (record) => {
-        // console.log("Clicked record:", record);
-        // setCoursesId(record._id);
-        // console.log(record._id, '333');
-
-        // setIsModalOpen(true);
 
         console.log("Clicked record:", record);
         setValuesTest({
@@ -262,8 +257,14 @@ export default function Courses() {
                                 <>
                                     <PlusOutlined onClick={() => showModal(record)} />
 
-                                    <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
-
+                                    <DeleteOutlined
+                                        onClick={() => {
+                                            if (window.confirm("Are you sure you want to delete this service?")) {
+                                                onDeleteService(record);
+                                            }
+                                        }}
+                                        style={{ color: "red", marginLeft: "12px" }}
+                                    />
                                 </>
                             )
                         }
@@ -380,11 +381,7 @@ export default function Courses() {
                                     rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                                 >
                                     <Input
-                                        // onChange={(e) => handleOnChangeTest(e)}
-                                        // type="text"
-                                        // value={coursesId}
-                                        // name="source_id"
-                                        // placeholder="Nhập mã bài thi"
+
                                         onChange={(e) => handleOnChangeTest(e)}
                                         type="text"
                                         value={valuesTest.source_id}

@@ -39,6 +39,7 @@ const UpdateQuestionPage = () => {
             setLoading(false);
         } catch (error) {
             console.error("Error fetching question list:", error);
+            showToast('Nhập id test cần tìm')
             setLoading(false);
         }
     };
@@ -308,6 +309,13 @@ const UpdateQuestionPage = () => {
         setPagination({ ...pagination, current: newCurrentPage });
         handleSubmit();
     };
+    const resetPage = () => {
+        const newCurrentPage = 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        setQuestionList([]);
+
+    };
+
     return (
         <div>
             <Input
@@ -319,6 +327,8 @@ const UpdateQuestionPage = () => {
             <Button type="primary" onClick={handleSubmit}>
                 Submit
             </Button>
+
+            <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={resetPage}>Reset</Button>
 
             {/* Table to display the list of questions */}
             <Table
@@ -349,8 +359,14 @@ const UpdateQuestionPage = () => {
                         title: "Actions",
                         render: (record) => (
                             <div>
-                                <DeleteOutlined onClick={() => onDeleteQuestion(record)} style={{ color: "red", marginLeft: "12px" }} />
-                                <EditOutlined onClick={() => showModal(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                <DeleteOutlined
+                                    onClick={() => {
+                                        if (window.confirm("Are you sure you want to delete this service?")) {
+                                            onDeleteQuestion(record);
+                                        }
+                                    }}
+                                    style={{ color: "red", marginLeft: "12px" }}
+                                />                                  <EditOutlined onClick={() => showModal(record)} style={{ color: "green", marginLeft: "12px" }} />
                             </div>
                         ),
                     },
@@ -361,8 +377,11 @@ const UpdateQuestionPage = () => {
                 onChange={handleTableChange}
                 loading={loading}
             />
-            <div>
+            <div style={{ marginBottom: '30px', marginTop: '10px' }}>
+                <h3 style={{ float: 'right', marginRight: '40px', border: '1px solid black', padding: '5px', marginLeft: '20px' }}>{pagination.current}</h3>
 
+            </div>
+            <div>
                 <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={changePage1}>Prev Page</Button>
                 <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', marginRight: '20px' }} type="primary" onClick={changePage}>Next Page</Button>
             </div>

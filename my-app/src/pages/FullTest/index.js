@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Col, Form, Row, Modal, Radio } from "antd";
 import React, { useState, useEffect } from "react";
-import { deleteTest, getAllFullTest, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint, deleteQuestion } from "../../utils/APIRoutes";
+import { deleteTest, getAllFullTest, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint, deleteQuestion, updateTest } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-design/icons';
@@ -8,7 +8,6 @@ import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-d
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
-import Column from "antd/es/table/Column";
 
 const { TextArea } = Input;
 
@@ -23,7 +22,15 @@ export default function FullTest() {
     const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
     const [imageFile, setImageFile] = useState(null);
     const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
+    const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
+    const [valuesTest, setValuesTest] = useState({
+        test_id: "",
+        source_id: "",
+        title: "",
+        description: "",
+        timeline: 0,
+    })
     const [values, setValues] = useState({
         num_quest: 0,
         content: "",
@@ -169,32 +176,7 @@ export default function FullTest() {
         showToast('Xoá thành công')
     }
 
-    // const handleAddQuestion = async (e) => {
-    //     e.preventDefault();
-    //     values['answers'] = [{
-    //         order_answer: "A",
-    //         content_answer: values.content_answer_1,
-    //     }, {
-    //         order_answer: "B",
-    //         content_answer: values.content_answer_2,
-    //     }, {
-    //         order_answer: "C",
-    //         content_answer: values.content_answer_3,
-    //     }, {
-    //         order_answer: "D",
-    //         content_answer: values.content_answer_4,
-    //     }]
 
-
-    //     try {
-    //         const { data } = await axios.post(addQuestion, {
-    //             ...values
-    //         }, { headers })
-    //         setIsModalOpen(false);
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
 
     const handleAddQuestion = async (e) => {
         if (e) {
@@ -402,6 +384,50 @@ export default function FullTest() {
         // toast.error(message);
         alert(message);
     }
+    const handleOnChangeTest = (e) => {
+        setValuesTest({ ...valuesTest, [e.target.name]: e.target.value });
+
+    }
+    const showModalUpdate = (record) => {
+        console.log("Clicked record:", record);
+        setValuesTest({
+            ...valuesTest,
+            source_id: record.source_id,
+            test_id: record._id,
+            title: record.title,
+            description: record.description, // Update the source_id in the valuesTest state
+        });
+        console.log(record.source_id, '44');
+        console.log(record._id, '333');
+        setIsModalUpdateOpen(true);
+
+    };
+    const handleCancelUpdate = async () => {
+        setIsModalUpdateOpen(false);
+    }
+    const handleOnChangeNumberTest = (e) => {
+        setValuesTest({ ...valuesTest, [e.target.name]: parseInt(e.target.value) });
+
+    }
+    const handleUpdateTest = async (e) => {
+        e.preventDefault();
+        try {
+            const { source_id, test_id, title, description, timeline } = valuesTest;
+            const { dataTest } = await axios.patch(updateTest, {
+                source_id, test_id, title, description, timeline
+            }, { headers })
+            showToast("Update thành công");
+            setLoading(true)
+            updateTable();
+            setIsModalUpdateOpen(false);
+        } catch (error) {
+            // Handle the error here
+            console.error("Error adding test:", error);
+            showToast('Có lỗi trong việc update')
+            setLoading(false); // Ensure loading state is set to false in case of error
+            // Optionally, you can display an error message or perform other actions
+        }
+    };
     return (
 
         <div>
@@ -454,8 +480,16 @@ export default function FullTest() {
                                         <PlusOutlined onClick={() => showModal(record)}
                                         />
 
-                                        <DeleteOutlined onClick={() => onDeleteService(record)} style={{ color: "red", marginLeft: "12px" }} />
-                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                        <DeleteOutlined
+                                            onClick={() => {
+                                                if (window.confirm("Are you sure you want to delete this service?")) {
+                                                    onDeleteService(record);
+                                                }
+                                            }}
+                                            style={{ color: "red", marginLeft: "12px" }}
+                                        />                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                        <EditOutlined onClick={() => showModalUpdate(record)} style={{ color: "green", marginLeft: "12px" }} />
+
                                     </div>
                                 )
                             }
@@ -677,10 +711,17 @@ export default function FullTest() {
                             key: "6",
                             title: "Actions",
 
-                            render: (record1) => {
+                            render: (record) => {
                                 return (
                                     <div>
-                                        <DeleteOutlined onClick={() => onDeleteQuestion(record1)} style={{ color: "red", marginLeft: "12px" }} />
+                                        <DeleteOutlined
+                                            onClick={() => {
+                                                if (window.confirm("Are you sure you want to delete this service?")) {
+                                                    onDeleteQuestion(record);
+                                                }
+                                            }}
+                                            style={{ color: "red", marginLeft: "12px" }}
+                                        />
                                     </div>
                                 )
                             }
@@ -695,6 +736,92 @@ export default function FullTest() {
                     }
                 ></Table>
             </Modal >
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalUpdateOpen} onOk={handleUpdateTest} onCancel={handleCancelUpdate}
+            >
+                {isModalUpdateOpen}
+                <Space>
+                    <Form name="formThemTest" layout="verical">
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Mã bài thi"
+                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                >
+                                    <Input
+
+                                        onChange={(e) => handleOnChangeTest(e)}
+                                        type="text"
+                                        value={valuesTest.source_id}
+                                        name="source_id"
+                                        placeholder="Nhập mã bài thi"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Mã bài thi"
+                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                >
+                                    <Input
+
+                                        onChange={(e) => handleOnChangeTest(e)}
+                                        type="text"
+                                        value={valuesTest.test_id}
+                                        name="test_id"
+                                        placeholder="Nhập mã bài thi"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Title "
+                                    rules={[{ required: true, message: 'Title không được để trống' }]}
+                                >
+                                    <Input
+                                        name="title"
+                                        onChange={(e) => handleOnChangeTest(e)}
+                                        value={valuesTest.title}
+
+                                        placeholder="Nhập tiêu đề" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Mô tả"
+                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
+                                >
+                                    <Input
+                                        name="description"
+                                        onChange={(e) => handleOnChangeTest(e)}
+                                        value={valuesTest.description}
+
+                                        placeholder="Mô tả" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+
+                                    label="Time line"
+                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                                >
+                                    <Input
+                                        name="timeline"
+                                        onChange={(e) => handleOnChangeNumberTest(e)}
+                                        placeholder="Nhập thời gian làm bài test"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </Form>
+
+                </Space>
+
+            </Modal>
 
         </div >
     )

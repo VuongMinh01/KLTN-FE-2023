@@ -44,9 +44,9 @@ export default function SideMenu({ userData }) {
                 }}
                 items={[
                     {
-                        label: "Dashboard",
+                        label: "User",
                         icon: <HomeOutlined />,
-                        key: '/admin/dashboard',
+                        key: '/user',
 
                     },
                     {

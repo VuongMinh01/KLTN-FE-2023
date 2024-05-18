@@ -56,10 +56,16 @@ export default function InformUser() {
             })
             .catch(error => {
                 console.error('Error updating user information:', error);
+                showToast('Username đã tồn tại ',)
                 // Optionally, you can show an error message or perform error handling
             });
     };
-
+    function showToast(message) {
+        // Replace this with your toast alert implementation
+        // For example, if you're using react-toastify:
+        // toast.error(message);
+        alert(message);
+    }
     return (
         <div>
             <h1>User Profile</h1>

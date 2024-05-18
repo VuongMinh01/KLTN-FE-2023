@@ -26,24 +26,34 @@ export default function LoginPage() {
 
     const onButtonClick = async (e) => {
         e.preventDefault();
-        if (handleValidation()) {
-            const { password, email } = values;
-            const { data } = await axios.post(loginRoute, {
-                email,
-                password,
-            });
+        try {
+            if (handleValidation()) {
+                const { password, email } = values;
+                const { data } = await axios.post(loginRoute, {
+                    email,
+                    password,
+                });
 
-            if (data.message === "Login success") {
-                localStorage.setItem("user", JSON.stringify(data.result.access_token));
-                navigate("/user"); // Redirect to the user path
-            }
+                if (data.message === "Login success") {
+                    localStorage.setItem("user", JSON.stringify(data.result.access_token));
+                    navigate("/user"); // Redirect to the user path
+                }
 
-            if (data.message === "Request failed with status code 422") {
-                toast.error(data.msg, toastOptions);
-                showToast('Tài khoản hoặc mật khẩu không chính xác');
+                if (data.message === "Request failed with status code 422") {
+                    toast.error(data.msg, toastOptions);
+                    showToast('Tài khoản hoặc mật khẩu không chính xác');
+                }
             }
+        } catch (error) {
+            // Handle errors here
+            console.error("An error occurred:", error);
+            // You can also display an error message to the user
+            toast.error("An error occurred. Please try again later.", toastOptions);
+            showToast('Tài khoản hoặc mật khẩu không chính xác');
+
         }
     }
+
 
 
     function showToast(message) {
