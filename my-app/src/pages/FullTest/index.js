@@ -487,7 +487,8 @@ export default function FullTest() {
                                                 }
                                             }}
                                             style={{ color: "red", marginLeft: "12px" }}
-                                        />                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                        />
+                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
                                         <EditOutlined onClick={() => showModalUpdate(record)} style={{ color: "green", marginLeft: "12px" }} />
 
                                     </div>

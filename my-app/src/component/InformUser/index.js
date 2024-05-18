@@ -81,8 +81,8 @@ export default function InformUser() {
                 <label>Email:</label>
                 <Input type="email" name="email" value={userData.email} disabled />
             </div>
-            <div>
-                <label>Date of Birth:</label>
+            <div style={{ padding: '10px' }}>
+                <label style={{ marginRight: '10px' }}>Date of Birth:</label>
                 <DatePicker value={userData.date_of_birth ? moment(userData.date_of_birth, 'YYYY-MM-DD') : null} onChange={handleDateChange} />
             </div>
             <div>

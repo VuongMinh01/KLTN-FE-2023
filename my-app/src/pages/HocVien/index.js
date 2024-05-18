@@ -1,17 +1,20 @@
-import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
+import { Space, Table, Typography, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect, useRef } from "react";
-import { getAllHocVien } from "../../utils/APIRoutes";
+import { getAllHocVien, searchUser } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { InfoOutlined } from '@ant-design/icons';
 
-import { ToastContainer, toast } from 'react-toastify';
-import { Navigate, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { DatePicker, Button, Image } from "antd";
+import moment from 'moment';
+import { limit } from "firebase/firestore";
 
 export default function HocVien() {
     const [loading, setLoading] = useState(false)
     const [dataSource, setDataSource] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const token = localStorage.getItem("user").replace(/"/g, '');
     const headers = {
         'Authorization': `Bearer ${token}`,
@@ -39,6 +42,38 @@ export default function HocVien() {
             return previousState
         });
     }
+
+
+        ; const [userData, setUserData] = useState({
+            name: "",
+            email: "",
+            date_of_birth: "",
+            location: "",
+            username: "",
+            avatar: "",
+            cover_photo: ""
+        });
+
+    const showModal = (username) => {
+        // Fetch user data using the username
+        axios.get(`${searchUser}`, {
+            params: {
+                name_email: username, // Use the username as the parameter
+                limit: 1, // Limit to 1 result since you're expecting a single user
+                page: 1 // Assuming you always want the first page of results
+            },
+            headers: headers
+        })
+            .then(response => {
+                const userDataFromApi = response.data.result.users[0]; // Assuming username is unique, so we take the first user
+                setUserData(userDataFromApi);
+                setIsModalOpen(true); // Open the modal after fetching user data
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+            });
+    };
+
 
 
     return (
@@ -78,6 +113,7 @@ export default function HocVien() {
                     render: (record) => {
                         return (
                             <>
+                                <InfoOutlined onClick={() => showModal(record.username)} style={{ color: "green", marginLeft: "12px" }} />
 
 
                             </>
@@ -93,6 +129,46 @@ export default function HocVien() {
                     }
                 }
             ></Table>
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalOpen}
+                onCancel={() => setIsModalOpen(false)}
+                footer={null}>
+                <h1>User Profile</h1>
+                <div>
+                    <Image width={400} src={userData.avatar} />
+
+                </div>
+                <div>
+                    <label>Name:</label>
+                    <Input name="name" value={userData.name} disabled />
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <Input type="email" name="email" value={userData.email} disabled />
+                </div>
+                <div style={{ padding: '10px' }}>
+                    <label style={{ marginRight: '10px' }}>Date of Birth:</label>
+                    <DatePicker value={userData.date_of_birth ? moment(userData.date_of_birth, 'YYYY-MM-DD') : null} disabled />
+                </div>
+                <div>
+                    <label>Location:</label>
+                    <Input name="location" value={userData.location} disabled />
+                </div>
+                <div>
+                    <label>Username:</label>
+                    <Input name="username" value={userData.username} disabled />
+                </div>
+                <div>
+                    <label>Avatar:</label>
+                    <Input name="avatar" value={userData.avatar} disabled />
+                </div>
+                <div>
+                    <label>Cover Photo:</label>
+                    <Input name="cover_photo" value={userData.cover_photo} disabled />
+                </div>
+            </Modal>
         </Container>
     )
 }

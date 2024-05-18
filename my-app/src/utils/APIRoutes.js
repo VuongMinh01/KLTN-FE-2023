@@ -33,6 +33,6 @@ export const updateQuestion = `${host}/questions/update`;
 export const updateTest = `${host}/tests/update`;
 export const submitTest = `${host}/scorecards/`;
 export const getScore = `${host}/scorecards`;
-
+export const searchUser = `${host}/search/user`
 export const uploadImageEndpoint = `${host}/medias/upload-image`;
 export const uploadAudioEndpoint = `${host}/medias/upload-audio`
