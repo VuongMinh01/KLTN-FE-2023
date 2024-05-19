@@ -5,7 +5,7 @@ import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input, Image } from "antd";
 import { getQuestionList, submitTest, getTestId } from "../../utils/APIRoutes";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import StopPage from "../../component/StopPage";
 import StartPage from "../../component/StartPage";
 import Logo from '../../assets/ToeicTesting.png'
@@ -17,6 +17,8 @@ export default function ReadingTesting() {
 
     const [currentPage, setCurrentPage] = useState('start');
     const location = useLocation();
+    const navigate = useNavigate();
+
     const changePage = (page) => {
         setCurrentPage(page);
     };
@@ -86,7 +88,7 @@ export default function ReadingTesting() {
         const parts = pathname.split('/');
         return parts[parts.length - 1];
     }
-    const token = localStorage.getItem("user").replace(/"/g, '');
+    const token = localStorage.getItem("user") ? localStorage.getItem("user").replace(/"/g, '') : null; // Check if token exists
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -138,6 +140,10 @@ export default function ReadingTesting() {
             console.log(questions, 'data list');
         }).catch((error) => {
             console.error('Error fetching list of questions:', error);
+            const confirmed = window.confirm("Bạn cần phải đăng nhập để làm bài này. Nhấn OK để chuyển đến trang đăng nhập.");
+            if (confirmed) {
+                navigate('/login');
+            }
         });
     }
     function showToast(message) {

@@ -5,7 +5,7 @@ import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input, Image } from "antd";
 import { getQuestionList, submitTest, getTestId } from "../../utils/APIRoutes";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import StartPage from "../../component/StartPage";
 import axios from "axios";
 import StopPage from "../../component/StopPage";
@@ -14,7 +14,7 @@ export default function FullTesting() {
 
     const [currentPage, setCurrentPage] = useState('start');
     const location = useLocation();
-
+    const navigate = useNavigate();
     // clock
     const [totalTime, setTotalTime] = useState(0); // State to store total time
     const [remainingTime, setRemainingTime] = useState(0);
@@ -69,7 +69,7 @@ export default function FullTesting() {
         const parts = pathname.split('/');
         return parts[parts.length - 1];
     }
-    const token = localStorage.getItem("user").replace(/"/g, '');
+    const token = localStorage.getItem("user") ? localStorage.getItem("user").replace(/"/g, '') : null; // Check if token exists
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -120,6 +120,10 @@ export default function FullTesting() {
             console.log(questions, 'data list');
         }).catch((error) => {
             console.error('Error fetching list of questions:', error);
+            const confirmed = window.confirm("Bạn cần phải đăng nhập để làm bài này. Nhấn OK để chuyển đến trang đăng nhập.");
+            if (confirmed) {
+                navigate('/login');
+            }
         });
     }
 
