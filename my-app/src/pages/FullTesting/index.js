@@ -207,7 +207,7 @@ export default function FullTesting() {
 
 
 
-            <div className="sidebar">
+            {/* <div className="sidebar">
                 <ul>
                     <li><button onClick={() => changePage('part 1')}>Part 1</button></li>
                     <li><button onClick={() => changePage('part 2')}>Part 2</button></li>
@@ -217,7 +217,7 @@ export default function FullTesting() {
                     <li><button onClick={() => changePage('part 6')}>Part 6</button></li>
                     <li><button onClick={() => changePage('part 7')}>Part 7</button></li>
                 </ul>
-            </div>
+            </div> */}
             <div className="main-content">
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}

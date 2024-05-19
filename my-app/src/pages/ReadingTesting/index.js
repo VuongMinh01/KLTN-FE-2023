@@ -198,13 +198,13 @@ export default function ReadingTesting() {
         <div className="App">
             <Header />
 
-            <div className="sidebar">
+            {/* <div className="sidebar">
                 <ul>
                     <li><button onClick={() => changePage('part 5')}>Part 5</button></li>
                     <li><button onClick={() => changePage('part 6')}>Part 6</button></li>
                     <li><button onClick={() => changePage('part 7')}>Part 7</button></li>
                 </ul>
-            </div>
+            </div> */}
             <div className="main-content">
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
@@ -426,7 +426,7 @@ function Part6(props) {
             <h1>Part 6</h1>
             {renderItemsInGroupsOfFour()}
             <Button onClick={handlePreviousClick}>Previous Part</Button>
-            <Button onClick={handleClick}>Submit</Button>
+            <Button onClick={handleClick}>Next Part</Button>
         </Container>
     );
 }
@@ -446,9 +446,7 @@ function Part7(props) {
         props.changePage('part 6');
     };
 
-    const handleClick = () => {
-        // Handle submit logic here
-    };
+
 
     const handleRadioChangePart7 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
@@ -600,7 +598,6 @@ function Part7(props) {
             {renderItemsInGroupsOfTwo()}
             {renderItemsInGroupsOfFour()}
             <Button onClick={handlePreviousClick}>Previous Part</Button>
-            <Button onClick={handleClick}>Submit</Button>
         </Container>
     );
 }

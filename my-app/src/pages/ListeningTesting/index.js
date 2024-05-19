@@ -212,7 +212,7 @@ export default function ListeningTesting() {
 
 
 
-            <div className="sidebar">
+            {/* <div className="sidebar">
                 <ul>
                     <li><button onClick={() => changePage('part 1')}>Part 1</button></li>
                     <li><button onClick={() => changePage('part 2')}>Part 2</button></li>
@@ -220,7 +220,7 @@ export default function ListeningTesting() {
                     <li><button onClick={() => changePage('part 4')}>Part 4</button></li>
 
                 </ul>
-            </div>
+            </div> */}
             <div className="main-content">
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
