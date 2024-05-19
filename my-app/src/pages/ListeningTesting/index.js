@@ -537,8 +537,8 @@ function Part3(props) {
 
     const handleRadioChangePart4 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 31] = value; // Adjust index to match Part 4's data
-        props.onRadioChange(index + 31, value); // Call the parent component's handler
+        updatedSelectedAnswers[index] = value; // Adjust index to match Part 4's data
+        props.onRadioChange(index, value); // Call the parent component's handler
     };
 
     const slicedDataSource = props.dataSource.length >= 31 ? props.dataSource.slice(31, 69) : Array.from({ length: 39 });
@@ -627,8 +627,8 @@ function Part4(props) {
 
     const handleRadioChangePart4 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 70] = value; // Adjust index to match Part 4's data
-        props.onRadioChange(index + 70, value); // Call the parent component's handler
+        updatedSelectedAnswers[index] = value; // Adjust index to match Part 4's data
+        props.onRadioChange(index, value); // Call the parent component's handler
     };
 
     const slicedDataSource = props.dataSource.length >= 30 ? props.dataSource.slice(70, 99) : Array.from({ length: 30 });

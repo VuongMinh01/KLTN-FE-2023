@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import StopPage from "../../component/StopPage";
 import StartPage from "../../component/StartPage";
 import Logo from '../../assets/ToeicTesting.png'
-
 import axios from "axios";
 
 
@@ -70,7 +69,6 @@ export default function ReadingTesting() {
     }, [location.pathname]);
     //clock
     const fetchTestTimeline = (test_id, headers) => {
-        // Fetch test timeline using axios
         const testTimelineUrl = `${getTestId}/${test_id}`;
         axios.get(testTimelineUrl, { headers })
             .then(response => {
@@ -96,7 +94,6 @@ export default function ReadingTesting() {
     const [modifiedDataSource, setModifiedDataSource] = useState([]);
 
     const handleRadioChangePart = (index, value) => {
-        console.log("handleRadioChangePart called");
         const updatedSelectedAnswers = [...selectedAnswersPart];
         updatedSelectedAnswers[index] = value;
         setSelectedAnswersPart(updatedSelectedAnswers);
@@ -117,7 +114,6 @@ export default function ReadingTesting() {
                     order_answer
                 }
             };
-
             setModifiedDataSource(updatedDataSource);
             console.log("Data at index ", index, updatedDataSource[index]);
         }
@@ -147,12 +143,8 @@ export default function ReadingTesting() {
         });
     }
     function showToast(message) {
-        // Replace this with your toast alert implementation
-        // For example, if you're using react-toastify:
-        // toast.error(message);
         alert(message);
     }
-
 
     const handleSubmit = () => {
         // Ensure questions and modifiedDataSource have data
@@ -193,12 +185,10 @@ export default function ReadingTesting() {
                 setTotalMarks(total_marks); // Update totalMarks state
                 setCurrentPage('finish');
 
-                // You can display a success message or perform any other actions here
             })
             .catch(error => {
                 // Handle error
                 console.error('Error submitting test:', error);
-                // You can display an error message or perform any other error handling here
             });
 
     };
@@ -354,8 +344,8 @@ function Part6(props) {
 
     const handleRadioChangePart6 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 30] = value;
-        props.onRadioChange(index + 30, value);
+        updatedSelectedAnswers[index] = value;
+        props.onRadioChange(index, value);
     };
 
     const slicedDataSource = props.dataSource.length >= 16 ? props.dataSource.slice(30, 46) : Array.from({ length: 16 });
@@ -462,8 +452,8 @@ function Part7(props) {
 
     const handleRadioChangePart7 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
-        updatedSelectedAnswers[index + 46] = value; // Adjusted index for part 7
-        props.onRadioChange(index + 46, value); // Adjusted index for part 7
+        updatedSelectedAnswers[index] = value; // Adjusted index for part 7
+        props.onRadioChange(index, value); // Adjusted index for part 7
     };
 
     const slicedDataSourceTwo = props.dataSource.length >= 10 ? props.dataSource.slice(46, 56) : Array.from({ length: 10 });
@@ -580,8 +570,8 @@ function Part7(props) {
                                         id={`C-${index}`}
                                         name={`Question-${index}`}
                                         value="C"
-                                        checked={props.selectedAnswers[i + index + 56] === "A"}
-                                        onChange={() => handleRadioChangePart7(i + index + 56, "A")} />
+                                        checked={props.selectedAnswers[i + index + 56] === "C"}
+                                        onChange={() => handleRadioChangePart7(i + index + 56, "C")} />
                                     <label htmlFor={`C-${index}`}>
                                         .C {props.dataSource[index + i + 56] && props.dataSource[index + i + 56].answers && props.dataSource[index + i + 56].answers[2] && props.dataSource[index + i + 56].answers[2].content_answer}
                                     </label><br />
@@ -590,8 +580,8 @@ function Part7(props) {
                                         id={`D-${index}`}
                                         name={`Question-${index}`}
                                         value="D"
-                                        checked={props.selectedAnswers[i + index + 56] === "A"}
-                                        onChange={() => handleRadioChangePart7(i + index + 56, "A")} />
+                                        checked={props.selectedAnswers[i + index + 56] === "D"}
+                                        onChange={() => handleRadioChangePart7(i + index + 56, "D")} />
                                     <label htmlFor={`D-${index}`}>
                                         .D {props.dataSource[index + i + 56] && props.dataSource[index + i + 56].answers && props.dataSource[index + i + 56].answers[3] && props.dataSource[index + i + 56].answers[3].content_answer}
                                     </label><br />
