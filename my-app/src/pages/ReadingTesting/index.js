@@ -257,6 +257,8 @@ function Part5(props) {
     const handleClick = () => {
         // Call changePage function to change the page
         props.changePage('part 6');
+        window.scrollTo(0, 0);
+
     };
 
     const handleRadioChangePart5 = (index, value) => {
@@ -336,10 +338,14 @@ function Part6(props) {
 
     const handleClick = () => {
         props.changePage('part 7');
+        window.scrollTo(0, 0);
+
     };
 
     const handlePreviousClick = () => {
         props.changePage('part 5');
+        window.scrollTo(0, 0);
+
     };
 
     const handleRadioChangePart6 = (index, value) => {
@@ -444,6 +450,8 @@ function Part7(props) {
 
     const handlePreviousClick = () => {
         props.changePage('part 6');
+        window.scrollTo(0, 0);
+
     };
 
 
