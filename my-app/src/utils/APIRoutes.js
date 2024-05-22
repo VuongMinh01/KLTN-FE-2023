@@ -9,7 +9,7 @@ export const verifyEmail = `${host}/users/verify-email`;
 export const getAllCourses = `${host}/courses/list`;
 export const getAllTestReading = `${host}/tests/list/660e9e7ebcacb7dfe482795f`;
 export const getAllTestListening = `${host}/tests/list/66101219bcacb7dfe4827987`;
-export const getAllFullTest = `${host}/tests/list/66191b699815e0b81e1de733`;
+export const getAllFullTest = `${host}/tests/list/664d7f342edceae7e7c92c5c`;
 export const getAllHocVien = `${host}/users/list`;
 export const getTestId = `${host}/tests/`;
 
@@ -30,6 +30,7 @@ export const getQuestionListId = `${host}/questions/list/:test_id`
 
 export const updateUser = `${host}/users/me`;
 export const updateQuestion = `${host}/questions/update`;
+export const updateCourses = `${host}/courses/update`;
 export const updateTest = `${host}/tests/update`;
 export const submitTest = `${host}/scorecards/`;
 export const getScore = `${host}/scorecards`;

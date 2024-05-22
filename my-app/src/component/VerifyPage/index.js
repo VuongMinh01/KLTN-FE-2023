@@ -64,8 +64,8 @@ export default function Verify() {
                 <h1>Xác minh tài khoản</h1>
 
                 {verifyAccount && <div>
-                    <h1>Account Verified</h1>
-                    <p>Your account has been successfully verified.</p>
+                    <h1>Tài khoản đã xác minh</h1>
+                    <p>Tài khoản của bạn đã được xác minh</p>
                     {/* Display any additional information or components for verified accounts */}
                 </div>}
                 {!verifyAccount && <div>
@@ -73,7 +73,7 @@ export default function Verify() {
                         name="email_verify_token"
                         onChange={(e) => handleOnChange(e)}
                         placeholder="Nhập mã xác minh" />
-                        <Button style={{ marginTop: '10px' }} onClick={onSend}>Send</Button></>
+                        <Button style={{ marginTop: '10px' }} onClick={onSend}>Gửi</Button></>
 
                 </div>}
             </div>

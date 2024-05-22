@@ -38,21 +38,21 @@ export default function ForgetPasswordPage() {
             <div className='Register'>
 
                 <div className={'titleContainer'}>
-                    <div>Submit Gmail</div>
+                    <div>Gửi Mail</div>
                 </div>
                 <form onSubmit={handleSubmit} className="inputContainer" >
                     <input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="Nhập mail đã đăng ký của bạn tại đây"
                         value={email}
                         className={'inputBox'}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <br />
-                    <button type="submit">Submit</button>
+                    <button type="submit">Gửi</button>
                 </form>
                 <div className={'inputContainer'}>
-                    <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
+                    <h4>Đã có tài khoản?<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Đăng nhập</NavLink></h4>
                 </div>
                 <ToastContainer />
 
@@ -94,7 +94,7 @@ export function SubmitTokenPage() {
             <div className='Register'>
 
                 <div className={'titleContainer'}>
-                    <div>Submit token</div>
+                    <div>Mã xác minh</div>
                 </div>
                 <div className={'inputContainer'}>
                     <form onSubmit={handleSubmit}>
@@ -102,14 +102,14 @@ export function SubmitTokenPage() {
                             className={'inputBox'}
 
                             type="text"
-                            placeholder="Enter token"
+                            placeholder="Nhập mã xác minh tại đây"
                             value={forgot_password_token}
                             onChange={(e) => setForgot_password_token(e.target.value)}
                         />
-                        <button type="submit">Submit</button>
+                        <button type="submit">Gửi</button>
                     </form>
                     <div className={'inputContainer'}>
-                        <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
+                        <h4>Đã có tài khoản?<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Đăng nhập</NavLink></h4>
                     </div>
                     <ToastContainer />
 
@@ -152,14 +152,14 @@ export function ResetPasswordPage() {
 
             // Assuming the resetPassword API returns a success message upon password reset
             console.log("Password reset successfully:", data.message);
-            toast.error('Password reset successfully');
+            toast.error('Mật khẩu thay đổi thành công');
 
             // Navigate to login page upon successful password reset
             navigate('/login');
         } catch (error) {
             console.error('Error resetting password:', error);
             // Handle error, show error message to user
-            toast.error('Error resetting password');
+            toast.error('Mật khẩu thay đổi không thành công');
         }
     };
 
@@ -168,7 +168,7 @@ export function ResetPasswordPage() {
         <div className={'mainContainer'}>
             <div className='Register'>
                 <div className={'titleContainer'}>
-                    <div>Reset Password</div>
+                    <div>Thay đổi mật khẩu</div>
                 </div>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <form onSubmit={handleSubmit} className="inputContainer" >
@@ -199,10 +199,10 @@ export function ResetPasswordPage() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <br />
-                    <button type="submit">Reset Password</button>
+                    <button type="submit">Thay đổi mật khẩu</button>
                 </form>
                 <div className={'inputContainer'}>
-                    <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
+                    <h4>Đã có tài khoản<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Đăng nhập</NavLink></h4>
                 </div>
                 <ToastContainer />
 

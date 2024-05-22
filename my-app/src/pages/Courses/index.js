@@ -1,9 +1,9 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Segmented } from "antd";
 import React, { useState, useEffect, useRef } from "react";
-import { addCourses, getAllCourses, addTest, deleteCourses } from "../../utils/APIRoutes";
+import { addCourses, getAllCourses, addTest, deleteCourses, updateCourses } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
@@ -53,7 +53,13 @@ export default function Courses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Drawer
-    const showDrawer = () => {
+    const showModalUpdate = (record) => {
+        console.log("Clicked record:", record);
+        setValues({
+            ...values,
+            type: record.type,
+            course_id: record._id // Update the source_id in the valuesTest state
+        });
         setOpen(true);
     };
     const onClose = () => {
@@ -94,6 +100,27 @@ export default function Courses() {
                 setLoading(true)
                 form.resetFields();
                 updateTable();
+            }
+        }
+    };
+    const handleUpdateCourses = async (e) => {
+        e.preventDefault();
+        if (handleValidation()) {
+            const { type, title, description, content, course_id } = values;
+            try {
+                const { data } = await axios.patch(updateCourses, {
+                    course_id,
+                    type,
+                    title,
+                    description,
+                    content,
+                    thumbnails: []
+                }, config);
+                console.log("Course updated successfully:", data);
+                // Handle success response
+            } catch (error) {
+                console.error("Error updating course:", error);
+                // Handle error response
             }
         }
     };
@@ -151,34 +178,46 @@ export default function Courses() {
     })
 
     const handleAddTestValidation = () => {
+        const { source_id, title, description, timeline } = valuesTest;
+        if (source_id === "" || source_id.length <= 5) {
+            toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (title === "" || title.length <= 5) {
+            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (description === "" || description.length <= 5) {
+            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+            return false;
+        } else if (isNaN(timeline) || timeline === "") {
+            toast.error("Timeline phải là một số và không được để trống", toastOptions);
+            return false;
+        }
         return true;
-    }
+    };
 
     const handleAddTest = async (e) => {
         e.preventDefault();
-        try {
-            if (handleAddTestValidation()) {
-                const { source_id, title, description, timeline } = valuesTest;
-                const { dataTest } = await axios.post(addTest, {
-                    source_id, title, description, timeline,
+        if (handleAddTestValidation()) { // Validate input values
+            const { source_id, title, description, timeline } = valuesTest;
 
-                }, config)
+            // Send a POST request to add the test
+            const { dataTest } = await axios.post(addTest, {
+                source_id, title, description, timeline,
+            }, config);
 
-                if (dataTest === 'Test created successfully') {
-                    setLoading(true)
-                    console.log("Thêm thành công");
-                }
-                setLoading(true)
-                setIsModalOpen(false);
+            if (dataTest === 'Test created successfully') {
+                setLoading(true);
+                console.log("Thêm thành công");
             }
-        } catch (error) {
-            // Handle the error here
-            console.error("Error adding test:", error);
-            toast.error('Có lỗi trong việc thêm')
+            setIsModalOpen(false); // Close the modal after adding the test
             setLoading(false); // Ensure loading state is set to false in case of error
-            // Optionally, you can display an error message or perform other actions
-        }
-    };
+
+
+        };
+
+    }
+
+
     const onDeleteService = async (e) => {
         await axios.delete(`${deleteCourses}/${e._id}`, config,
         )
@@ -203,17 +242,17 @@ export default function Courses() {
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách courses</Typography.Title>
+                <Typography.Title level={4}>Danh sách khoá học</Typography.Title>
 
                 {/* Nút chức năng  */}
-                <Space>
+                {/* <Space>
                     <Button
                         type="primary"
                         onClick={showDrawer} icon={<PlusOutlined />}>
-                        Thêm Courses
+                        Thêm Khoá học
                     </Button>
 
-                </Space>
+                </Space> */}
 
                 {/* Table thông tin khách hàng */}
                 <Table columns={[
@@ -221,6 +260,18 @@ export default function Courses() {
                         key: '1',
                         title: "Loại",
                         dataIndex: "type",
+                        render: (type) => {
+                            switch (type) {
+                                case 0:
+                                    return "Listening";
+                                case 1:
+                                    return "Reading";
+                                case 2:
+                                    return "Full Test";
+                                default:
+                                    return "Unknown";
+                            }
+                        },
                     },
                     {
                         key: '2',
@@ -246,7 +297,7 @@ export default function Courses() {
                     },
                     {
                         key: '6',
-                        title: "Source id",
+                        title: "Mã khoá học",
                         dataIndex: "_id",
                     },
                     {
@@ -257,14 +308,16 @@ export default function Courses() {
                                 <>
                                     <PlusOutlined onClick={() => showModal(record)} />
 
-                                    <DeleteOutlined
+                                    {/* <DeleteOutlined
                                         onClick={() => {
-                                            if (window.confirm("Are you sure you want to delete this service?")) {
+                                            if (window.confirm("Bạn có chắc muốn xoá khoá học này?")) {
                                                 onDeleteService(record);
                                             }
                                         }}
                                         style={{ color: "red", marginLeft: "12px" }}
-                                    />
+                                    /> */}
+                                    {/* <EditOutlined onClick={() => showModalUpdate(record)} style={{ color: "green", marginLeft: "12px" }}
+                                    /> */}
                                 </>
                             )
                         }
@@ -280,16 +333,32 @@ export default function Courses() {
                 ></Table>
             </Space>
             <ToastContainer />
-            <Drawer
-                title="Create a new courses"
+            <Modal
+                title="Tạo khoá học mới"
                 width={720}
-                onClose={onClose}
+                onCancel={onClose}
+                onOk={handleUpdateCourses}
                 open={open}
                 bodyStyle={{ paddingBottom: 80 }}
             >
                 <Form layout="vertical"
                     form={form}>
                     <Row gutter={16}>
+                        <Col span={12}>
+
+                            <Form.Item
+                                label="Mã khoá học"
+                                rules={[{ required: true, message: 'Type không được để trống' }]}
+                            >
+                                <Input
+                                    onChange={(e) => handleOnChangeNumber(e)}
+                                    name="course_id"
+                                    placeholder="Nhập loại khoá học"
+                                    value={values.course_id}
+                                    disabled
+                                />
+                            </Form.Item>
+                        </Col>
                         <Col span={12}>
                             <Form.Item
                                 label="Type"
@@ -298,7 +367,9 @@ export default function Courses() {
                                 <Input
                                     onChange={(e) => handleOnChangeNumber(e)}
                                     name="type"
-                                    placeholder="Nhập mã bài thi"
+                                    placeholder="Nhập loại khoá học"
+                                    value={values.type}
+                                    disabled
                                 />
                             </Form.Item>
                         </Col>
@@ -330,12 +401,12 @@ export default function Courses() {
                             <Form.Item
 
                                 label="Content"
-                                rules={[{ required: true, message: 'Content không được để trống' }]}
+                                rules={[{ required: true, message: 'Nội dung không được để trống' }]}
                             >
                                 <Input
                                     name="content"
                                     onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập content"
+                                    placeholder="Nhập nôi dụng"
                                 />
                             </Form.Item>
                         </Col>
@@ -348,7 +419,7 @@ export default function Courses() {
                                 <Input
                                     name="thumbnails"
                                     onChange={(e) => handleOnChange(e)}
-                                    placeholder="Nhập content"
+                                    placeholder="Nhập hình ảnh"
                                 />
                             </Form.Item>
                         </Col>
@@ -358,13 +429,8 @@ export default function Courses() {
 
 
                 </Form>
-                <Space>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button onClick={(e) => handleClick(e)} type="primary">
-                        Thêm
-                    </Button>
-                </Space>
-            </Drawer>
+
+            </Modal>
 
             <Modal
                 width={900}
@@ -377,8 +443,8 @@ export default function Courses() {
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    label="Mã bài thi"
-                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                    label="Mã khoá học"
+                                    rules={[{ required: true, message: 'Mã khoá học không được để trống' }]}
                                 >
                                     <Input
 
@@ -386,15 +452,15 @@ export default function Courses() {
                                         type="text"
                                         value={valuesTest.source_id}
                                         name="source_id"
-                                        placeholder="Nhập mã bài thi"
+                                        placeholder="Nhập mã khoá học"
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Title "
-                                    rules={[{ required: true, message: 'Title không được để trống' }]}
+                                    label="Tiêu đề "
+                                    rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
                                 >
                                     <Input
                                         name="title"
@@ -417,13 +483,13 @@ export default function Courses() {
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Time line"
-                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                                    label="Thời gian bài làm"
+                                    rules={[{ required: true, message: 'Thời gian bài làm không được để trống' }]}
                                 >
                                     <Input
                                         name="timeline"
                                         onChange={(e) => handleOnChangeNumberTest(e)}
-                                        placeholder="Nhập thời gian làm bài test"
+                                        placeholder="Nhập thời gian làm bài"
                                     />
                                 </Form.Item>
                             </Col>

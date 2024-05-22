@@ -68,25 +68,25 @@ export default function InformUser() {
     }
     return (
         <div>
-            <h1>User Profile</h1>
+            <h1 style={{ color: 'cornflowerblue' }}>Trang cá nhân</h1>
             <div>
                 <Image width={400} src={userData.avatar} />
 
             </div>
             <div>
-                <label>Name:</label>
+                <label>Tên người dùng:</label>
                 <Input name="name" value={userData.name} onChange={handleChange} />
             </div>
             <div>
-                <label>Email:</label>
+                <label>Email người dùng:</label>
                 <Input type="email" name="email" value={userData.email} disabled />
             </div>
             <div style={{ padding: '10px' }}>
-                <label style={{ marginRight: '10px' }}>Date of Birth:</label>
+                <label style={{ marginRight: '10px' }}>Ngày sinh:</label>
                 <DatePicker value={userData.date_of_birth ? moment(userData.date_of_birth, 'YYYY-MM-DD') : null} onChange={handleDateChange} />
             </div>
             <div>
-                <label>Location:</label>
+                <label>Nơi ở:</label>
                 <Input name="location" value={userData.location} onChange={handleChange} />
             </div>
             <div>
@@ -101,7 +101,7 @@ export default function InformUser() {
                 <label>Cover Photo:</label>
                 <Input name="cover_photo" value={userData.cover_photo} onChange={handleChange} />
             </div>
-            <Button style={{ background: 'cornflowerblue', marginTop: '10px', borderRadius: '20px', color: 'white' }} onClick={handleSubmit}>Save Changes</Button>
+            <Button style={{ background: 'cornflowerblue', marginTop: '10px', borderRadius: '20px', color: 'white' }} onClick={handleSubmit}>Lưu</Button>
         </div>
     );
 }

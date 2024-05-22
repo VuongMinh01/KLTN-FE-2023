@@ -194,14 +194,14 @@ export default function FullTest() {
         // Check if the content field is empty
         if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
             console.log("Content must not be empty");
-            showToast('Content must not be empty')
+            showToast('Tiêu đề không được để trống')
             return; // Prevent further execution if content is empty
         }
 
         // Check if the description field is empty
         if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
             console.log("Description must not be empty");
-            showToast('Description must not be empty')
+            showToast('Mô tả không được để trống')
 
             return; // Prevent further execution if description is empty
         }
@@ -234,13 +234,12 @@ export default function FullTest() {
                 // Update values.content with the image URL if available
                 // and values.description with the audio URL if available
                 setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('thêm audio thành công');
+                showToast('Thêm âm thanh thành công');
                 // Close the modal
                 setIsModalOpen(false);
             } else {
                 // Handle other response statuses if needed
-                console.log('loi');
-                showToast('thêm audio không thành công')
+                showToast('Thêm anh thanh không thành công')
             }
         } catch (error) {
             console.log(error);
@@ -287,6 +286,7 @@ export default function FullTest() {
             setQuestionList(response.data.result.questions); // Update questionList state with the fetched data
         } catch (error) {
             console.error("Error fetching question list:", error);
+            showToast('Có lỗi trong việc lấy danh sách câu hỏi')
         }
     };
     const showModalQuestion = (record) => {
@@ -319,22 +319,23 @@ export default function FullTest() {
                         console.log('Image URL:', imageUrl);
                         // Update values.content with the image URL
                         setValues({ ...values, content: imageUrl });
-                        showToast('Upload hình ảnh thành công');
+                        showToast('Thêm hình ảnh thành công');
 
                     } else {
                         console.error('Image URL not found in response data:', responseData);
-                        showToast('Upload hình ảnh thất bại');
+                        showToast('Thêm hình ảnh thất bại');
 
                     }
                 })
                 .catch(error => {
                     console.error('Error uploading image:', error);
-                    showToast('Upload hình ảnh thất bại');
+                    showToast('Thêm hình ảnh thất bại');
 
                     // Handle error response here
                 });
         } else {
             console.warn('No image selected.');
+            showToast("Không có hình ảnh nào được chọn")
             // Handle case where no image is selected
         }
     };
@@ -358,30 +359,28 @@ export default function FullTest() {
                         console.log('Audio URL:', audioUrl);
                         // Update values.description with the audio URL
                         setValues({ ...values, description: audioUrl });
-                        showToast('Upload audio thành công');
+                        showToast('Thêm âm thanh thành công');
 
                     } else {
                         console.error('Audio URL not found in response data:', responseData);
-                        showToast('Upload audio thất bại');
+                        showToast('Thêm âm thanh thất bại');
 
                     }
                 })
                 .catch(error => {
                     console.error('Error uploading audio:', error);
-                    showToast('Upload audio thất bại');
+                    showToast('Thêm âm thanh thất bại');
 
                     // Handle error response here
                 });
         } else {
             console.warn('No audio selected.');
+            showToast('Không có âm thanh nào được chọn')
             // Handle case where no audio is selected
         }
     };
 
     function showToast(message) {
-        // Replace this with your toast alert implementation
-        // For example, if you're using react-toastify:
-        // toast.error(message);
         alert(message);
     }
     const handleOnChangeTest = (e) => {
@@ -397,8 +396,6 @@ export default function FullTest() {
             title: record.title,
             description: record.description, // Update the source_id in the valuesTest state
         });
-        console.log(record.source_id, '44');
-        console.log(record._id, '333');
         setIsModalUpdateOpen(true);
 
     };
@@ -423,7 +420,7 @@ export default function FullTest() {
         } catch (error) {
             // Handle the error here
             console.error("Error adding test:", error);
-            showToast('Có lỗi trong việc update')
+            showToast('Có lỗi trong việc cập nhật')
             setLoading(false); // Ensure loading state is set to false in case of error
             // Optionally, you can display an error message or perform other actions
         }
@@ -482,7 +479,7 @@ export default function FullTest() {
 
                                         <DeleteOutlined
                                             onClick={() => {
-                                                if (window.confirm("Are you sure you want to delete this service?")) {
+                                                if (window.confirm("Bạn có xác nhận xoá bài kiểm tra này?")) {
                                                     onDeleteService(record);
                                                 }
                                             }}
@@ -526,6 +523,7 @@ export default function FullTest() {
                                     value={values.test_id}
                                     name="test_id"
                                     placeholder="Nhập mã test"
+                                    disabled
                                 />
                             </Form.Item>
                         </Col>
@@ -617,7 +615,7 @@ export default function FullTest() {
                                         rows={4}
                                         onChange={handleOnChange}
                                         name="content"
-                                        placeholder="Type content here"
+                                        placeholder="Nhập content câu hỏi tại đây"
                                     />
                                 </Form.Item>
                             </Col>
@@ -717,7 +715,7 @@ export default function FullTest() {
                                     <div>
                                         <DeleteOutlined
                                             onClick={() => {
-                                                if (window.confirm("Are you sure you want to delete this service?")) {
+                                                if (window.confirm("Bạn có chắc muốn xoá câu hỏi này?")) {
                                                     onDeleteQuestion(record);
                                                 }
                                             }}
@@ -748,8 +746,8 @@ export default function FullTest() {
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    label="Mã bài thi"
-                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                    label="Mã khoá học"
+                                    rules={[{ required: true, message: 'Mã khoá học không được để trống' }]}
                                 >
                                     <Input
 
@@ -757,7 +755,8 @@ export default function FullTest() {
                                         type="text"
                                         value={valuesTest.source_id}
                                         name="source_id"
-                                        placeholder="Nhập mã bài thi"
+                                        placeholder="Nhập mã khoá học"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>
@@ -773,14 +772,15 @@ export default function FullTest() {
                                         value={valuesTest.test_id}
                                         name="test_id"
                                         placeholder="Nhập mã bài thi"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Title "
-                                    rules={[{ required: true, message: 'Title không được để trống' }]}
+                                    label="Tiêu đề "
+                                    rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
                                 >
                                     <Input
                                         name="title"
@@ -807,13 +807,13 @@ export default function FullTest() {
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Time line"
-                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                                    label="Thời gian bài làm"
+                                    rules={[{ required: true, message: 'Thời gian bài làm không được để trống' }]}
                                 >
                                     <Input
                                         name="timeline"
                                         onChange={(e) => handleOnChangeNumberTest(e)}
-                                        placeholder="Nhập thời gian làm bài test"
+                                        placeholder="Nhập thời gian bài làm"
                                     />
                                 </Form.Item>
                             </Col>

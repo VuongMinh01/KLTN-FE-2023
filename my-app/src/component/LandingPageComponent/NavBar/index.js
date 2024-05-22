@@ -61,7 +61,7 @@ function NavBar() {
                         <NavLink className='NavLinkCss' to="/nguphap">Ngữ pháp</NavLink>
                         <NavLink className='NavLinkCss' to="/tuvung">Từ vựng</NavLink>
                     </Nav>
-                    {signedIn && <NavLink className='NavLinkCss' to="/login" >View profile</NavLink>}
+                    {signedIn && <NavLink className='NavLinkCss' to="/login" >Trang cá nhân</NavLink>}
                     {!signedIn && <NavLink className='NavLinkCss' to="/login">Đăng nhập</NavLink>}
                 </Navbar.Collapse>
             </Container>

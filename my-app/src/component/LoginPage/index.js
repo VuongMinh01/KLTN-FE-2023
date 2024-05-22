@@ -62,10 +62,7 @@ export default function LoginPage() {
         // toast.error(message);
         alert(message);
     }
-    const onButtonClickGmail = async (e) => {
-        e.preventDefault();
 
-    }
     const handleValidation = () => {
         const { password, email } = values;
         if (password === "") {
@@ -96,13 +93,13 @@ export default function LoginPage() {
 
 
                 <div className={'titleContainer'}>
-                    <div>Login</div>
+                    <div>Đăng nhập</div>
                 </div>
                 <br />
                 <div className={'inputContainer'}>
                     <input
                         name="email"
-                        placeholder="Enter your email here"
+                        placeholder="Nhập tài khoản vào đây"
                         onChange={(e) => handleOnChange(e)}
                         className={'inputBox'}
                     />
@@ -111,7 +108,7 @@ export default function LoginPage() {
                 <div className={'inputContainer'}>
                     <input
                         name="password"
-                        placeholder="Enter your password here"
+                        placeholder="Nhập mật khẩu vảo đây"
                         onChange={(e) => handleOnChange(e)}
                         className={'inputBox'}
                         type='password'
@@ -119,19 +116,18 @@ export default function LoginPage() {
                 </div>
                 <br />
                 <div className={'inputContainer'}>
-                    <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
-                    <input className={'inputButton'} type="button" onClick={onButtonClickGmail} value={'Gmail'} />
+                    <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Đăng nhập'} />
 
 
                 </div>
                 <div style={{ display: 'grid' }}>
                     <div style={{ display: 'flex' }}>
-                        <h4>Don't have an account?</h4>
-                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/register">Register</NavLink></h4>
+                        <h4>Bạn chưa có tài khoản?</h4>
+                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/register">Đăng ký</NavLink></h4>
                     </div>
                     <div style={{ display: 'flex' }}>
-                        <h4>Forget your password?</h4>
-                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/forgetPassword">Forget Password</NavLink></h4>
+                        <h4>Bạn quên mật khẩu?</h4>
+                        <h4><NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/forgetPassword">Quên mật khẩu</NavLink></h4>
                     </div>
 
                 </div>

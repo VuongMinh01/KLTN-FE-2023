@@ -67,7 +67,7 @@ export default function Admin() {
             // Handle error
             console.error('Error:', error);
             // Display a toast alert with the error message
-            showToast('Phiên đăng nhập hết hạn ');
+            showToast('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại hoặc xác minh tài khoản.');
         });
 
     function showToast(message) {

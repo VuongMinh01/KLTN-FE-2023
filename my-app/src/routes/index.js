@@ -17,6 +17,12 @@ import TuongLai from '../component/NguPhapTongHop/TuongLai';
 import HienTaiHoanThanhTiepDien from '../component/NguPhapTongHop/HienTaiHoanThanhTiepDien';
 import QuaKhuHoanThanhTiepDien from '../component/NguPhapTongHop/QuaKhuHoanThanhTiepDien';
 import { SubmitTokenPage, ResetPasswordPage } from '../component/ForgetPasswordPage';
+import TuVung1 from '../component/TuVungTongHop/TuVung1';
+import TuVung2 from '../component/TuVungTongHop/TuVung2';
+import TuVung3 from '../component/TuVungTongHop/TuVung3';
+import TuVung4 from '../component/TuVungTongHop/TuVung4';
+import TuVung5 from '../component/TuVungTongHop/TuVung5';
+import TuVung6 from '../component/TuVungTongHop/TuVung6';
 
 const publicRoute = [
     { path: '/', component: LandingPage },
@@ -40,6 +46,17 @@ const publicRoute = [
     { path: '/nguphap/qua-khu-hoan-thanh', component: QuaKhuHoanThanh },
     { path: '/nguphap/qua-khu-hoan-thanh-tiep-dien', component: QuaKhuHoanThanhTiepDien },
     { path: '/nguphap/tuong-lai', component: TuongLai },
+
+    { path: '/tuvung/contracts', component: TuVung1 },
+    { path: '/tuvung/marketing', component: TuVung2 },
+    { path: '/tuvung/warranties', component: TuVung3 },
+    { path: '/tuvung/business-planing', component: TuVung4 },
+    { path: '/tuvung/conferences', component: TuVung5 },
+    { path: '/tuvung/computer-internet', component: TuVung6 },
+    { path: '/tuvung/office-technology', component: TuongLai },
+    { path: '/tuvung/office-procedures', component: TuongLai },
+    { path: '/tuvung/electronics', component: TuongLai },
+
 ]
 
 const privateRoute = [

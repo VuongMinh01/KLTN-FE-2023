@@ -5,7 +5,7 @@ import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-design/icons';
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
 import Column from "antd/es/table/Column";
@@ -100,7 +100,34 @@ export default function Reading() {
     // Function to handle image upload
 
 
-
+    const handleUpdateTestValidation = () => {
+        const { source_id, test_id, title, description, timeline } = valuesTest;
+        if (source_id === "" || source_id.length <= 5) {
+            toast.error("Mã khoá học phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (title === "" || title.length <= 5) {
+            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (description === "" || description.length <= 5) {
+            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+            return false;
+        } else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
+            toast.error("Timeline phải là một số và không được để trống", toastOptions);
+            return false;
+        }
+        if (test_id === "" || test_id.length <= 5) {
+            toast.error("Mã bài kiểm tra phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        }
+        return true;
+    };
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
 
     const clickButton = (e) => {
         // code huong dan
@@ -336,23 +363,25 @@ export default function Reading() {
     }
     const handleUpdateTest = async (e) => {
         e.preventDefault();
-        try {
-            const { source_id, test_id, title, description, timeline } = valuesTest;
-            const { dataTest } = await axios.patch(updateTest, {
-                source_id, test_id, title, description, timeline
-            }, { headers })
-            showToast("Update thành công");
-            setLoading(true)
-            updateTable();
-            setIsModalUpdateOpen(false);
-        } catch (error) {
-            // Handle the error here
-            console.error("Error adding test:", error);
-            showToast('Có lỗi trong việc update')
-            setLoading(false); // Ensure loading state is set to false in case of error
-            // Optionally, you can display an error message or perform other actions
-        }
-    };
+        if (handleUpdateTestValidation()) { // Validate input values
+            try {
+                const { source_id, test_id, title, description, timeline } = valuesTest;
+                const { dataTest } = await axios.patch(updateTest, {
+                    source_id, test_id, title, description, timeline
+                }, { headers })
+                showToast("Update thành công");
+                setLoading(true)
+                updateTable();
+                setIsModalUpdateOpen(false);
+            } catch (error) {
+                // Handle the error here
+                console.error("Error adding test:", error);
+                showToast('Có lỗi trong việc update')
+                setLoading(false); // Ensure loading state is set to false in case of error
+                // Optionally, you can display an error message or perform other actions
+            }
+        };
+    }
     const onDeleteQuestion = async (e) => {
         console.log(e._id, '1');
         console.log(e.test_id, '2');
@@ -373,7 +402,7 @@ export default function Reading() {
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
+                <Typography.Title level={4}>Danh sách bài Reading Test</Typography.Title>
 
 
 
@@ -401,12 +430,12 @@ export default function Reading() {
                         },
                         {
                             key: "4",
-                            title: "Thời gian",
+                            title: "Thời gian (phút)",
                             dataIndex: "timeline",
                         },
                         {
                             key: "5",
-                            title: "Mã courses",
+                            title: "Mã khoá học",
                             dataIndex: "source_id",
                         },
                         {
@@ -465,6 +494,7 @@ export default function Reading() {
                                     value={values.test_id}
                                     name="test_id"
                                     placeholder="Nhập mã test"
+                                    disabled
                                 />
                             </Form.Item>
                         </Col>
@@ -692,6 +722,7 @@ export default function Reading() {
                                         value={valuesTest.source_id}
                                         name="source_id"
                                         placeholder="Nhập mã bài thi"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>
@@ -707,6 +738,7 @@ export default function Reading() {
                                         value={valuesTest.test_id}
                                         name="test_id"
                                         placeholder="Nhập mã bài thi"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>

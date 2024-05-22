@@ -4,7 +4,7 @@ import "../../css/PageQuanTri.css"
 import Header from '../../component/LandingPageComponent/Header';
 import '../../css/AddPart1.css';
 import { Button, Input, Image } from "antd";
-import { getQuestionList, submitTest, getTestId } from "../../utils/APIRoutes";
+import { getQuestionList, submitTest, getTestId, getScore } from "../../utils/APIRoutes";
 import { useLocation, useNavigate } from 'react-router-dom';
 import StartPage from "../../component/StartPage";
 import axios from "axios";
@@ -30,6 +30,7 @@ export default function FullTesting() {
     const [questions, setQuestions] = useState([]); // State to store complete question data
     const [totalMarks, setTotalMarks] = useState(null); // Initialize totalMarks state
     const [totalCorrect, setTotalCorrect] = useState(null);
+    const [totalTime1, setTotalTime1] = useState(null);
 
     //clock
     const handleStartTest = () => {
@@ -38,12 +39,15 @@ export default function FullTesting() {
     };
     const startTimer = () => {
         const newTimer = setInterval(() => {
-            setRemainingTime(prevTime => prevTime - 1);
-            if (remainingTime === 0) {
-                clearInterval(newTimer);
-                handleSubmit();
-            }
-        }, 60000); // Interval of 1 minute
+            setRemainingTime(prevTime => {
+                if (prevTime === 0) {
+                    clearInterval(newTimer); // Stop the timer
+                    handleSubmit(); // Submit the test when time runs out
+                    return 0;
+                }
+                return prevTime - 1;
+            });
+        }, 60000); // Interval of 1 second
         setTimer(newTimer);
     };
     const stopTimerAndChangePage = () => {
@@ -142,6 +146,8 @@ export default function FullTesting() {
                 console.error('Error fetching test timeline:', error);
             });
     };
+    const test_id = getTestIdFromURL(location.pathname);
+
     function showToast(message) {
         // Replace this with your toast alert implementation
         // For example, if you're using react-toastify:
@@ -151,32 +157,43 @@ export default function FullTesting() {
 
 
     const handleSubmit = () => {
+        // Check if any question is unanswered
+        const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+
+        // If there are unanswered questions, show a toast message and return
+        if (unansweredQuestions.length < modifiedDataSource.length) {
+            const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn nộp bài?");
+            if (!confirmed) {
+                return; // Don't proceed with submitting the test if not confirmed
+            }
+        }
+
         // Ensure questions and modifiedDataSource have data
-        console.log('Questions length:', questions.length);
-        console.log('ModifiedDataSource length:', modifiedDataSource.length);
         if (questions.length === 0 || modifiedDataSource.length === 0) {
             console.error('Questions or modifiedDataSource is empty.');
             showToast('Ít nhất phải có một đáp án được chọn');
-
             return;
         }
 
-        // Construct the testData object with selected answers
+        // Calculate the total time taken by the test
+        const total_time = totalTime - remainingTime;
+
+        // Construct the testData object with selected answers and total time
         const testData = {
-            total_time: 111, // Example value, replace with actual total time
-            test_id: getTestIdFromURL(location.pathname), // Use the test ID obtained from the URL
+            total_time: totalTime - remainingTime,
+            test_id: getTestIdFromURL(location.pathname),
             questions: questions.map((question, index) => ({
-                _id: question._id, // Add question ID
-                test_id: question.test_id, // Add test ID
-                num_quest: question.num_quest, // Add question number
-                description: question.description, // Add question description
-                content: question.content, // Add question content
-                score: question.score, // Add question score
-                created_at: question.created_at, // Add creation date
-                updated_at: question.updated_at, // Add last update date
-                answers: question.answers, // Add answer options
-                correct_at: question.correct_at, // Add correct answer
-                selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null // Add selected answer object or null
+                _id: question._id,
+                test_id: question.test_id,
+                num_quest: question.num_quest,
+                description: question.description,
+                content: question.content,
+                score: question.score,
+                created_at: question.created_at,
+                updated_at: question.updated_at,
+                answers: question.answers,
+                correct_at: question.correct_at,
+                selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null
             }))
         };
 
@@ -184,12 +201,13 @@ export default function FullTesting() {
         axios.post(submitTest, testData, { headers })
             .then(response => {
                 // Handle successful response
-                const { total_marks } = response.data.result;
-                const { total_correct } = response.data.result;
+                const { total_marks, total_correct, total_time } = response.data.result;
+                console.log(response.data.result);
+                console.log(total_time);
                 setTotalCorrect(total_correct);
-                setTotalMarks(total_marks); // Update totalMarks state
+                setTotalMarks(total_marks);
+                setTotalTime1(total_time);
                 setCurrentPage('finish');
-
                 // You can display a success message or perform any other actions here
             })
             .catch(error => {
@@ -197,7 +215,6 @@ export default function FullTesting() {
                 console.error('Error submitting test:', error);
                 // You can display an error message or perform any other error handling here
             });
-
     };
 
 
@@ -222,7 +239,7 @@ export default function FullTesting() {
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
 
-                {currentPage !== 'start' && (
+                {currentPage !== 'start' && currentPage !== 'stop' && (
                     <div>
                         {/* Render test questions based on currentPage */}
                         {currentPage === 'part 1' && <Part1
@@ -261,32 +278,38 @@ export default function FullTesting() {
                             selectedAnswers={selectedAnswersPart}
                             onRadioChange={handleRadioChangePart} />}
 
-                        {remainingTime > 0 && <h3 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Time remaining: {remainingTime} minutes</h3>}
+                        {currentPage !== 'finish' && currentPage !== 'xem' && remainingTime > 0 && (
+                            <h3 style={{ textAlign: 'center', color: 'cornflowerblue' }}>
+                                Thời gian còn lại: {remainingTime} minutes
+                            </h3>
+                        )}
                     </div>
 
                 )}
 
 
-                {currentPage === 'finish' && <Finish totalMarks={totalMarks} totalCorrect={totalCorrect} />}
+                {currentPage === 'finish' && <Finish totalMarks={totalMarks} totalCorrect={totalCorrect} totalTime1={totalTime1} changePage={changePage}
+                />}
+                {currentPage === 'xem' && <ScorecardDetail totalMarks={totalMarks} totalTime1={totalTime1} totalCorrect={totalCorrect} testId={test_id} />}
 
-                {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && (
+                {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && currentPage !== 'xem' && (
                     <Button onClick={stopTimerAndChangePage} style={{
                         margin: '20px 20px 20px 20px',
                         background: 'cornflowerblue',
                         color: 'white',
                         borderRadius: '20px',
                         width: '90%',
-                    }}>Stop Test</Button>
+                    }}>Tạm ngừng bài làm</Button>
                 )}
             </div>
-            {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && (
+            {currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'start' && currentPage !== 'xem' && (
 
                 <Button onClick={handleSubmit} style={{
                     margin: '10px 10px 10px 10px',
                     background: 'cornflowerblue',
                     color: 'white',
                     borderRadius: '20px',
-                }}>Submit Test</Button>
+                }}>Nộp bài</Button>
             )}
 
         </div>
@@ -1002,20 +1025,97 @@ function Part7(props) {
         </Container>
     );
 }
-function Finish({ totalMarks, totalCorrect }) {
+function Finish({ totalMarks, totalCorrect, changePage, totalTime1 }) {
+    const changePageHandler = () => {
+        changePage('xem');
+    };
+
     return (
         <Container fluid>
             <Row style={{ backgroundColor: 'cornflowerblue', color: 'white', border: '1px solid ', borderRadius: '10px', width: '70vw', height: '70vh', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Col>
                     <h1 style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>Test Submitted Successfully</h1>
-                    <h3>Thank you for completing the test.</h3>
-                    <h3>Total correct: {totalCorrect}/200</h3>
-                    <h3>Total Marks: {totalMarks}</h3>
+                    <h3>Bạn đã hoàn thành bài kiểm tra</h3>
+                    <h3>Tổng số câu đúng: {totalCorrect}/200</h3>
+                    <h3>Tổng số điểm: {totalMarks}</h3>
+                    <h3>Thời gian làm bài: {parseInt(totalTime1)} minutes</h3>
                 </Col>
                 <Col xs={12} style={{ textAlign: 'center' }}>
                     <Image src={Logo} preview={false} />
                 </Col>
+                <Button
+                    style={{ border: '1px solid black', borderRadius: '15px', width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
+                    value='Xem thông tin bài làm' onClick={changePageHandler}>Xem thông tin bài làm</Button>
             </Row>
         </Container>
     );
 }
+function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
+    const [scorecardDetail, setScorecardDetail] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [id, setId] = useState(testId); // Set initial value of id to testId
+    const [submittedId, setSubmittedId] = useState("");
+
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(`${getScore}/${id}`, { headers });
+                setScorecardDetail(response.data.result);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching scorecard detail:", error);
+                setLoading(false);
+                showToast("Mã kiểm tra không hợp lệ");
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    function showToast(message) {
+
+        alert(message);
+    }
+
+    return (
+        <div style={{ background: 'white' }}>
+
+            {scorecardDetail && (
+                <>
+                    <div style={{
+                        border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite'
+                    }}>
+                        <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Thông tin bài làm</h1>
+                        <h3>Tổng số câu đúng: {totalCorrect}</h3>
+                        <h3>Tổng số điểm: {totalMarks}</h3>
+                        <h3>Thời gian làm bài: {totalTime1}  </h3>
+                    </div>
+                    <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
+
+                    <ul>
+                        {scorecardDetail.questions.map((question, index) => (
+                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
+                                <li key={index}>
+                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {index + 1}</h3>
+                                    <p>Mô tả: {question.description}</p>
+                                    <h4>Đáp án đúng: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</h4>
+                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "null"}</h4>
+                                    <h4>Điểm: {question.score}</h4>
+                                </li>
+                            </div>
+                        ))}
+                    </ul>
+                </>
+            )
+            }
+        </div >
+    );
+
+}
+

@@ -32,7 +32,7 @@ export default function ChangePassword() {
                     confirm_password: ''
                 });
                 // Show success toast
-                showToast('Password changed successfully');
+                showToast('Thay đổi mật khẩu thành công');
 
             })
             .catch(error => {

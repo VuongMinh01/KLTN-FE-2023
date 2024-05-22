@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getScore } from "../../utils/APIRoutes";
 
+import { Image } from "antd";
 function ScorecardDetail() {
     const [scorecardDetail, setScorecardDetail] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -35,8 +36,8 @@ function ScorecardDetail() {
     }
 
     return (
-        <div>
-            <h1 style={{ color: 'cornflowerblue' }}>Scorecard Detail</h1>
+        <div style={{ background: 'white' }}>
+            <h1 style={{ color: 'cornflowerblue' }}>Thông tin bài làm</h1>
             <input
                 style={{ width: '500px' }}
                 type="text"
@@ -44,25 +45,28 @@ function ScorecardDetail() {
                 onChange={(e) => setId(e.target.value)}
                 placeholder="Enter ID"
             />
-            <button style={{ borderRadius: '15px', background: 'cornflowerblue', color: 'white', margin: '10px 10px 10px 10px' }} onClick={handleSubmit}>Submit</button>
+            <button style={{ borderRadius: '15px', background: 'cornflowerblue', color: 'white', margin: '10px 10px 10px 10px' }} onClick={handleSubmit}>Gửi</button>
             {scorecardDetail && (
                 <>
-                    <div style={{ border: '1px solid black', borderRadius: '15px', padding: '10px' }}>
-                        <h3>Total Correct: {scorecardDetail.total_correct}</h3>
-                        <h3>Total Marks: {scorecardDetail.total_marks}</h3>
-                        <h3>Total Time: {scorecardDetail.total_time} seconds</h3>
+                    <div style={{
+                        border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite'
+                    }}>
+                        <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Thông tin bài làm</h1>
+                        <h3>Tổng số câu đúng: {scorecardDetail.total_correct}</h3>
+                        <h3>Tổng số điểm: {scorecardDetail.total_marks}</h3>
+                        <h3>Thời gian: {scorecardDetail.total_time}  </h3>
                     </div>
-                    <h2>Questions:</h2>
+                    <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
 
                     <ul>
                         {scorecardDetail.questions.map((question, index) => (
-                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px' }}>
+                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
                                 <li key={index}>
-                                    <h3>Câu {index + 1}</h3>
-                                    <p>Description: {question.description}</p>
-                                    <p>Correct Answer: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</p>
-                                    <p>Selected Answer: {question.selected_at ? question.selected_at.content_answer : "null"}</p>
-                                    <p>Score: {question.score}</p>
+                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {index + 1}</h3>
+                                    <p>Mô tả: {question.description}</p>
+                                    <h4>Đáp án đúng: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</h4>
+                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "null"}</h4>
+                                    <h4>Điểm: {question.score}</h4>
                                 </li>
                             </div>
                         ))}

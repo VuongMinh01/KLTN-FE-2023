@@ -23,7 +23,7 @@ export default function RegisterPage() {
     const handleValidation = () => {
         const { password, confirm_password, email, name } = values;
         if (password !== confirm_password) {
-            toast.error("password và confirmpassword phải giống nhau.", toastOptions);
+            toast.error("Mật khẩu và mật khẩu xác nhận phải giống nhau.", toastOptions);
             return false;
         }
         if (name.length < 3) {
@@ -36,7 +36,7 @@ export default function RegisterPage() {
         }
 
         else if (password.length < 6) {
-            toast.error("Password không được ít hơn 6 ký tự", toastOptions);
+            toast.error("Mật khẩu không được ít hơn 6 ký tự", toastOptions);
             return false;
         }
         return true;
@@ -67,7 +67,7 @@ export default function RegisterPage() {
                 }
             } catch (error) {
                 console.error('Error registering user:', error);
-                toast.error('An error occurred. Please try again later.');
+                toast.error('Thông tin nhập không hợp lệ.');
             }
         }
     };
@@ -90,7 +90,7 @@ export default function RegisterPage() {
                 </div>
                 <div className={'inputContainer'}>
                     <input
-                        placeholder="Enter your Name here"
+                        placeholder="Nhập tên của bạn tại đây"
                         className={'inputBox'}
                         name="name"
                         onChange={(e) => handleOnChange(e)}
@@ -101,7 +101,7 @@ export default function RegisterPage() {
 
                 <div className={'inputContainer'}>
                     <input
-                        placeholder="Enter your email here"
+                        placeholder="Nhập Email tại đây"
                         className={'inputBox'}
                         name="email"
                         onChange={(e) => handleOnChange(e)}
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                 <br />
                 <div className={'inputContainer'}>
                     <input
-                        placeholder="Enter your password here"
+                        placeholder="Nhập mật khẩu tại đây"
                         className={'inputBox'}
                         name="password"
                         onChange={(e) => handleOnChange(e)}
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                 <br />
                 <div className={'inputContainer'}>
                     <input
-                        placeholder="Enter your confirm password here"
+                        placeholder="Nhập mật khẩu xác nhận tại đây"
                         className={'inputBox'}
                         name="confirm_password"
                         onChange={(e) => handleOnChange(e)}
@@ -132,7 +132,7 @@ export default function RegisterPage() {
 
                 <div className={'inputContainer'}>
                     <input
-                        placeholder="Enter your date of birth here"
+                        placeholder="Nhập ngày sinh của bạn tại đây"
                         className={'inputBox'}
                         name="date_of_birth"
                         onChange={(e) => handleOnChange(e)}
@@ -142,7 +142,7 @@ export default function RegisterPage() {
                 <br />
                 <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Register'} />
                 <div className={'inputContainer'}>
-                    <h4>Already have an account<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Login</NavLink></h4>
+                    <h4>Đã có tài khoản?<NavLink className='NavLinkCss' style={{ color: 'cornflowerblue' }} to="/login">Đăng nhập</NavLink></h4>
                 </div>
                 <ToastContainer />
 

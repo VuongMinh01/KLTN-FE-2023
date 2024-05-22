@@ -5,7 +5,7 @@ import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-design/icons';
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
 
@@ -48,6 +48,13 @@ export default function Listening() {
         setValuesTest({ ...valuesTest, [e.target.name]: e.target.value });
 
     }
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
 
     // Modal
     const showModal = (record) => {
@@ -266,6 +273,28 @@ export default function Listening() {
     const handleAddTestValidation = () => {
         return true;
     }
+    const handleUpdateTestValidation = () => {
+        const { source_id, test_id, title, description, timeline } = valuesTest;
+        if (source_id === "" || source_id.length <= 5) {
+            toast.error("Mã khoá học phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (title === "" || title.length <= 5) {
+            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (description === "" || description.length <= 5) {
+            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+            return false;
+        } else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
+            toast.error("Timeline phải là một số và không được để trống", toastOptions);
+            return false;
+        }
+        if (test_id === "" || test_id.length <= 5) {
+            toast.error("Mã bài kiểm tra phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        }
+        return true;
+    };
+
 
     const handleImageUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -391,23 +420,25 @@ export default function Listening() {
     }
     const handleUpdateTest = async (e) => {
         e.preventDefault();
-        try {
-            const { source_id, test_id, title, description, timeline } = valuesTest;
-            const { dataTest } = await axios.patch(updateTest, {
-                source_id, test_id, title, description, timeline
-            }, { headers })
-            showToast("Update thành công");
-            setLoading(true)
-            updateTable();
-            setIsModalUpdateOpen(false);
-        } catch (error) {
-            // Handle the error here
-            console.error("Error adding test:", error);
-            showToast('Có lỗi trong việc update')
-            setLoading(false); // Ensure loading state is set to false in case of error
-            // Optionally, you can display an error message or perform other actions
-        }
-    };
+        if (handleUpdateTestValidation()) { // Validate input values
+            try {
+                const { source_id, test_id, title, description, timeline } = valuesTest;
+                const { dataTest } = await axios.patch(updateTest, {
+                    source_id, test_id, title, description, timeline
+                }, { headers })
+                showToast("Update thành công");
+                setLoading(true)
+                updateTable();
+                setIsModalUpdateOpen(false);
+            } catch (error) {
+                // Handle the error here
+                console.error("Error adding test:", error);
+                showToast('Có lỗi trong việc update')
+                setLoading(false); // Ensure loading state is set to false in case of error
+                // Optionally, you can display an error message or perform other actions
+            }
+        };
+    }
     const onDeleteQuestion = async (e) => {
         console.log(e._id, '1');
         console.log(e.test_id, '2');
@@ -461,7 +492,7 @@ export default function Listening() {
                         },
                         {
                             key: "5",
-                            title: "Mã courses",
+                            title: "Mã khoá học",
                             dataIndex: "source_id",
                         },
                         {
@@ -520,6 +551,7 @@ export default function Listening() {
                                     value={values.test_id}
                                     name="test_id"
                                     placeholder="Nhập mã test"
+                                    disabled
                                 />
                             </Form.Item>
                         </Col>
@@ -662,7 +694,7 @@ export default function Listening() {
                         </Col>
 
                         <Col span={24} >
-                            <label>Score</label> <br />
+                            <label>Điểm</label> <br />
                             <input onChange={handleOnChangeNumber} type='number' name='score' placeholder="Nhập điểm câu hỏi"></input>
                         </Col>
 
@@ -688,18 +720,18 @@ export default function Listening() {
 
                         {
                             key: "2",
-                            title: "Description",
+                            title: "Mô tả",
                             dataIndex: "description",
                         },
 
                         {
                             key: "3",
-                            title: "Content",
+                            title: "Tiêu đề",
                             dataIndex: "content",
                         },
                         {
                             key: "4",
-                            title: "score",
+                            title: "Điểm",
                             dataIndex: "score",
                         },
                         {
@@ -711,7 +743,7 @@ export default function Listening() {
                                     <div>
                                         <DeleteOutlined
                                             onClick={() => {
-                                                if (window.confirm("Are you sure you want to delete this service?")) {
+                                                if (window.confirm("Bạn có xác nhận xoá câu hỏi này không?")) {
                                                     onDeleteQuestion(record);
                                                 }
                                             }}
@@ -743,8 +775,8 @@ export default function Listening() {
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    label="Mã bài thi"
-                                    rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
+                                    label="Mã khoá học"
+                                    rules={[{ required: true, message: 'Mã khoá học không được để trống' }]}
                                 >
                                     <Input
 
@@ -752,7 +784,8 @@ export default function Listening() {
                                         type="text"
                                         value={valuesTest.source_id}
                                         name="source_id"
-                                        placeholder="Nhập mã bài thi"
+                                        placeholder="Nhập mã khoá học"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>
@@ -768,13 +801,14 @@ export default function Listening() {
                                         value={valuesTest.test_id}
                                         name="test_id"
                                         placeholder="Nhập mã bài thi"
+                                        disabled
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Title "
+                                    label="Tiêu đề "
                                     rules={[{ required: true, message: 'Title không được để trống' }]}
                                 >
                                     <Input
@@ -796,19 +830,19 @@ export default function Listening() {
                                         onChange={(e) => handleOnChangeTest(e)}
                                         value={valuesTest.description}
 
-                                        placeholder="Mô tả" />
+                                        placeholder="Nhập mô tả" />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
 
-                                    label="Time line"
-                                    rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                                    label="Thời gian bài làm"
+                                    rules={[{ required: true, message: 'Thời gian bài làm không được để trống' }]}
                                 >
                                     <Input
                                         name="timeline"
                                         onChange={(e) => handleOnChangeNumberTest(e)}
-                                        placeholder="Nhập thời gian làm bài test"
+                                        placeholder="Nhập thời gian bài làm"
                                     />
                                 </Form.Item>
                             </Col>

@@ -66,7 +66,12 @@ const UpdateQuestionPage = () => {
         console.log("Clicked record:", record);
         setValues({
             ...values,
-            question_id: record._id // Update the source_id in the valuesTest state
+            question_id: record._id,
+            num_quest: record.num_quest,
+            score: record.score,
+            content: record.content,
+            description: record.description,
+            content_answer: record.content_answer, // Update the source_id in the valuesTest state
         });
         console.log(record._id, '333');
         setIsModalOpen(true);
@@ -319,16 +324,16 @@ const UpdateQuestionPage = () => {
     return (
         <div>
             <Input
-                placeholder="Enter Test ID"
+                placeholder="Nhập mã bài kiểm tra"
                 value={testId}
                 onChange={(e) => setTestId(e.target.value)}
                 style={{ width: 200, marginRight: 16 }}
             />
             <Button type="primary" onClick={handleSubmit}>
-                Submit
+                Gửi
             </Button>
 
-            <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={resetPage}>Reset</Button>
+            <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={resetPage}>Làm mới</Button>
 
             {/* Table to display the list of questions */}
             <Table
@@ -341,17 +346,17 @@ const UpdateQuestionPage = () => {
                     },
                     {
                         key: "2",
-                        title: "Description",
+                        title: "Mô tả",
                         dataIndex: "description",
                     },
                     {
                         key: "3",
-                        title: "Content",
+                        title: "Nội dung",
                         dataIndex: "content",
                     },
                     {
                         key: "4",
-                        title: "score",
+                        title: "Điểm",
                         dataIndex: "score",
                     },
                     {
@@ -361,7 +366,7 @@ const UpdateQuestionPage = () => {
                             <div>
                                 <DeleteOutlined
                                     onClick={() => {
-                                        if (window.confirm("Are you sure you want to delete this service?")) {
+                                        if (window.confirm("Bạn có xác nhận xoá câu hỏi này?")) {
                                             onDeleteQuestion(record);
                                         }
                                     }}
@@ -382,8 +387,8 @@ const UpdateQuestionPage = () => {
 
             </div>
             <div>
-                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={changePage1}>Prev Page</Button>
-                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', marginRight: '20px' }} type="primary" onClick={changePage}>Next Page</Button>
+                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={changePage1}>Trang trước</Button>
+                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', marginRight: '20px' }} type="primary" onClick={changePage}>Trang kế</Button>
             </div>
 
             <Modal
@@ -404,6 +409,7 @@ const UpdateQuestionPage = () => {
                                     value={values.question_id}
                                     name="question_id"
                                     placeholder="Nhập mã câu hỏi"
+                                    disabled
                                 />
                             </Form.Item>
                         </Col>
@@ -415,6 +421,7 @@ const UpdateQuestionPage = () => {
                                 <Input
                                     onChange={handleOnChangeNumber}
                                     name="num_quest"
+                                    value={values.num_quest}
                                     placeholder="Nhập num quest" />
                             </Form.Item>
                         </Col>
@@ -445,6 +452,7 @@ const UpdateQuestionPage = () => {
                                         onChange={handleOnChange}
                                         name="description"
                                         placeholder="Mô tả"
+                                        value={values.description}
                                     />
                                 </Form.Item>
                             </Col>
@@ -489,13 +497,15 @@ const UpdateQuestionPage = () => {
                             <Col span={24}>
                                 <Form.Item
                                     label="Content"
-                                    rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                    rules={[{ required: true, message: 'Nội dung không được trống' }]}
                                 >
                                     <TextArea
                                         rows={4}
                                         onChange={handleOnChange}
                                         name="content"
-                                        placeholder="Type content here"
+                                        placeholder="Nhập nội dung tại đây"
+                                        value={values.content}
+
                                     />
                                 </Form.Item>
                             </Col>
@@ -546,8 +556,8 @@ const UpdateQuestionPage = () => {
                         </Col>
 
                         <Col span={24} >
-                            <label>Score</label> <br />
-                            <input onChange={handleOnChangeNumber} type='number' name='score' placeholder="Nhập điểm câu hỏi"></input>
+                            <label>Điểm</label> <br />
+                            <input onChange={handleOnChangeNumber} type='number' name='score' value={values.score} placeholder="Nhập điểm câu hỏi"></input>
                         </Col>
 
                     </Row>

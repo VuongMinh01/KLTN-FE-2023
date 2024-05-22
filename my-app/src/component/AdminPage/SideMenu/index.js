@@ -44,29 +44,29 @@ export default function SideMenu({ userData }) {
                 }}
                 items={[
                     {
-                        label: "User",
+                        label: "Trang cá nhân",
                         icon: <HomeOutlined />,
                         key: '/user',
 
                     },
                     {
-                        label: "Courses",
+                        label: "Khoá học",
                         icon: <ReadOutlined />,
                         key: '/admin/courses',
 
                     },
                     {
-                        label: "Listening",
+                        label: "Bài kiểm tra Listening",
                         key: '/admin/listening',
                         icon: <ReadOutlined />
                     },
                     {
-                        label: "Reading",
+                        label: "Bài kiểm tra Reading",
                         key: '/admin/reading',
                         icon: <ReadOutlined />
                     },
                     {
-                        label: "Full Test",
+                        label: "Bài kiểm tra Full Test ",
                         key: '/admin/fulltest',
                         icon: <ReadOutlined />
                     },
@@ -84,7 +84,7 @@ export default function SideMenu({ userData }) {
                         icon: <CheckCircleOutlined />,
                     },
                     {
-                        label: "Update Questions",
+                        label: "Cập nhật câu hỏi",
                         key: '/admin/updatequestion',
                         icon: <CheckCircleOutlined />,
                     },

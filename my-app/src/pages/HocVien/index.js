@@ -78,49 +78,52 @@ export default function HocVien() {
 
     return (
 
-        <Container>
-            <Typography.Title level={4}>Danh sách courses</Typography.Title>
+        <Container fluid>
+            <Typography.Title level={4}>Danh sách học viên</Typography.Title>
 
-            <Table columns={[
-                {
-                    key: '1',
-                    title: "Id",
-                    dataIndex: "_id",
-                },
-                {
-                    key: '2',
-                    title: "Tên",
-                    dataIndex: "name",
+            <Table
 
-                },
 
-                {
-                    key: '3',
-                    title: "Email",
-                    dataIndex: "email",
-                },
-                {
-                    key: '3',
-                    title: "Xác nhận tài khoản",
-                    dataIndex: "verify",
-                    render: (verify) => {
-                        return verify === 0 ? 'No' : 'Yes';
+                columns={[
+                    {
+                        key: '1',
+                        title: "Id",
+                        dataIndex: "_id",
                     },
-                },
-                {
-                    key: '4',
-                    title: "Actions",
-                    render: (record) => {
-                        return (
-                            <>
-                                <InfoOutlined onClick={() => showModal(record.username)} style={{ color: "green", marginLeft: "12px" }} />
+                    {
+                        key: '2',
+                        title: "Tên",
+                        dataIndex: "name",
+
+                    },
+
+                    {
+                        key: '3',
+                        title: "Email",
+                        dataIndex: "email",
+                    },
+                    {
+                        key: '3',
+                        title: "Xác nhận tài khoản",
+                        dataIndex: "verify",
+                        render: (verify) => {
+                            return verify === 0 ? 'No' : 'Yes';
+                        },
+                    },
+                    {
+                        key: '4',
+                        title: "Actions",
+                        render: (record) => {
+                            return (
+                                <>
+                                    <InfoOutlined onClick={() => showModal(record.username)} style={{ color: "green", marginLeft: "12px" }} />
 
 
-                            </>
-                        )
-                    }
-                },
-            ]}
+                                </>
+                            )
+                        }
+                    },
+                ]}
                 dataSource={dataSource}
                 rowKey="_id"
                 pagination={
@@ -135,25 +138,33 @@ export default function HocVien() {
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}>
-                <h1>User Profile</h1>
+                <h1>Thông tin học viên</h1>
                 <div>
-                    <Image width={400} src={userData.avatar} />
-
+                    <label>Avatar:</label>
+                    {userData.avatar ? (
+                        <Image name="avatar" src={userData.avatar} disabled />
+                    ) : (
+                        <img
+                            src={`https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg`}
+                            alt="Random Avatar"
+                            style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+                        />
+                    )}
                 </div>
                 <div>
-                    <label>Name:</label>
+                    <label>Tên người dùng:</label>
                     <Input name="name" value={userData.name} disabled />
                 </div>
                 <div>
-                    <label>Email:</label>
+                    <label>Email người dùng:</label>
                     <Input type="email" name="email" value={userData.email} disabled />
                 </div>
                 <div style={{ padding: '10px' }}>
-                    <label style={{ marginRight: '10px' }}>Date of Birth:</label>
+                    <label style={{ marginRight: '10px' }}>Ngày sinh:</label>
                     <DatePicker value={userData.date_of_birth ? moment(userData.date_of_birth, 'YYYY-MM-DD') : null} disabled />
                 </div>
                 <div>
-                    <label>Location:</label>
+                    <label>Nơi ở:</label>
                     <Input name="location" value={userData.location} disabled />
                 </div>
                 <div>
