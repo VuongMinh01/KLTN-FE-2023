@@ -41,15 +41,13 @@ export default function LoginPage() {
 
                 if (data.message === "Request failed with status code 422") {
                     toast.error(data.msg, toastOptions);
-                    showToast('Tài khoản hoặc mật khẩu không chính xác');
                 }
             }
         } catch (error) {
             // Handle errors here
             console.error("An error occurred:", error);
             // You can also display an error message to the user
-            toast.error("An error occurred. Please try again later.", toastOptions);
-            showToast('Tài khoản hoặc mật khẩu không chính xác');
+            toast.error("Tài khoản hoặc mật khẩu không chính xác", toastOptions);
 
         }
     }
@@ -65,12 +63,16 @@ export default function LoginPage() {
 
     const handleValidation = () => {
         const { password, email } = values;
-        if (password === "") {
-            toast.error("Password is required.", toastOptions);
+        if (email === "") {
+            toast.error("Email đăng nhập không được để trống.", toastOptions);
             return false;
         }
-        else if (email.length === "") {
-            toast.error("Email is required.", toastOptions);
+        else if (!/@/.test(email)) {
+            toast.error('Email cần nhập đúng định dạng.', toastOptions);
+            return;
+        }
+        else if (password === "") {
+            toast.error("Mật khẩu không được để trống.", toastOptions);
             return false;
         }
         return true;

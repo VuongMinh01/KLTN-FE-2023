@@ -3,6 +3,8 @@ import axios from "axios";
 import { getUser, updateUser } from "../../utils/APIRoutes";
 import { useState, useEffect } from "react";
 import { Input, DatePicker, Button, Image } from "antd";
+import { ToastContainer, toast } from 'react-toastify';
+
 import moment from 'moment';
 
 export default function InformUser() {
@@ -13,12 +15,19 @@ export default function InformUser() {
         location: "",
         username: "",
         avatar: "",
-        cover_photo: ""
+        cover_photo: "null",
     });
     const token = localStorage.getItem("user").replace(/"/g, '');
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
+    };
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
     };
 
     useEffect(() => {
@@ -46,19 +55,54 @@ export default function InformUser() {
             date_of_birth: dateString
         }));
     };
+    const handleValidation = () => {
+        const { name, date_of_birth, location, username, avatar, cover_photo } = userData;
+        if (name === "") {
+            toast.error("Họ tên không được để trống", toastOptions);
+            return false;
+        }
+        else if (name.length < 3) {
+            toast.error("Họ tên không được ít hơn 3 ký tự", toastOptions);
+            return false;
+        }
+        else if (date_of_birth === "") {
+            toast.error("Ngày sinh không được để trống", toastOptions);
+            return false;
+        }
+        else if (location === "") {
+            toast.error("Nơi ở không được để trống", toastOptions);
+            return false;
+        }
+        else if (username === "") {
+            toast.error("Username không được để trống", toastOptions);
+            return false;
+        }
+        else if (avatar === "") {
+            toast.error("Avatar không được để trống.", toastOptions);
+            return false;
+        }
+        else if (cover_photo === "") {
+            toast.error("Cover photo không được để trống.", toastOptions);
+            return false;
+        }
+        return true;
+    };
 
     const handleSubmit = () => {
         // Make a request to update user information
-        axios.patch(updateUser, userData, { headers })
-            .then(response => {
-                console.log('User information updated successfully:', response.data);
-                // Optionally, you can show a success message or perform other actions
-            })
-            .catch(error => {
-                console.error('Error updating user information:', error);
-                showToast('Username đã tồn tại ',)
-                // Optionally, you can show an error message or perform error handling
-            });
+        if (handleValidation()) {
+
+            axios.patch(updateUser, userData, { headers })
+                .then(response => {
+                    console.log('User information updated successfully:', response.data);
+                    // Optionally, you can show a success message or perform other actions
+                })
+                .catch(error => {
+                    console.error('Error updating user information:', error);
+                    // Optionally, you can show an error message or perform error handling
+                    toast.error('Username đã tồn tại. Vui lòng thay đổi')
+                });
+        }
     };
     function showToast(message) {
         // Replace this with your toast alert implementation
@@ -102,6 +146,7 @@ export default function InformUser() {
                 <Input name="cover_photo" value={userData.cover_photo} onChange={handleChange} />
             </div>
             <Button style={{ background: 'cornflowerblue', marginTop: '10px', borderRadius: '20px', color: 'white' }} onClick={handleSubmit}>Lưu</Button>
+            <ToastContainer />
         </div>
     );
 }

@@ -26,11 +26,11 @@ export default function Listening() {
     const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
 
     const [values, setValues] = useState({
-        num_quest: 0,
+        num_quest: "",
         content: "",
         description: "",
         test_id: "",
-        score: 0,
+        score: "",
         answers: [],
         correct_at: {},
     });
@@ -194,15 +194,15 @@ export default function Listening() {
         showToast('Xoá thành công')
     }
 
+
     const handleAddQuestion = async (e) => {
         if (e) {
             e.preventDefault(); // Prevent default form submission behavior if event object exists
         }
-
         // Check if values object is defined
         if (!values || typeof values !== 'object') {
             console.log("Values object is undefined or not an object");
-            showToast('Values object is undefined or not an object')
+            toast.error('Values object is undefined or not an object')
 
             return;
         }
@@ -210,14 +210,14 @@ export default function Listening() {
         // Check if the content field is empty
         if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
             console.log("Content must not be empty");
-            showToast('Content must not be empty')
+            toast.error('Content không được để trống')
             return; // Prevent further execution if content is empty
         }
 
         // Check if the description field is empty
         if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
             console.log("Description must not be empty");
-            showToast('Description must not be empty')
+            toast.error('Mô tả không được để trống')
 
             return; // Prevent further execution if description is empty
         }
@@ -229,7 +229,42 @@ export default function Listening() {
             { order_answer: "C", content_answer: values.content_answer_3 },
             { order_answer: "D", content_answer: values.content_answer_4 }
         ];
-
+        if (values.num_quest === "") {
+            toast.error('Numquest không được để trống');
+            return false;
+        }
+        if (isNaN(values.num_quest)) {
+            toast.error('Numquest phải là một số');
+            return false;
+        }
+        if (Object.keys(values.correct_at).length === 0) {
+            toast.error('Cần phải chọn một đáp án đúng.');
+            return false;
+        }
+        if (!values.content_answer_1 || values.content_answer_1.trim() === "") {
+            toast.error('Nội dung câu trả lời A không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_2 || values.content_answer_2.trim() === "") {
+            toast.error('Nội dung câu trả lời B không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_3 || values.content_answer_3.trim() === "") {
+            toast.error('Nội dung câu trả lời C không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_4 || values.content_answer_4.trim() === "") {
+            toast.error('Nội dung câu trả lời D không được để trống.');
+            return false;
+        }
+        if (values.score === "") {
+            toast.error('Điểm không được để trống.');
+            return false;
+        }
+        if (isNaN(values.score)) {
+            toast.error('Điểm phải là một số');
+            return false;
+        }
         try {
             // Make the POST request to add the question
             const response = await axios.post(addQuestion, { ...values, answers }, { headers });
@@ -250,18 +285,18 @@ export default function Listening() {
                 // Update values.content with the image URL if available
                 // and values.description with the audio URL if available
                 setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('thêm audio thành công');
+                showToast('Thêm âm thanh thành công');
                 // Close the modal
                 setIsModalOpen(false);
             } else {
                 // Handle other response statuses if needed
-                console.log('loi');
-                showToast('thêm audio không thành công')
+                toast.error('Thêm âm thanh không thành công')
             }
         } catch (error) {
             console.log(error);
             // Handle error here, such as showing an error message to the user
         }
+        showToast("Thêm câu hỏi thành công.")
         setIsModalOpen(false)
     };
 
@@ -270,9 +305,7 @@ export default function Listening() {
 
     }
 
-    const handleAddTestValidation = () => {
-        return true;
-    }
+
     const handleUpdateTestValidation = () => {
         const { source_id, test_id, title, description, timeline } = valuesTest;
         if (source_id === "" || source_id.length <= 5) {
@@ -852,6 +885,7 @@ export default function Listening() {
                 </Space>
 
             </Modal>
+            <ToastContainer />
         </div >
     )
 }

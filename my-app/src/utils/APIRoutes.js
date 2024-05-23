@@ -36,4 +36,5 @@ export const submitTest = `${host}/scorecards/`;
 export const getScore = `${host}/scorecards`;
 export const searchUser = `${host}/search/user`
 export const uploadImageEndpoint = `${host}/medias/upload-image`;
-export const uploadAudioEndpoint = `${host}/medias/upload-audio`
+export const uploadAudioEndpoint = `${host}/medias/upload-audio`;
+export const resendVerify = `${host}/users/resend-verify-email`;

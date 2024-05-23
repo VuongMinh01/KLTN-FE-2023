@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getQuestionList, deleteQuestion, uploadAudioEndpoint, uploadImageEndpoint, updateQuestion, getAllTestListening } from "../../utils/APIRoutes";
+import { getQuestionList, deleteQuestion, uploadImageEndpoint, updateQuestion, getAllTestReading } from "../../utils/APIRoutes";
 import { Table, Col, Form, Row, Modal, Radio, Input, Button } from "antd";
 import { ToastContainer, toast } from 'react-toastify';
 import { Select } from "antd";
 const { Option } = Select;
 const { TextArea } = Input;
 
-const UpdateQuestionPage = () => {
+const UpdateQuestionReadingPage = () => {
     // State variables
     const [questionList, setQuestionList] = useState([]);
     const [testId, setTestId] = useState("");
+    const [selectedTestId, setSelectedTestId] = useState('');
+
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [testIds, setTestIds] = useState([]); // Initialize testIds state
-    const [selectedTestId, setSelectedTestId] = useState('');
 
     const token = localStorage.getItem("user").replace(/"/g, '');
     const headers = {
@@ -23,14 +24,12 @@ const UpdateQuestionPage = () => {
         'Content-Type': 'application/json'
     };
 
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 10,
-    });
+
+    // Function to handle the form submission
 
     useEffect(() => {
         // Fetch all test data
-        axios.get(getAllTestListening, {
+        axios.get(getAllTestReading, {
             params: {
                 limit: 10,
                 page: 1,
@@ -49,15 +48,16 @@ const UpdateQuestionPage = () => {
                 console.error("Error fetching test data:", error);
             });
     }, []);
-    // Function to handle the form submission
-    const handleSubmit = async (e) => {
+
+
+    const handleSubmit = async () => {
         try {
             setLoading(true);
             // Make the API call to fetch the question list based on the test ID
             const response = await axios.get(`${getQuestionList}/${testId}`, {
                 params: {
                     limit: 10,
-                    page: parseInt(pagination.current), // Parse to integer
+                    page: pagination.current,
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -72,25 +72,6 @@ const UpdateQuestionPage = () => {
             showToast('Nhập id test cần tìm')
             setLoading(false);
         }
-    };
-
-    // Modify the changePage and changePage1 functions to pass the updated page number to handleSubmit
-    const changePage = () => {
-        const newCurrentPage = pagination.current + 1;
-        setPagination({ ...pagination, current: newCurrentPage });
-    };
-
-    const changePage1 = () => {
-        const newCurrentPage = pagination.current - 1;
-        if (newCurrentPage >= 1) {
-            setPagination({ ...pagination, current: newCurrentPage });
-        }
-    };
-    const resetPage = () => {
-        const newCurrentPage = 1;
-        setPagination({ ...pagination, current: newCurrentPage });
-        setQuestionList([]);
-
     };
     const onDeleteQuestion = async (e) => {
         axios.delete(deleteQuestion, {
@@ -133,7 +114,6 @@ const UpdateQuestionPage = () => {
 
     const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
     const [imageFile, setImageFile] = useState(null);
-    const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
 
     const [values, setValues] = useState({
         num_quest: "",
@@ -159,9 +139,7 @@ const UpdateQuestionPage = () => {
     const handleContentTypeChange = (e) => {
         setContentType(e.target.value);
     };
-    const handleContentTypeChange1 = (e) => {
-        setContentType1(e.target.value);
-    };
+
     const clickButton = (e) => {
         // code huong dan
         // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
@@ -193,13 +171,6 @@ const UpdateQuestionPage = () => {
     };
 
 
-    const [audioFile, setAudioFile] = useState(null);
-
-    const handleAudioUpload = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setAudioFile(event.target.files[0]);
-        }
-    };
     const handleClick = (e) => {
         if (imageFile) {
             const formData = new FormData(); // Create FormData object to send the file
@@ -218,7 +189,7 @@ const UpdateQuestionPage = () => {
                         const imageUrl = responseData.data[0].url;
                         console.log('Image URL:', imageUrl);
                         // Update values.content with the image URL
-                        setValues({ ...values, content: imageUrl });
+                        setValues({ ...values, description: imageUrl });
                         showToast('Upload hình ảnh thành công');
 
                     } else {
@@ -239,44 +210,7 @@ const UpdateQuestionPage = () => {
         }
     };
 
-    const handleAudioClick = () => {
-        if (audioFile) {
-            const formData = new FormData(); // Create FormData object to send the file
-            formData.append('audio', audioFile); // Append the audio file to the FormData object
 
-            axios.post(uploadAudioEndpoint, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data' // Update content type for file upload
-                }
-            }) // Send the POST request with the FormData and headers
-                .then(response => {
-                    console.log('Audio upload response:', response);
-                    const responseData = response?.data;
-                    if (responseData && responseData.data && responseData.data.length > 0) {
-                        const audioUrl = responseData.data[0].url;
-                        console.log('Audio URL:', audioUrl);
-                        // Update values.description with the audio URL
-                        setValues({ ...values, description: audioUrl });
-                        showToast('Upload audio thành công');
-
-                    } else {
-                        console.error('Audio URL not found in response data:', responseData);
-                        showToast('Upload audio thất bại');
-
-                    }
-                })
-                .catch(error => {
-                    console.error('Error uploading audio:', error);
-                    showToast('Upload audio thất bại');
-
-                    // Handle error response here
-                });
-        } else {
-            console.warn('No audio selected.');
-            // Handle case where no audio is selected
-        }
-    };
 
     const handleUpdate = async (e) => {
         if (e) {
@@ -291,19 +225,11 @@ const UpdateQuestionPage = () => {
             return;
         }
 
-        // Check if the content field is empty
-        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
-            console.log("Content must not be empty");
-            toast.error('Content câu hỏi không được để trống.')
-            return; // Prevent further execution if content is empty
-        }
 
         // Check if the description field is empty
         if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
-            console.log("Description must not be empty");
-            showToast('Description câu hỏi không được để trống')
-
-            return; // Prevent further execution if description is empty
+            toast.error("Description không được để trống");
+            return; // Prevent further execution if content is empty
         }
 
         // Construct the answers array
@@ -323,6 +249,10 @@ const UpdateQuestionPage = () => {
         }
         if (Object.keys(values.correct_at).length === 0) {
             toast.error('Cần phải chọn một đáp án đúng.');
+            return false;
+        }
+        if (values.content === "") {
+            toast.error('Content câu hỏi không được để trống.');
             return false;
         }
         if (!values.content_answer_1 || values.content_answer_1.trim() === "") {
@@ -356,25 +286,14 @@ const UpdateQuestionPage = () => {
             // Check if the request was successful
             if (response.status === 200) {
                 // Extract the URL from the response data
-                const responseData = response.data.data[0];
-                let imageUrl, audioUrl;
+                const imageUrl = response.data.data[0].url;
 
-                // Check the type to distinguish between image and audio URLs
-                if (responseData.type === 'image') {
-                    imageUrl = responseData.url;
-                } else if (responseData.type === 'audio') {
-                    audioUrl = responseData.url;
-                }
 
-                // Update values.content with the image URL if available
-                // and values.description with the audio URL if available
-                setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('thêm audio thành công');
+                setValues({ ...values, description: imageUrl });
                 // Close the modal
                 setIsModalOpen(false);
             } else {
                 // Handle other response statuses if needed
-                console.log('loi');
                 showToast('thêm audio không thành công')
             }
         } catch (error) {
@@ -382,19 +301,39 @@ const UpdateQuestionPage = () => {
             // Handle error here, such as showing an error message to the user
         }
         setIsModalOpen(false)
+        showToast('Update câu hỏi thành công.')
+
     };
 
     const handleTableChange = (newPagination) => {
         setPagination(newPagination);
     };
 
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+    });
 
+    const changePage = () => {
+        const newCurrentPage = pagination.current + 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        handleSubmit();
+    };
+    const changePage1 = () => {
+        const newCurrentPage = pagination.current - 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        handleSubmit();
+    };
+    const resetPage = () => {
+        const newCurrentPage = 1;
+        setPagination({ ...pagination, current: newCurrentPage });
+        setQuestionList([]);
 
+    };
     const handleTestChange = (value) => {
         setTestId(value);
         console.log(value);
     };
-
     return (
         <div>
             {/* <Input
@@ -485,6 +424,7 @@ const UpdateQuestionPage = () => {
                         <Col span={12}>
                             <Form.Item
                                 label="Mã câu hỏi"
+
                                 rules={[{ required: true, message: 'Mã bài thi không được để trống' }]}
                             >
                                 <Input
@@ -510,61 +450,21 @@ const UpdateQuestionPage = () => {
                             </Form.Item>
                         </Col>
 
-
-                        {/* // test */}
-
-
                         <Col span={24}>
                             <Form.Item
-                                label="Content Type"
-                                rules={[{ required: true, message: 'Please select content type' }]}
+                                label="Content"
+                                rules={[{ required: true, message: 'Content không được để trống' }]}
                             >
-                                <Radio.Group onChange={handleContentTypeChange1} value={contentType1}>
-                                    <Radio value="text">Type Content</Radio>
-                                    <Radio value="audio">Upload Audio</Radio>
-                                </Radio.Group>
+                                <TextArea
+                                    rows={4}
+                                    onChange={handleOnChange}
+                                    name="content"
+                                    placeholder="Content"
+                                    value={values.content}
+                                />
                             </Form.Item>
                         </Col>
-                        {contentType1 === 'text' && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Mô tả"
-                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
-                                >
-                                    <TextArea
-                                        rows={4}
-                                        onChange={handleOnChange}
-                                        name="description"
-                                        placeholder="Mô tả"
-                                        value={values.description}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        )}
-                        {contentType1 === 'audio' && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Upload Audio"
-                                    rules={[{ required: true, message: 'Please upload an audio file' }]}
-                                >
-                                    <input
-                                        type="file"
-                                        onChange={handleAudioUpload}
-                                        className="filetype"
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    <br />
-                                    {audioFile &&
-                                        <>
-                                            <audio controls>
-                                                <source src={URL.createObjectURL(audioFile)} type="audio/mp3" />
-                                            </audio>
-                                            <button onClick={handleAudioClick}>Upload audio</button>
-                                        </>
-                                    }
-                                </Form.Item>
-                            </Col>
-                        )}
+
 
                         <Col span={24}>
                             <Form.Item
@@ -580,15 +480,15 @@ const UpdateQuestionPage = () => {
                         {contentType === 'text' && (
                             <Col span={24}>
                                 <Form.Item
-                                    label="Content"
-                                    rules={[{ required: true, message: 'Nội dung không được trống' }]}
+                                    label="Description"
+                                    rules={[{ required: true, message: 'Description không được trống' }]}
                                 >
                                     <TextArea
                                         rows={4}
                                         onChange={handleOnChange}
-                                        name="content"
-                                        placeholder="Nhập nội dung tại đây"
-                                        value={values.content}
+                                        name="description"
+                                        placeholder="Nhập mô tả tại đây"
+                                        value={values.description}
 
                                     />
                                 </Form.Item>
@@ -654,4 +554,4 @@ const UpdateQuestionPage = () => {
     );
 };
 
-export default UpdateQuestionPage;
+export default UpdateQuestionReadingPage;

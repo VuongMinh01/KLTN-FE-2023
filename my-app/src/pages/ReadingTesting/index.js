@@ -307,6 +307,7 @@ function Part5(props) {
                 <Row gutter={24} key={index}>
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
+
                             <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 1}. {props.dataSource[index] && props.dataSource[index].content}</h3>
 
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>

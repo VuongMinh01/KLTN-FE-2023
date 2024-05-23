@@ -84,8 +84,13 @@ export default function SideMenu({ userData }) {
                         icon: <CheckCircleOutlined />,
                     },
                     {
-                        label: "Cập nhật câu hỏi",
+                        label: "Cập nhật câu hỏi Listening",
                         key: '/admin/updatequestion',
+                        icon: <CheckCircleOutlined />,
+                    },
+                    {
+                        label: "Cập nhật câu hỏi Reading",
+                        key: '/admin/updatequestionReading',
                         icon: <CheckCircleOutlined />,
                     },
                     {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { changePassword, verifyPassword } from "../../utils/APIRoutes";
 import { Button, Input } from "antd";
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import axios from "axios";
@@ -21,26 +21,61 @@ export default function ChangePassword() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     };
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
+
+    const handleValidation = () => {
+        const { old_password, password, confirm_password } = values;
+        if (old_password === "") {
+            toast.error("Mật khẩu cũ không được để trống.", toastOptions);
+            return false;
+        }
+        else if (password === "") {
+            toast.error("Mật khẩu mới không được để trống.", toastOptions);
+            return false;
+        }
+        else if (password.length < 6) {
+            toast.error("Mật khẩu mới không được ít hơn 6 ký tự.", toastOptions);
+            return false;
+        }
+        else if (confirm_password === "") {
+            toast.error("Mật khẩu xác nhận không được để trống.", toastOptions);
+            return false;
+        }
+        else if (confirm_password !== password) {
+            toast.error("Mật khẩu xác nhận phải trùng khớp với mật khẩu", toastOptions);
+            return false;
+        }
+        return true;
+    };
+
     const submit = (e) => {
         e.preventDefault();
-        axios.put(changePassword, values, { headers })
-            .then(response => {
-                // Clear input fields
-                setValues({
-                    old_password: '',
-                    password: '',
-                    confirm_password: ''
-                });
-                // Show success toast
-                showToast('Thay đổi mật khẩu thành công');
+        if (handleValidation()) {
 
-            })
-            .catch(error => {
-                // Handle error if needed
-                console.error('Error changing password:', error);
-                // Optionally, show an error toast
-                showToast('Có lỗi trong việc đổi mật khẩu');
-            });
+            axios.put(changePassword, values, { headers })
+                .then(response => {
+                    // Clear input fields
+                    setValues({
+                        old_password: '',
+                        password: '',
+                        confirm_password: ''
+                    });
+                    // Show success toast
+                    showToast('Thay đổi mật khẩu thành công');
+                })
+                .catch(error => {
+                    // Handle error if needed
+                    console.error('Error changing password:', error);
+                    // Optionally, show an error toast
+                    toast.error('Mật khẩu cũ không đúng');
+                });
+        }
     };
     function showToast(message) {
         // Replace this with your toast alert implementation
@@ -55,29 +90,32 @@ export default function ChangePassword() {
             <Row>
                 <Input
                     name="old_password"
-                    value={values.old_password}
                     onChange={handleOnChange}
                     placeholder="Nhập mật khẩu cũ"
+                    type="password"
                     style={{ marginBottom: '10px' }}
                 />
                 <Input
                     name="password"
-                    value={values.password}
                     onChange={handleOnChange}
                     placeholder="Nhập mật khẩu mới"
+                    type="password"
+
                     style={{ marginBottom: '10px' }}
 
                 />
                 <Input
                     name="confirm_password"
-                    value={values.confirm_password}
                     onChange={handleOnChange}
                     placeholder="Xác nhận mật khẩu mới"
+                    type="password"
+
                     style={{ marginBottom: '10px' }}
 
                 />
             </Row>
             <Button style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', background: 'cornflowerblue', color: 'white', borderRadius: '20px' }} onClick={submit}>Đổi mật khẩu</Button>
+            <ToastContainer />
         </Container>
     )
 }

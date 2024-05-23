@@ -223,18 +223,18 @@ export default function FullTest() {
                 // Extract the URL from the response data
                 const responseData = response.data.data[0];
                 let imageUrl, audioUrl;
-
                 // Check the type to distinguish between image and audio URLs
                 if (responseData.type === 'image') {
                     imageUrl = responseData.url;
-                } else if (responseData.type === 'audio') {
+                }
+                if (responseData.type === 'audio') {
                     audioUrl = responseData.url;
                 }
-
                 // Update values.content with the image URL if available
                 // and values.description with the audio URL if available
                 setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('Thêm âm thanh thành công');
+
+                ;
                 // Close the modal
                 setIsModalOpen(false);
             } else {

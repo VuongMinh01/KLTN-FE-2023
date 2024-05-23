@@ -20,7 +20,6 @@ export default function Reading() {
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
 
     const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
-    const [imageFile, setImageFile] = useState(null);
     const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
 
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
@@ -34,23 +33,27 @@ export default function Reading() {
     })
 
     const [values, setValues] = useState({
-        num_quest: 0,
+        num_quest: "",
         content: "",
         description: "",
         test_id: "",
-        score: 0,
+        score: "",
         answers: [],
         correct_at: {},
     });
     const [questionList, setQuestionList] = useState([]); // State variable to store the question list
+    const [imageFile, setImageFile] = useState(null);
 
+
+
+    const handleImageUpload = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImageFile(event.target.files[0]);
+        }
+    };
 
     // Modal
     const showModal = (record) => {
-        // console.log("Clicked record:", record);
-        // // setTestId(record._id);
-        // console.log(record._id, '3232')
-        // setIsModalOpen(true);
 
         console.log("Clicked record:", record);
         setValues({
@@ -105,13 +108,23 @@ export default function Reading() {
         if (source_id === "" || source_id.length <= 5) {
             toast.error("Mã khoá học phải lớn hơn 5 kí tự", toastOptions);
             return false;
-        } else if (title === "" || title.length <= 5) {
-            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+        } else if (title === "") {
+            toast.error("Tên tiêu đề không được để trống", toastOptions);
             return false;
-        } else if (description === "" || description.length <= 5) {
+        }
+        else if (title.length < 3) {
+            toast.error("Tên tiêu đề không được ít hơn 3 ký tự", toastOptions);
+            return false;
+        }
+        else if (description === "") {
+            toast.error("Mô tả không được để trống", toastOptions);
+            return false;
+        }
+        else if (description.length < 5) {
             toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
             return false;
-        } else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
+        }
+        else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
             toast.error("Timeline phải là một số và không được để trống", toastOptions);
             return false;
         }
@@ -198,11 +211,7 @@ export default function Reading() {
 
 
 
-    const handleImageUpload = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setImageFile(event.target.files[0]);
-        }
-    };
+
 
 
     const handleAddQuestion = async (e) => {
@@ -217,8 +226,8 @@ export default function Reading() {
         }
 
         // Check if the content field is empty
-        if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
-            console.log("Content must not be empty");
+        if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
+            toast.error("Description không được để trống");
             return; // Prevent further execution if content is empty
         }
 
@@ -229,7 +238,46 @@ export default function Reading() {
             { order_answer: "C", content_answer: values.content_answer_3 },
             { order_answer: "D", content_answer: values.content_answer_4 }
         ];
-
+        if (values.num_quest === "") {
+            toast.error('Numquest không được để trống');
+            return false;
+        }
+        if (isNaN(values.num_quest)) {
+            toast.error('Numquest phải là một số');
+            return false;
+        }
+        if (Object.keys(values.correct_at).length === 0) {
+            toast.error('Cần phải chọn một đáp án đúng.');
+            return false;
+        }
+        if (values.content === "") {
+            toast.error('Content câu hỏi không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_1 || values.content_answer_1.trim() === "") {
+            toast.error('Nội dung câu trả lời A không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_2 || values.content_answer_2.trim() === "") {
+            toast.error('Nội dung câu trả lời B không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_3 || values.content_answer_3.trim() === "") {
+            toast.error('Nội dung câu trả lời C không được để trống.');
+            return false;
+        }
+        if (!values.content_answer_4 || values.content_answer_4.trim() === "") {
+            toast.error('Nội dung câu trả lời D không được để trống.');
+            return false;
+        }
+        if (values.score === "") {
+            toast.error('Điểm không được để trống.');
+            return false;
+        }
+        if (isNaN(values.score)) {
+            toast.error('Điểm phải là một số');
+            return false;
+        }
         try {
             // Make the POST request to add the question
             const response = await axios.post(addQuestion, { ...values, answers }, { headers });
@@ -240,7 +288,7 @@ export default function Reading() {
                 const imageUrl = response.data.data[0].url;
 
                 // Update values.content with the image URL
-                setValues({ ...values, content: imageUrl });
+                setValues({ ...values, description: imageUrl });
 
                 // Close the modal
                 setIsModalOpen(false);
@@ -253,6 +301,7 @@ export default function Reading() {
             // Handle error here, such as showing an error message to the user
         }
         setIsModalOpen(false)
+        showToast('Thêm câu hỏi thành công.')
     };
 
 
@@ -274,7 +323,7 @@ export default function Reading() {
                         const imageUrl = responseData.data[0].url;
                         console.log('Image URL:', imageUrl);
                         // Update values.content with the image URL
-                        setValues({ ...values, content: imageUrl });
+                        setValues({ ...values, description: imageUrl });
                         showToast('Upload hình ảnh thành công');
 
                     } else {
@@ -301,16 +350,7 @@ export default function Reading() {
         alert(message);
     }
 
-    const [audioFile, setAudioFile] = useState(null);
 
-
-
-
-    const handleAudioUpload = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setAudioFile(event.target.files[0]);
-        }
-    };
 
 
     const fetchQuestionList = async (testId) => {
@@ -510,53 +550,20 @@ export default function Reading() {
                             </Form.Item>
                         </Col>
 
-
-                        {/* // test */}
-
-
                         <Col span={24}>
                             <Form.Item
-                                label="Content Type"
-                                rules={[{ required: true, message: 'Please select content type' }]}
+                                label="Content"
+                                rules={[{ required: true, message: 'Content không được để trống' }]}
                             >
-                                <Radio.Group onChange={handleContentTypeChange1} value={contentType1}>
-                                    <Radio value="text">Type Content</Radio>
-                                    <Radio value="audio">Upload Audio</Radio>
-                                </Radio.Group>
+                                <TextArea
+                                    rows={4}
+                                    onChange={handleOnChange}
+                                    name="content"
+                                    placeholder="Content"
+                                />
                             </Form.Item>
                         </Col>
-                        {contentType1 === 'text' && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Mô tả"
-                                    rules={[{ required: true, message: 'Mô tả không được để trống' }]}
-                                >
-                                    <TextArea
-                                        rows={4}
-                                        onChange={handleOnChange}
-                                        name="description"
-                                        placeholder="Mô tả"
-                                    />
-                                </Form.Item>
-                            </Col>
-                        )}
-                        {contentType1 === 'audio' && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Upload Audio"
-                                    rules={[{ required: true, message: 'Please upload an audio file' }]}
-                                >
-                                    <input
-                                        type="file"
-                                        onChange={handleAudioUpload}
-                                        className="filetype"
-                                        style={{ marginBottom: "10px" }}
-                                    />
-                                    <br />
-                                    {audioFile && <audio controls><source src={URL.createObjectURL(audioFile)} type="audio/mpeg" /></audio>}
-                                </Form.Item>
-                            </Col>
-                        )}
+
 
                         <Col span={24}>
                             <Form.Item
@@ -572,14 +579,14 @@ export default function Reading() {
                         {contentType === 'text' && (
                             <Col span={24}>
                                 <Form.Item
-                                    label="Content"
-                                    rules={[{ required: true, message: 'Content cannot be empty' }]}
+                                    label="Description"
+                                    rules={[{ required: true, message: 'Description không được để trống' }]}
                                 >
                                     <TextArea
                                         rows={4}
                                         onChange={handleOnChange}
-                                        name="content"
-                                        placeholder="Type content here"
+                                        name="description"
+                                        placeholder="Nhập mô tả tại đây"
                                     />
                                 </Form.Item>
                             </Col>
@@ -789,6 +796,7 @@ export default function Reading() {
                 </Space>
 
             </Modal>
+            <ToastContainer />
         </div >
     )
 }

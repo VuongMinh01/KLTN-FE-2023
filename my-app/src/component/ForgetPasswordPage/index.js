@@ -21,6 +21,15 @@ export default function ForgetPasswordPage() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (email === "") {
+            toast.error('Email không được để trống.', toastOptions);
+            return;
+        }
+        else if (!/@/.test(email)) {
+            toast.error('Email cần nhập đúng định dạng.', toastOptions);
+            return;
+        }
+
         try {
             // Call forgotPassword API endpoint
             await axios.post(forgotPassword, { email });
@@ -28,7 +37,7 @@ export default function ForgetPasswordPage() {
             navigate('/submit-token');
         } catch (error) {
             console.error('Error submitting email:', error);
-            toast.error('Gmail không được để trống');
+            toast.error('Gmail không tồn tại');
             // Handle error, show error message to user
         }
     };
@@ -36,7 +45,6 @@ export default function ForgetPasswordPage() {
     return (
         <div className={'mainContainer'}>
             <div className='Register'>
-
                 <div className={'titleContainer'}>
                     <div>Gửi Mail</div>
                 </div>
@@ -72,6 +80,10 @@ export function SubmitTokenPage() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (forgot_password_token === "") {
+            toast.error('Mã xác minh không được để trống.', toastOptions);
+            return;
+        }
         try {
             // Remove double quotes from the token
             const cleanedToken = forgot_password_token.replace(/"/g, '');
@@ -83,7 +95,7 @@ export function SubmitTokenPage() {
             navigate('/reset-password');
         } catch (error) {
             console.error('Error submitting token:', error);
-            toast.error('Vui lòng nhập đúng token');
+            toast.error('Vui lòng nhập đúng mã xác minh được nhận.');
 
             // Handle error, show error message to user
         }
@@ -134,6 +146,26 @@ export function ResetPasswordPage() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (forgot_password_token === "") {
+            toast.error('Mã xác minh không được để trống.', toastOptions);
+            return;
+        }
+        else if (password === "") {
+            toast.error('Mật khẩu không được để trống.', toastOptions);
+            return;
+        }
+        else if (password.length < 6) {
+            toast.error('Mật khẩu không được ít hơn 6 ký tự.', toastOptions);
+            return;
+        }
+        else if (confirmPassword === "") {
+            toast.error('Mật khẩu xác nhận không được để trống.', toastOptions);
+            return;
+        }
+        else if (confirmPassword !== password) {
+            toast.error('Mật khẩu xác nhận phải giống mật khẩu.', toastOptions);
+            return;
+        }
         try {
             if (password !== confirmPassword) {
                 toast.error("Passwords do not match");
@@ -174,7 +206,7 @@ export function ResetPasswordPage() {
                 <form onSubmit={handleSubmit} className="inputContainer" >
                     <input
                         type="text"
-                        placeholder="Enter token"
+                        placeholder="Nhập mã xác minh từ mail"
                         className={'inputBox'}
 
                         value={forgot_password_token}
@@ -183,7 +215,7 @@ export function ResetPasswordPage() {
                     <br />
                     <input
                         type="password"
-                        placeholder="Enter new password"
+                        placeholder="Nhập mật khẩu mới"
                         value={password}
                         className={'inputBox'}
 
@@ -194,7 +226,7 @@ export function ResetPasswordPage() {
                         type="password"
                         className={'inputBox'}
 
-                        placeholder="Confirm new password"
+                        placeholder="Nhập mật khẩu xác nhận"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />

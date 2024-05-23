@@ -9,7 +9,7 @@ import Listening from "../../../pages/Listening";
 import HocVien from "../../../pages/HocVien";
 import DashBoard from "../../../pages/DashBoard";
 import UpdateQuestionPage from "../../UpdateQuestionPage";
-
+import UpdateQuestionReadingPage from "../../UpdateQuestionReadingPage";
 export default function AppRoutes() {
     return (
         <Routes>
@@ -23,6 +23,7 @@ export default function AppRoutes() {
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/hocvien" element={<HocVien />}></Route>
             <Route path="/updatequestion" element={<UpdateQuestionPage />}></Route>
+            <Route path="/updatequestionReading" element={<UpdateQuestionReadingPage />}></Route>
 
         </Routes>
     )

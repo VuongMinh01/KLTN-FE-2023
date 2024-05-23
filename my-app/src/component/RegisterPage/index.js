@@ -19,24 +19,44 @@ export default function RegisterPage() {
     const handleOnChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
+    const dateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
 
     const handleValidation = () => {
-        const { password, confirm_password, email, name } = values;
-        if (password !== confirm_password) {
-            toast.error("Mật khẩu và mật khẩu xác nhận phải giống nhau.", toastOptions);
+        const { password, confirm_password, email, name, date_of_birth } = values;
+        if (name === "") {
+            toast.error("Tên không được để trống.", toastOptions);
             return false;
         }
-        if (name.length < 3) {
-            toast.error("Username không được ít hơn 3 ký tự.", toastOptions);
+        else if (name.length < 3) {
+            toast.error("Tên không được ít hơn 3 ký tự.", toastOptions);
             return false;
         }
         else if (email === "") {
             toast.error("Email không được để trống.", toastOptions);
             return false;
         }
-
+        else if (!/@gmail/.test(email)) {
+            toast.error("Email phải là địa chỉ gmail.", toastOptions);
+            return false;
+        }
+        else if (password === "") {
+            toast.error("Mật khẩu không được để trống", toastOptions);
+            return false;
+        }
         else if (password.length < 6) {
             toast.error("Mật khẩu không được ít hơn 6 ký tự", toastOptions);
+            return false;
+        }
+        else if (confirm_password === "") {
+            toast.error("Mật khẩu xác nhận không được để trống", toastOptions);
+            return false;
+        }
+        else if (password !== confirm_password) {
+            toast.error("Mật khẩu và mật khẩu xác nhận phải giống nhau.", toastOptions);
+            return false;
+        }
+        if (date_of_birth === "" || !dateRegex.test(date_of_birth)) {
+            toast.error("Ngày sinh không được để trống và phải là dd/mm/yyyy", toastOptions);
             return false;
         }
         return true;
@@ -62,8 +82,7 @@ export default function RegisterPage() {
                 if (data.status === false) {
                     toast.error(data.msg);
                 } else if (data.message === "Register success") {
-                    localStorage.setItem("user", JSON.stringify(data.user));
-                    navigate("/user/verify")
+                    navigate("/login")
                 }
             } catch (error) {
                 console.error('Error registering user:', error);
@@ -114,6 +133,7 @@ export default function RegisterPage() {
                         placeholder="Nhập mật khẩu tại đây"
                         className={'inputBox'}
                         name="password"
+                        type='password'
                         onChange={(e) => handleOnChange(e)}
 
                     />
@@ -124,6 +144,7 @@ export default function RegisterPage() {
                         placeholder="Nhập mật khẩu xác nhận tại đây"
                         className={'inputBox'}
                         name="confirm_password"
+                        type='password'
                         onChange={(e) => handleOnChange(e)}
 
                     />
