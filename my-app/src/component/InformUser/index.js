@@ -57,6 +57,11 @@ export default function InformUser() {
     };
     const handleValidation = () => {
         const { name, date_of_birth, location, username, avatar, cover_photo } = userData;
+        const dob = new Date(date_of_birth);
+        const currentDate = new Date();
+
+        // Compare dob with current date
+
         if (name === "") {
             toast.error("Họ tên không được để trống", toastOptions);
             return false;
@@ -67,6 +72,14 @@ export default function InformUser() {
         }
         else if (date_of_birth === "") {
             toast.error("Ngày sinh không được để trống", toastOptions);
+            return false;
+        }
+        if (dob > currentDate) {
+            toast.error("Ngày sinh không thể ở tương lai", toastOptions);
+            return false;
+        }
+        if (dob > currentDate) {
+            toast.error("Ngày sinh không thể ở tương lai", toastOptions);
             return false;
         }
         else if (location === "") {

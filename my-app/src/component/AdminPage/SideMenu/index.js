@@ -70,19 +70,6 @@ export default function SideMenu({ userData }) {
                         key: '/admin/fulltest',
                         icon: <ReadOutlined />
                     },
-
-                    {
-                        label: "Học viên",
-                        key: '/admin/hocvien',
-                        icon: <UserOutlined />
-                    },
-
-
-                    {
-                        label: "Xác minh",
-                        key: '/admin/verify',
-                        icon: <CheckCircleOutlined />,
-                    },
                     {
                         label: "Cập nhật câu hỏi Listening",
                         key: '/admin/updatequestion',
@@ -93,6 +80,22 @@ export default function SideMenu({ userData }) {
                         key: '/admin/updatequestionReading',
                         icon: <CheckCircleOutlined />,
                     },
+                    {
+                        label: "Ngân hàng câu hỏi",
+                        key: '/admin/questionspage',
+                        icon: <CheckCircleOutlined />,
+                    },
+                    {
+                        label: "Học viên",
+                        key: '/admin/hocvien',
+                        icon: <UserOutlined />
+                    },
+                    {
+                        label: "Xác minh",
+                        key: '/admin/verify',
+                        icon: <CheckCircleOutlined />,
+                    },
+
                     {
                         label: "Đăng xuất",
                         key: '/signout',

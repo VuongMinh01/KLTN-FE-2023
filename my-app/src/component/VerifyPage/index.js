@@ -49,7 +49,7 @@ export default function Verify() {
                 email_verify_token: verify.email_verify_token
             });
             console.log('Response data:', response.data);
-            if (response.data.message === 'Email verify success') {
+            if (response.data.message === 'success') {
                 setVerifyAccount(true); // Account verified
                 showToast("Xác minh thành công");
             } else {

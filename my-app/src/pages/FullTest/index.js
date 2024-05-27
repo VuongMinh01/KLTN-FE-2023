@@ -5,7 +5,7 @@ import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-design/icons';
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
 
@@ -131,7 +131,13 @@ export default function FullTest() {
         'Content-Type': 'application/json'
     };
 
-
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 8000,
+        draggable: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
     // Modal button
 
     const handleCancel = () => {
@@ -146,7 +152,37 @@ export default function FullTest() {
     }
 
 
-
+    const handleUpdateTestValidation = () => {
+        const { source_id, test_id, title, description, timeline } = valuesTest;
+        if (source_id === "" || source_id.length <= 5) {
+            toast.error("Mã khoá học phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        } else if (title === "") {
+            toast.error("Tên tiêu đề không được để trống", toastOptions);
+            return false;
+        }
+        else if (title.length < 5) {
+            toast.error("Tên tiêu đề không được ít hơn 5 ký tự", toastOptions);
+            return false;
+        }
+        else if (description === "") {
+            toast.error("Mô tả không được để trống", toastOptions);
+            return false;
+        }
+        else if (description.length < 5) {
+            toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
+            return false;
+        }
+        else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
+            toast.error("Timeline phải là một số và không được để trống", toastOptions);
+            return false;
+        }
+        if (test_id === "" || test_id.length <= 5) {
+            toast.error("Mã bài kiểm tra phải lớn hơn 5 kí tự", toastOptions);
+            return false;
+        }
+        return true;
+    };
 
     const onDeleteService = async (e) => {
         axios.delete(deleteTest, {
@@ -408,21 +444,25 @@ export default function FullTest() {
     }
     const handleUpdateTest = async (e) => {
         e.preventDefault();
-        try {
-            const { source_id, test_id, title, description, timeline } = valuesTest;
-            const { dataTest } = await axios.patch(updateTest, {
-                source_id, test_id, title, description, timeline
-            }, { headers })
-            showToast("Update thành công");
-            setLoading(true)
-            updateTable();
-            setIsModalUpdateOpen(false);
-        } catch (error) {
-            // Handle the error here
-            console.error("Error adding test:", error);
-            showToast('Có lỗi trong việc cập nhật')
-            setLoading(false); // Ensure loading state is set to false in case of error
-            // Optionally, you can display an error message or perform other actions
+        if (handleUpdateTest()) {
+
+
+            try {
+                const { source_id, test_id, title, description, timeline } = valuesTest;
+                const { dataTest } = await axios.patch(updateTest, {
+                    source_id, test_id, title, description, timeline
+                }, { headers })
+                toast.success("Update thành công", toastOptions);
+                setLoading(true)
+                updateTable();
+                setIsModalUpdateOpen(false);
+            } catch (error) {
+                // Handle the error here
+                console.error("Error adding test:", error);
+                showToast('Có lỗi trong việc cập nhật')
+                setLoading(false); // Ensure loading state is set to false in case of error
+                // Optionally, you can display an error message or perform other actions
+            }
         }
     };
     return (
@@ -823,7 +863,7 @@ export default function FullTest() {
                 </Space>
 
             </Modal>
-
+            <ToastContainer />
         </div >
     )
 }

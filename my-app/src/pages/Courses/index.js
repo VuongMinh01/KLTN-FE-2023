@@ -182,10 +182,16 @@ export default function Courses() {
         if (source_id === "" || source_id.length <= 5) {
             toast.error("Id phải lớn hơn 5 kí tự", toastOptions);
             return false;
-        } else if (title === "" || title.length <= 5) {
+        }
+        else if (title === "") {
+            toast.error("Tên tiêu đề không được để trống", toastOptions);
+            return false;
+        }
+        else if (title.length < 4) {
             toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
             return false;
-        } else if (description === "" || description.length <= 5) {
+        }
+        else if (description === "" || description.length <= 5) {
             toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
             return false;
         } else if (isNaN(timeline) || timeline === "") {
@@ -200,22 +206,27 @@ export default function Courses() {
         if (handleAddTestValidation()) { // Validate input values
             const { source_id, title, description, timeline } = valuesTest;
 
-            // Send a POST request to add the test
-            const { dataTest } = await axios.post(addTest, {
-                source_id, title, description, timeline,
-            }, config);
+            try {
+                // Send a POST request to add the test
+                const response = await axios.post(addTest, {
+                    source_id, title, description, timeline,
+                }, config);
 
-            if (dataTest === 'Test created successfully') {
-                setLoading(true);
-                console.log("Thêm thành công");
+                const { message, result } = response.data;
+
+                if (message === 'Test created successfully') {
+                    setLoading(true);
+                    console.log("Thêm thành công");
+                    toast.success("Test created successfully", toastOptions);
+                }
+                setIsModalOpen(false); // Close the modal after adding the test
+                setLoading(false); // Ensure loading state is set to false in case of error
+            } catch (error) {
+                console.error("Error:", error);
+                // Handle error if needed
             }
-            setIsModalOpen(false); // Close the modal after adding the test
-            setLoading(false); // Ensure loading state is set to false in case of error
-
-
-        };
-
-    }
+        }
+    };
 
 
     const onDeleteService = async (e) => {
@@ -499,7 +510,7 @@ export default function Courses() {
                 </Space>
 
             </Modal>
-
+            <ToastContainer />
         </div>
     )
 }

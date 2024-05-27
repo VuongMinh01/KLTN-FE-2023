@@ -110,7 +110,7 @@ export default function TuVungPage() {
                                 style={{ width: 250 }}
                                 cover={<img alt="example" src={TLD} />} // Remove onClick handler
                             >
-                                <Meta title="Tương lai" description="" />
+                                <Meta title="Office Technology" description="" />
                             </Card>
                         </Link>
                     </Col>
@@ -123,7 +123,7 @@ export default function TuVungPage() {
                                 style={{ width: 250 }}
                                 cover={<img alt="example" src={HTHTTD} />} // Remove onClick handler
                             >
-                                <Meta title="Hiện tại HT tiếp diễn" description="" />
+                                <Meta title="Office Procedures" description="" />
                             </Card>
                         </Link>
                     </Col>
@@ -136,7 +136,7 @@ export default function TuVungPage() {
                                 style={{ width: 250 }}
                                 cover={<img alt="example" src={QKHTTD} />} // Remove onClick handler
                             >
-                                <Meta title="Quá khứ HT tiếp diễn" description="" />
+                                <Meta title="Electronics" description="" />
                             </Card>
                         </Link>
                     </Col>

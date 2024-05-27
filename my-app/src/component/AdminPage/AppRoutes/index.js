@@ -10,6 +10,7 @@ import HocVien from "../../../pages/HocVien";
 import DashBoard from "../../../pages/DashBoard";
 import UpdateQuestionPage from "../../UpdateQuestionPage";
 import UpdateQuestionReadingPage from "../../UpdateQuestionReadingPage";
+import QuestionsPage from "../../QuestionsPage";
 export default function AppRoutes() {
     return (
         <Routes>
@@ -24,6 +25,7 @@ export default function AppRoutes() {
             <Route path="/hocvien" element={<HocVien />}></Route>
             <Route path="/updatequestion" element={<UpdateQuestionPage />}></Route>
             <Route path="/updatequestionReading" element={<UpdateQuestionReadingPage />}></Route>
+            <Route path="/questionspage" element={<QuestionsPage />}></Route>
 
         </Routes>
     )

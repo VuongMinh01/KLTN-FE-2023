@@ -14,6 +14,13 @@ export default function RegisterPage() {
         pauseOnHover: true,
         theme: "dark"
     };
+    const [values, setValues] = useState({
+        name: "",
+        email: "",
+        password: "",
+        confirm_password: "",
+        date_of_birth: "",
+    });
     const navigate = useNavigate();
 
     const handleOnChange = (e) => {
@@ -55,10 +62,12 @@ export default function RegisterPage() {
             toast.error("Mật khẩu và mật khẩu xác nhận phải giống nhau.", toastOptions);
             return false;
         }
-        if (date_of_birth === "" || !dateRegex.test(date_of_birth)) {
+        else if (date_of_birth === "" || !dateRegex.test(date_of_birth)) {
             toast.error("Ngày sinh không được để trống và phải là dd/mm/yyyy", toastOptions);
             return false;
         }
+
+
         return true;
     };
 
@@ -92,13 +101,7 @@ export default function RegisterPage() {
     };
 
 
-    const [values, setValues] = useState({
-        name: "",
-        email: "",
-        password: "",
-        confirm_password: "",
-        date_of_birth: "",
-    });
+
 
     return (
         <div className={'mainContainer'}>

@@ -1,4 +1,4 @@
-import { Space, Table, Typography, Col, Form, Row, Modal, Radio } from "antd";
+import { Space, Table, Typography, Col, Form, Row, Modal, Radio, Button } from "antd";
 import React, { useState, useEffect } from "react";
 import { deleteTest, getAllTestListening, getQuestionListId, addQuestion, uploadImageEndpoint, uploadAudioEndpoint, updateTest, deleteQuestion } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
@@ -8,6 +8,7 @@ import { PlusOutlined, DeleteOutlined, InfoOutlined, EditOutlined } from '@ant-d
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import '../../css/Reading.css'
+import * as XLSX from 'xlsx';
 
 const { TextArea } = Input;
 
@@ -18,6 +19,7 @@ export default function Listening() {
     const [dataSource, setDataSource] = useState([])
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalExcelOpen, setIsModalExcelOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
@@ -44,6 +46,15 @@ export default function Listening() {
     const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
 
+
+    const [file, setFile] = useState(null);
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+
+
     const handleOnChangeTest = (e) => {
         setValuesTest({ ...valuesTest, [e.target.name]: e.target.value });
 
@@ -66,6 +77,16 @@ export default function Listening() {
         console.log(record._id, '333');
         setIsModalOpen(true);
 
+    };
+    const showModalExcel = (record) => {
+        // console.log("Clicked record:", record);
+        // console.log(record._id, '333');
+
+        setValues({
+            ...values,
+            test_id: record._id // Update the source_id in the valuesTest state
+        });
+        setIsModalExcelOpen(true);
     };
     const showModalUpdate = (record) => {
         console.log("Clicked record:", record);
@@ -487,6 +508,81 @@ export default function Listening() {
         showToast('Xoá thành công')
     }
 
+
+    const handleAddQuestions = async (e) => {
+        e.preventDefault();
+
+        if (!file) {
+            toast.error('Vui lòng tải lên tệp Excel.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            if (jsonData.length < 2) {
+                toast.error('Tệp Excel không hợp lệ.');
+                return;
+            }
+
+            // Iterate through each row of jsonData starting from index 1
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                const question = {
+                    num_quest: parseInt(row[0]),
+                    content: row[1],
+                    description: row[2],
+                    score: parseInt(row[3]),
+                    answers: [
+                        { order_answer: 'A', content_answer: row[4] },
+                        { order_answer: 'B', content_answer: row[5] },
+                        { order_answer: 'C', content_answer: row[6] },
+                        { order_answer: 'D', content_answer: row[7] }
+                    ],
+                    correct_at: {
+                        order_answer: row[8], // Correct answer key (A, B, C, or D)
+                        content_answer: row[4] // Placeholder, this field is not needed for validation
+                    },
+                    test_id: values.test_id,
+                };
+
+                try {
+                    // Send a separate request for each question
+                    const response = await axios.post(addQuestion, question, { headers });
+                    if (response.status === 200) {
+                        toast.success("Thêm câu hỏi thành công.");
+                    } else {
+                        toast.error('Thêm câu hỏi không thành công.');
+                    }
+                } catch (error) {
+                    console.log(error);
+                    toast.error('Thêm câu hỏi không thành công.');
+                }
+            }
+
+            // After processing all questions, close the modal
+            setIsModalExcelOpen(false);
+        };
+        reader.readAsArrayBuffer(file);
+    };
+
+
+
+    const handleOkExcel = async () => {
+        setIsModalExcelOpen(false);
+    };
+
+    const handleCancelExcel = () => {
+        setIsModalExcelOpen(false);
+    };
+
+
+
     return (
 
         <div>
@@ -537,6 +633,8 @@ export default function Listening() {
                                     <div>
 
                                         <PlusOutlined onClick={() => showModal(record)}
+                                        />
+                                        <PlusOutlined style={{ color: "green", marginLeft: "12px" }} onClick={() => showModalExcel(record)}
                                         />
 
                                         <DeleteOutlined
@@ -884,6 +982,29 @@ export default function Listening() {
 
                 </Space>
 
+            </Modal>
+            <Modal
+                title="Add Questions from Excel"
+                onOk={handleAddQuestions}
+                open={isModalExcelOpen}
+                onCancel={() => setIsModalExcelOpen(false)}
+            >
+                <Form onSubmit={handleAddQuestions}>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Upload Excel"
+                                rules={[{ required: true, message: 'Please upload an Excel file' }]}
+                            >
+                                <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Button type="primary" onClick={handleAddQuestions}>
+                        Add Questions
+                    </Button>
+
+                </Form>
             </Modal>
             <ToastContainer />
         </div >

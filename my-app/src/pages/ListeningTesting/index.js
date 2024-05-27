@@ -146,7 +146,7 @@ export default function ListeningTesting() {
             console.log(questions, 'data list');
         }).catch((error) => {
             console.error('Error fetching list of questions:', error);
-            const confirmed = window.confirm("Bạn cần phải đăng nhập để làm bài này. Nhấn OK để chuyển đến trang đăng nhập.");
+            const confirmed = window.confirm("Bạn cần phải đăng nhập với tài khoản đã xác minh để làm bài kiểm tra này. Nhấn OK để chuyển đến trang đăng nhập.");
             if (confirmed) {
                 navigate('/login');
             }
@@ -159,54 +159,6 @@ export default function ListeningTesting() {
         alert(message);
     }
 
-    // const handleSubmit = () => {
-    //     // Ensure questions and modifiedDataSource have data
-    //     console.log('Questions length:', questions.length);
-    //     console.log('ModifiedDataSource length:', modifiedDataSource.length);
-    //     if (questions.length === 0 || modifiedDataSource.length === 0) {
-    //         console.error('Questions or modifiedDataSource is empty.');
-    //         showToast('Ít nhất phải có một đáp án được chọn');
-    //         return;
-    //     }
-
-    //     // Calculate the total time taken by the test
-    //     const total_time = totalTime - remainingTime;
-
-    //     // Construct the testData object with selected answers and total time
-    //     const testData = {
-    //         total_time,
-    //         test_id: getTestIdFromURL(location.pathname),
-    //         questions: questions.map((question, index) => ({
-    //             _id: question._id,
-    //             test_id: question.test_id,
-    //             num_quest: question.num_quest,
-    //             description: question.description,
-    //             content: question.content,
-    //             score: question.score,
-    //             created_at: question.created_at,
-    //             updated_at: question.updated_at,
-    //             answers: question.answers,
-    //             correct_at: question.correct_at,
-    //             selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null
-    //         }))
-    //     };
-
-    //     // Make a POST request to submit the test data
-    //     axios.post(submitTest, testData, { headers })
-    //         .then(response => {
-    //             // Handle successful response
-    //             const { total_marks, total_correct } = response.data.result;
-    //             setTotalCorrect(total_correct);
-    //             setTotalMarks(total_marks);
-    //             setCurrentPage('finish');
-    //             // You can display a success message or perform any other actions here
-    //         })
-    //         .catch(error => {
-    //             // Handle error
-    //             console.error('Error submitting test:', error);
-    //             // You can display an error message or perform any other error handling here
-    //         });
-    // };
     const handleSubmit = () => {
         // Check if any question is unanswered
         const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
@@ -723,24 +675,22 @@ function Finish({ totalMarks, totalCorrect, changePage, totalTime1 }) {
         </Container>
     );
 }
+
 function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
     const [scorecardDetail, setScorecardDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [id, setId] = useState(testId); // Set initial value of id to testId
     const [submittedId, setSubmittedId] = useState("");
 
-    const token = localStorage.getItem("user").replace(/"/g, '');
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${getScore}/${id}`, { headers });
+                const response = await axios.get(`${getScore}/${id}`, { headers: { 'Authorization': `Bearer ${localStorage.getItem("user").replace(/"/g, '')}`, 'Content-Type': 'application/json' } }
+                );
                 setScorecardDetail(response.data.result);
                 setLoading(false);
+                console.log(response.data.result);
             } catch (error) {
                 console.error("Error fetching scorecard detail:", error);
                 setLoading(false);
@@ -749,45 +699,50 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
         };
 
         fetchData();
-    }, []);
+    }, [id]);
 
     function showToast(message) {
-
         alert(message);
     }
 
     return (
         <div style={{ background: 'white' }}>
-
+            {loading && <p>Loading...</p>}
             {scorecardDetail && (
                 <>
-                    <div style={{
-                        border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite'
-                    }}>
+                    <div style={{ border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite' }}>
                         <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Thông tin bài làm</h1>
                         <h3>Tổng số câu đúng: {totalCorrect}</h3>
                         <h3>Tổng số điểm: {totalMarks}</h3>
-                        <h3>Thời gian làm bài: {totalTime1}  </h3>
+                        <h3>Thời gian làm bài: {totalTime1}  phút</h3>
                     </div>
                     <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
 
-                    <ul>
-                        {scorecardDetail.questions.map((question, index) => (
-                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
-                                <li key={index}>
-                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {index + 1}</h3>
+                    {scorecardDetail.questions.map((question, index) => (
+                        <ul>
+                            <li key={question.id}>
+                                <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
+                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {question.num_quest}</h3>
                                     <p>Mô tả: {question.description}</p>
-                                    <h4>Đáp án đúng: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</h4>
-                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "null"}</h4>
+                                    <h4>Đáp án đúng: {getAnswer(question)}</h4>
+                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "Chưa chọn"}</h4>
                                     <h4>Điểm: {question.score}</h4>
-                                </li>
-                            </div>
-                        ))}
-                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    ))}
                 </>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
 
+    function getAnswer(question) {
+        if (question.correct_at) {
+            return question.correct_at.content_answer;
+        } else if (question.selected_at) {
+            return question.selected_at.content_answer;
+        } else {
+            return "Chưa xác định";
+        }
+    }
 }
