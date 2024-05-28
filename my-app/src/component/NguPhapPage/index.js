@@ -20,6 +20,7 @@ export default function NguPhapPage() {
 
     return (
         <Container >
+            <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Ngữ pháp cơ bản dành cho người mới</h1>
             <Row className="RowH2">
                 <Col>
                     <Col xs={6} sm={4} className="Card" >

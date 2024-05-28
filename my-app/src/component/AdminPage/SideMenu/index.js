@@ -86,6 +86,11 @@ export default function SideMenu({ userData }) {
                         icon: <CheckCircleOutlined />,
                     },
                     {
+                        label: "Quản lý bài kiểm tra",
+                        key: '/admin/tests',
+                        icon: <ReadOutlined />,
+                    },
+                    {
                         label: "Học viên",
                         key: '/admin/hocvien',
                         icon: <UserOutlined />

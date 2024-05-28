@@ -11,6 +11,7 @@ import DashBoard from "../../../pages/DashBoard";
 import UpdateQuestionPage from "../../UpdateQuestionPage";
 import UpdateQuestionReadingPage from "../../UpdateQuestionReadingPage";
 import QuestionsPage from "../../QuestionsPage";
+import TestV2 from "../../../pages/TestV2";
 export default function AppRoutes() {
     return (
         <Routes>
@@ -26,6 +27,7 @@ export default function AppRoutes() {
             <Route path="/updatequestion" element={<UpdateQuestionPage />}></Route>
             <Route path="/updatequestionReading" element={<UpdateQuestionReadingPage />}></Route>
             <Route path="/questionspage" element={<QuestionsPage />}></Route>
+            <Route path="/tests" element={<TestV2 />}></Route>
 
         </Routes>
     )

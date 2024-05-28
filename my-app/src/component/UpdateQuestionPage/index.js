@@ -16,7 +16,15 @@ const UpdateQuestionPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [testIds, setTestIds] = useState([]); // Initialize testIds state
     const [selectedTestId, setSelectedTestId] = useState('');
-
+    const [values, setValues] = useState({
+        num_quest: "",
+        content: "",
+        description: "",
+        question_id: "",
+        score: "",
+        answers: [],
+        correct_at: {},
+    });
     const token = localStorage.getItem("user").replace(/"/g, '');
     const headers = {
         'Authorization': `Bearer ${token}`,
@@ -135,15 +143,7 @@ const UpdateQuestionPage = () => {
     const [imageFile, setImageFile] = useState(null);
     const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
 
-    const [values, setValues] = useState({
-        num_quest: "",
-        content: "",
-        description: "",
-        question_id: "",
-        score: "",
-        answers: [],
-        correct_at: {},
-    });
+
     const handleOnChangeNumber = (e) => {
         const value = parseInt(e.target.value);
         if (!isNaN(value)) {
@@ -294,14 +294,14 @@ const UpdateQuestionPage = () => {
         // Check if the content field is empty
         if (!values.content || typeof values.content !== 'string' || !values.content.trim()) {
             console.log("Content must not be empty");
-            toast.error('Content câu hỏi không được để trống.')
+            toast.error('Content must not be empty')
             return; // Prevent further execution if content is empty
         }
 
         // Check if the description field is empty
         if (!values.description || typeof values.description !== 'string' || !values.description.trim()) {
             console.log("Description must not be empty");
-            showToast('Description câu hỏi không được để trống')
+            showToast('Description must not be empty')
 
             return; // Prevent further execution if description is empty
         }
@@ -354,29 +354,29 @@ const UpdateQuestionPage = () => {
             const response = await axios.patch(updateQuestion, { ...values, answers }, { headers });
 
             // Check if the request was successful
-            if (response.status === 200) {
-                // Extract the URL from the response data
-                const responseData = response.data.data[0];
-                let imageUrl, audioUrl;
+            // if (response.status === 200) {
+            //     // Extract the URL from the response data
+            //     const responseData = response.data.data[0];
+            //     let imageUrl, audioUrl;
 
-                // Check the type to distinguish between image and audio URLs
-                if (responseData.type === 'image') {
-                    imageUrl = responseData.url;
-                } else if (responseData.type === 'audio') {
-                    audioUrl = responseData.url;
-                }
+            //     // Check the type to distinguish between image and audio URLs
+            //     if (responseData.type === 'image') {
+            //         imageUrl = responseData.url;
+            //     } else if (responseData.type === 'audio') {
+            //         audioUrl = responseData.url;
+            //     }
 
-                // Update values.content with the image URL if available
-                // and values.description with the audio URL if available
-                setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('thêm audio thành công');
-                // Close the modal
-                setIsModalOpen(false);
-            } else {
-                // Handle other response statuses if needed
-                console.log('loi');
-                showToast('thêm audio không thành công')
-            }
+            //     // Update values.content with the image URL if available
+            //     // and values.description with the audio URL if available
+            //     setValues({ ...values, content: imageUrl, description: audioUrl });
+            //     showToast('thêm audio thành công');
+            //     // Close the modal
+            //     setIsModalOpen(false);
+            // } else {
+            //     // Handle other response statuses if needed
+            //     console.log('loi');
+            //     showToast('thêm audio không thành công')
+            // }
         } catch (error) {
             console.log(error);
             // Handle error here, such as showing an error message to the user

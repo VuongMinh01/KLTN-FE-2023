@@ -19,6 +19,8 @@ const { Meta } = Card;
 export default function TuVungPage() {
     return (
         <Container >
+            <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Học từ vựng dành cho Toeic</h1>
+
             <Row className="RowH2">
                 <Col>
                     <Col xs={6} sm={4} className="Card" >

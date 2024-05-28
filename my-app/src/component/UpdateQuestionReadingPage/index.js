@@ -284,18 +284,18 @@ const UpdateQuestionReadingPage = () => {
             const response = await axios.patch(updateQuestion, { ...values, answers }, { headers });
 
             // Check if the request was successful
-            if (response.status === 200) {
-                // Extract the URL from the response data
-                const imageUrl = response.data.data[0].url;
+            // if (response.status === 200) {
+            //     // Extract the URL from the response data
+            //     const imageUrl = response.data.data[0].url;
 
 
-                setValues({ ...values, description: imageUrl });
-                // Close the modal
-                setIsModalOpen(false);
-            } else {
-                // Handle other response statuses if needed
-                showToast('thêm audio không thành công')
-            }
+            //     setValues({ ...values, description: imageUrl });
+            //     // Close the modal
+            //     setIsModalOpen(false);
+            // } else {
+            //     // Handle other response statuses if needed
+            //     showToast('thêm audio không thành công')
+            // }
         } catch (error) {
             console.log(error);
             // Handle error here, such as showing an error message to the user

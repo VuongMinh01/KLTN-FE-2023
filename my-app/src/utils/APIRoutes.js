@@ -17,9 +17,9 @@ export const addCourses = `${host}/courses/`;
 export const addTest = `${host}/tests/`;
 export const addQuestion = `${host}/questions/`;
 
-export const deleteCourses = `${host}/courses/delete`
-export const deleteTest = `${host}/tests/delete`
-export const deleteQuestion = `${host}/questions/delete`
+export const deleteCourses = `${host}/courses/delete`;
+export const deleteTest = `${host}/tests/delete`;
+export const deleteQuestion = `${host}/questions/delete`;
 export const getUser = `${host}/users/me`;
 export const changePassword = `${host}/users/change-password`;
 export const forgotPassword = `${host}/users/forgot-password`;
@@ -34,7 +34,22 @@ export const updateCourses = `${host}/courses/update`;
 export const updateTest = `${host}/tests/update`;
 export const submitTest = `${host}/scorecards/`;
 export const getScore = `${host}/scorecards`;
-export const searchUser = `${host}/search/user`
+export const searchUser = `${host}/search/user`;
 export const uploadImageEndpoint = `${host}/medias/upload-image`;
 export const uploadAudioEndpoint = `${host}/medias/upload-audio`;
 export const resendVerify = `${host}/users/resend-verify-email`;
+
+export const addQuestionNew = `${host}/questions-v2/`;
+export const getListQuestionNew = `${host}/questions-v2/list`;
+export const updateQuestionNew = `${host}/questions-v2/update`;
+export const deleteQuestionNew = `${host}/questions-v2/delete`;
+export const getQuestionById = `${host}/questions-v2/:question_id`;
+
+
+export const createTest = `${host}/tests-v2`;
+export const getListTest = `${host}/tests-v2/list`;
+export const deleteTests = `${host}/tests-v2/delete`;
+export const deleteQuestionFromTests = `${host}/tests-v2/delete-question-from-test`;
+export const getTestDetail = `${host}/tests-v2/full-test-detail`;
+export const addQuestionToTest = `${host}/tests-v2/add-question`
+export const getQuestionDetail = `${host}/questions-v2/:question_id`

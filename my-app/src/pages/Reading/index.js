@@ -300,19 +300,19 @@ export default function Reading() {
             const response = await axios.post(addQuestion, { ...values, answers }, { headers });
 
             // Check if the request was successful
-            if (response.status === 200) {
-                // Extract the URL from the response data
-                const imageUrl = response.data.data[0].url;
+            // if (response.status === 200) {
+            //     // Extract the URL from the response data
+            //     const imageUrl = response.data.data[0].url;
 
-                // Update values.content with the image URL
-                setValues({ ...values, description: imageUrl });
+            //     // Update values.content with the image URL
+            //     setValues({ ...values, description: imageUrl });
 
-                // Close the modal
-                setIsModalOpen(false);
-            } else {
-                // Handle other response statuses if needed
-                console.log('loi');
-            }
+            //     // Close the modal
+            //     setIsModalOpen(false);
+            // } else {
+            //     // Handle other response statuses if needed
+            //     console.log('loi');
+            // }
         } catch (error) {
             console.log(error);
             // Handle error here, such as showing an error message to the user

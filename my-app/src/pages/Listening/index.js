@@ -22,10 +22,10 @@ export default function Listening() {
     const [isModalExcelOpen, setIsModalExcelOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-
     const [contentType, setContentType] = useState('text'); // State variable to manage selected content type
     const [imageFile, setImageFile] = useState(null);
     const [contentType1, setContentType1] = useState('text'); // State variable to manage selected content type
+    const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
     const [values, setValues] = useState({
         num_quest: "",
@@ -43,7 +43,6 @@ export default function Listening() {
         description: "",
         timeline: 0,
     })
-    const [questionList, setQuestionList] = useState([]); // State variable to store the question list
 
 
 
@@ -144,15 +143,9 @@ export default function Listening() {
 
 
     const clickButton = (e) => {
-        // code huong dan
-        // // setValues({ ...values, correct_at: values['answers'].find(item => item.order_answer == e.target.value) })
-        // // console.log(values, 'duoi');
-
         console.log("Clicked value:", e.target.value);
-
         const order_answer = e.target.value; // Get the value of the clicked radio button
         const content_answer = e.target.nextElementSibling.value; // Get the content of the answer corresponding to the clicked radio button
-
         // Update correct_at with the selected answer
         setValues({
             ...values,
@@ -161,7 +154,6 @@ export default function Listening() {
                 content_answer
             }
         });
-
         console.log("Clicked value:", order_answer);
         console.log("Content of the answer:", content_answer);
     }
@@ -172,10 +164,7 @@ export default function Listening() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     };
-    const headersForImage = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data' // Update content type for file upload
-    };
+
 
     // Modal button
     const handleOk = async () => {
@@ -291,28 +280,28 @@ export default function Listening() {
             const response = await axios.post(addQuestion, { ...values, answers }, { headers });
 
             // Check if the request was successful
-            if (response.status === 200) {
-                // Extract the URL from the response data
-                const responseData = response.data.data[0];
-                let imageUrl, audioUrl;
+            // if (response.status === 200) {
+            //     // Extract the URL from the response data
+            //     const responseData = response.data.data[0];
+            //     let imageUrl, audioUrl;
 
-                // Check the type to distinguish between image and audio URLs
-                if (responseData.type === 'image') {
-                    imageUrl = responseData.url;
-                } else if (responseData.type === 'audio') {
-                    audioUrl = responseData.url;
-                }
+            //     // Check the type to distinguish between image and audio URLs
+            //     if (responseData.type === 'image') {
+            //         imageUrl = responseData.url;
+            //     } else if (responseData.type === 'audio') {
+            //         audioUrl = responseData.url;
+            //     }
 
-                // Update values.content with the image URL if available
-                // and values.description with the audio URL if available
-                setValues({ ...values, content: imageUrl, description: audioUrl });
-                showToast('Thêm âm thanh thành công');
-                // Close the modal
-                setIsModalOpen(false);
-            } else {
-                // Handle other response statuses if needed
-                toast.error('Thêm âm thanh không thành công')
-            }
+            //     // Update values.content with the image URL if available
+            //     // and values.description with the audio URL if available
+            //     setValues({ ...values, content: imageUrl, description: audioUrl });
+            //     showToast('Thêm âm thanh thành công');
+            //     // Close the modal
+            //     setIsModalOpen(false);
+            // } else {
+            //     // Handle other response statuses if needed
+            //     toast.error('Thêm âm thanh không thành công')
+            // }
         } catch (error) {
             console.log(error);
             // Handle error here, such as showing an error message to the user
@@ -588,7 +577,7 @@ export default function Listening() {
         <div>
             <Space size={20} direction={"vertical"}>
 
-                <Typography.Title level={4}>Danh sách bài Full Test</Typography.Title>
+                <Typography.Title level={4}>Danh sách bài Listening Test</Typography.Title>
 
 
 
@@ -644,7 +633,8 @@ export default function Listening() {
                                                 }
                                             }}
                                             style={{ color: "red", marginLeft: "12px" }}
-                                        />                                          <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                        />
+                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
                                         <EditOutlined onClick={() => showModalUpdate(record)} style={{ color: "green", marginLeft: "12px" }} />
 
                                     </div>

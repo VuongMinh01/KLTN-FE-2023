@@ -7,7 +7,7 @@ import User from "./pages/User";
 import ReadingTesting from "./pages/ReadingTesting";
 import ListeningTesting from "./pages/ListeningTesting";
 import FullTesting from "./pages/FullTesting";
-
+import TestingV2 from "./pages/TestingV2";
 function App() {
 
   return (
@@ -29,6 +29,7 @@ function App() {
           <Route path="/study/reading-test/*" element={<ReadingTesting />}></Route>
           <Route path="/study/listening-test/*" element={<ListeningTesting />}></Route>
           <Route path="/study/full-test/*" element={<FullTesting />}></Route>
+          <Route path="/study/testv2/*" element={<TestingV2 />}></Route>
 
 
         </Routes>

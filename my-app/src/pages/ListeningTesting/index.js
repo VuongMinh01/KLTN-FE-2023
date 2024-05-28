@@ -319,12 +319,12 @@ function Part1(props) {
 
     return (
         <Container fluid>
-            <h1>Part 1</h1>
+            <h1>Part 1: Mô tả tranh</h1>
             {Array.from({ length: 6 }).map((_, index) => (
                 <Row gutter={24} key={index}>
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
-                            <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 1}</h3>
+                            <h3 style={{ textAlign: 'left', marginLeft: '50px', marginTop: '10px' }}>Câu hỏi {index + 1}</h3>
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
                                 <audio controls={true} src={props.dataSource[index]?.description}></audio>
                             </div>
@@ -412,12 +412,12 @@ function Part2(props) {
 
     return (
         <Container fluid>
-            <h1>Part 2</h1>
+            <h1>Part 2: Hỏi - Đáp</h1>
             {slicedDataSource.map((item, index) => (
                 <Row gutter={24} key={index}>
                     <Col xs={12}>
                         <div style={{ border: '1px solid black', borderRadius: '20px', marginBottom: '10px' }}>
-                            <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + 7}</h3>
+                            <h3 style={{ textAlign: 'left', marginLeft: '50px', marginTop: '10px' }}>Câu hỏi {index + 7}</h3>
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
                                 <audio controls={true} src={props.dataSource[index + 6]?.description}></audio>
                             </div>
@@ -499,7 +499,7 @@ function Part3(props) {
                     <div style={{ display: 'grid' }}>
                         {props.dataSource.slice(i, i + 3).map((item, index) => (
                             <div key={index} style={{ marginRight: '20px' }}>
-                                <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 32}. {props.dataSource[index + i + 31] && props.dataSource[index + i + 31].content}</h3>
+                                <h3 style={{ textAlign: 'left', marginLeft: '50px', marginTop: '10px' }}>Câu hỏi {index + i + 32}. {props.dataSource[index + i + 31] && props.dataSource[index + i + 31].content}</h3>
                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
                                     <input
                                         type="radio"
@@ -552,7 +552,7 @@ function Part3(props) {
 
     return (
         <Container fluid>
-            <h1>Part 3</h1>
+            <h1>Part 3: Đoạn hội thoại</h1>
             {renderItemsInGroupsOfThree()}
             <Button onClick={handleClick}>Part kế tiếp</Button>
             <Button onClick={handlePreviousClick}>Part trước</Button>
@@ -588,7 +588,7 @@ function Part4(props) {
                     <div style={{ display: 'grid' }}>
                         {props.dataSource.slice(i, i + 3).map((item, index) => (
                             <div key={index} style={{ marginRight: '20px' }}>
-                                <h3 style={{ textAlign: 'left', marginLeft: '50px' }}>Câu {index + i + 71}. {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].content}</h3>
+                                <h3 style={{ textAlign: 'left', marginLeft: '50px', marginTop: '10px' }}>Câu hỏi {index + i + 71}. {props.dataSource[index + i + 70] && props.dataSource[index + i + 70].content}</h3>
                                 <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
                                     <input
                                         type="radio"
@@ -641,7 +641,7 @@ function Part4(props) {
 
     return (
         <Container fluid>
-            <h1>Part 4</h1>
+            <h1>Part 4: Bài nói ngắn</h1>
             {renderItemsInGroupsOfThree()}
             <Button onClick={handlePreviousClick}>Part trước</Button>
         </Container>
