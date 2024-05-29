@@ -51,5 +51,7 @@ export const getListTest = `${host}/tests-v2/list`;
 export const deleteTests = `${host}/tests-v2/delete`;
 export const deleteQuestionFromTests = `${host}/tests-v2/delete-question-from-test`;
 export const getTestDetail = `${host}/tests-v2/full-test-detail`;
+export const getTestDetailForDelete = `${host}/tests-v2/full-test-detail/:test_id`;
+
 export const addQuestionToTest = `${host}/tests-v2/add-question`
 export const getQuestionDetail = `${host}/questions-v2/:question_id`

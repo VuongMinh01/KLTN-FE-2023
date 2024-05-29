@@ -107,7 +107,7 @@ export default function TestingV2() {
         updatedSelectedAnswers[index] = value;
         setSelectedAnswersPart(updatedSelectedAnswers);
 
-        const selectedAnswer = dataSource[index]?.answers.find(answer => answer.order_answer === value);
+        const selectedAnswer = dataSource[index]?.items[0]?.answers.find(answer => answer.order_answer === value);
         if (selectedAnswer) {
             const { content_answer, order_answer } = selectedAnswer;
             const updatedDataSource = [...modifiedDataSource];
@@ -143,6 +143,7 @@ export default function TestingV2() {
             setDataSource(questions);
             setQuestions(questions); // Update questions state
             console.log(questions, 'data list');
+            console.log(questions[0].items[0], 'du lieu');
         }).catch((error) => {
             console.error('Error fetching list of questions:', error);
             const confirmed = window.confirm("Bạn cần phải đăng nhập với tài khoản đã xác minh để làm bài kiểm tra này. Nhấn OK để chuyển đến trang đăng nhập.");
@@ -154,7 +155,6 @@ export default function TestingV2() {
 
 
     function showToast(message) {
-
         alert(message);
     }
 
@@ -177,25 +177,28 @@ export default function TestingV2() {
             return;
         }
 
-        // Calculate the total time taken by the test
-        const total_time = totalTime - remainingTime;
-
         // Construct the testData object with selected answers and total time
         const testData = {
             total_time: totalTime - remainingTime,
-            test_id: getTestIdFromURL(location.pathname),
+            test_id: getTestIdFromURL(location.pathname), // Make sure getTestIdFromURL is defined
             questions: questions.map((question, index) => ({
-                _id: question._id,
-                test_id: question.test_id,
-                num_quest: question.num_quest,
-                description: question.description,
-                content: question.content,
-                score: question.score,
-                created_at: question.created_at,
-                updated_at: question.updated_at,
-                answers: question.answers,
-                correct_at: question.correct_at,
-                selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null
+                // Map over each question object
+                selected_at: modifiedDataSource[index] ? modifiedDataSource[index].selected_at : null,
+                items: question.items.map(item => ({
+                    // Map over each item in the items array
+                    _id: item._id,
+                    score: item.score,
+                    content: item.content,
+                    description: item.description,
+                    num_part: item.num_part,
+                    correct_at: item.correct_at,
+                    answers: item.answers,
+                    created_at: item.created_at,
+                    updated_at: item.updated_at,
+                    // Include only item-specific properties here
+                    // Add other properties if needed
+                })),
+                // Add other properties if needed
             }))
         };
 
@@ -220,6 +223,7 @@ export default function TestingV2() {
     };
 
 
+
     return (
         <div className="App">
             <Header />
@@ -229,6 +233,7 @@ export default function TestingV2() {
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
                 {currentPage !== 'start' && (
                     <div>
+
                         {currentPage === 'part 1' && <Part1
                             changePage={changePage}
                             dataSource={dataSource}
@@ -300,7 +305,9 @@ function Part1(props) {
 
     const handleRadioChangePart1 = (index, value) => {
         const updatedSelectedAnswers = [...props.selectedAnswers];
+        console.log(updatedSelectedAnswers, '1');
         updatedSelectedAnswers[index] = value;
+        console.log(value, '2');
         props.onRadioChange(index, value); // Call the parent component's handler
     };
 
@@ -317,7 +324,7 @@ function Part1(props) {
                                 <audio controls={true} src={props.dataSource[index]?.items[0]?.audio_content}></audio>
                             </div>
                             <div style={{ justifyContent: 'center', alignItems: 'center', display: 'grid', padding: "10px" }}>
-                                <Image alt="preview" src={props.dataSource[index]?.image_content} style={{ width: 300 }} />
+                                <Image alt="preview" src={props.dataSource[index]?.items[0]?.image_content} style={{ width: 300 }} />
                             </div>
                             <div style={{ textAlign: 'justify', margin: '10px 10px 10px 50px' }}>
                                 <input

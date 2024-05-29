@@ -175,15 +175,35 @@ export default function QuestionsPage() {
         console.log(record._id);// Fetch question list for the clicked test_id
     };
 
+    // const handleOnChange = (e) => {
+    //     setValues({ ...values, [e.target.name]: e.target.value });
+    // }
     const handleOnChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
-    }
+        const { name, value } = e.target;
+        setValues({
+            ...values,
+            [name]: value,
+        });
+    };
+    const handleOnChangeQuestionGroup = (e) => {
+        const { name, value } = e.target;
+        setValuesQuestionGroup({
+            ...valuesQuestionGroup,
+            [name]: value,
+        });
+    };
+
+    // const clickButton = (e) => {
+    //     const { value } = e.target;
+    //     setValues({
+    //         ...values,
+    //         correct_at: { [value]: true },
+    //     });
+    // };
     const handleOnChangeAddQuestionToTest = (e) => {
         setValuesAddQuestion({ ...valuesAddQuestion, [e.target.name]: e.target.value });
     }
-    const handleOnChangeQuestionGroup = (e) => {
-        setValuesQuestionGroup({ ...valuesQuestionGroup, [e.target.name]: e.target.value });
-    }
+
     const handleOnChangeNumber = (e) => {
         const value = parseInt(e.target.value);
         if (!isNaN(value)) {
@@ -195,9 +215,24 @@ export default function QuestionsPage() {
             setValues({ ...values, [e.target.name]: '' });
         }
     };
+    const handleOnChangeNumber1 = (e) => {
+        const value = parseInt(e.target.value);
+        if (!isNaN(value)) {
+            setValuesQuestionGroup({ ...valuesQuestionGroup, [e.target.name]: value });
+            if (e.target.name === 'type') {
+                setType(value);
+            }
+        } else {
+            setValuesQuestionGroup({ ...valuesQuestionGroup, [e.target.name]: '' });
+        }
+    };
 
     const handleTypeChange = (value) => {
         setValues({ ...values, type: value });
+        setType(value);
+    };
+    const handleTypeChangeQuestionGroup = (value) => {
+        setValuesQuestionGroup({ ...valuesQuestionGroup, type: value });
         setType(value);
     };
     const getAllQuestions = async (part) => {
@@ -205,7 +240,7 @@ export default function QuestionsPage() {
             setLoading(true);
             const response = await axios.get(getListQuestionNew, {
                 params: {
-                    limit: 20,
+                    limit: 50,
                     page: 1,
                 },
                 headers: { ...headers }
@@ -249,6 +284,21 @@ export default function QuestionsPage() {
         console.log("Clicked value:", order_answer);
         console.log("Content of the answer:", content_answer);
     }
+    const clickButton1 = (e) => {
+        console.log("Clicked value:", e.target.value);
+        const order_answer = e.target.value; // Get the value of the clicked radio button
+        const content_answer = e.target.nextElementSibling.value; // Get the content of the answer corresponding to the clicked radio button
+        // Update correct_at with the selected answer
+        setValuesQuestionGroup({
+            ...valuesQuestionGroup,
+            correct_at: {
+                order_answer,
+                content_answer
+            }
+        });
+        console.log("Clicked value:", order_answer);
+        console.log("Content of the answer:", content_answer);
+    }
     const handleClick = (e) => {
         if (imageFile) {
             const formData = new FormData(); // Create FormData object to send the file
@@ -267,6 +317,38 @@ export default function QuestionsPage() {
                         console.log('Image URL:', imageUrl);
                         // Update values.content with the image URL
                         setValues({ ...values, image_content: imageUrl });
+                        showToast('Upload hình ảnh thành công');
+                    } else {
+                        console.error('Image URL not found in response data:', responseData);
+                        showToast('Upload hình ảnh thất bại');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    showToast('Upload hình ảnh thất bại');
+                });
+        } else {
+            console.warn('No image selected.');
+        }
+    };
+    const handleClick1 = (e) => {
+        if (imageFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('image', imageFile); // Append the image file to the FormData object
+            axios.post(uploadImageEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Image upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const imageUrl = responseData.data[0].url;
+                        console.log('Image URL:', imageUrl);
+                        // Update values.content with the image URL
+                        setValuesQuestionGroup({ ...valuesQuestionGroup, image_content: imageUrl });
                         showToast('Upload hình ảnh thành công');
                     } else {
                         console.error('Image URL not found in response data:', responseData);
@@ -317,16 +399,55 @@ export default function QuestionsPage() {
             // Handle case where no audio is selected
         }
     };
+    const handleAudioClick1 = () => {
+        if (audioFile) {
+            const formData = new FormData(); // Create FormData object to send the file
+            formData.append('audio', audioFile); // Append the audio file to the FormData object
+
+            axios.post(uploadAudioEndpoint, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data' // Update content type for file upload
+                }
+            }) // Send the POST request with the FormData and headers
+                .then(response => {
+                    console.log('Audio upload response:', response);
+                    const responseData = response?.data;
+                    if (responseData && responseData.data && responseData.data.length > 0) {
+                        const audioUrl = responseData.data[0].url;
+                        console.log('Audio URL:', audioUrl);
+                        // Update values.description with the audio URL
+                        setValuesQuestionGroup({ ...valuesQuestionGroup, audio_content: audioUrl });
+                        showToast('Upload audio thành công');
+
+                    } else {
+                        console.error('Audio URL not found in response data:', responseData);
+                        showToast('Upload audio thất bại');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading audio:', error);
+                    showToast('Upload audio thất bại');
+                    // Handle error response here
+                });
+        } else {
+            console.warn('No audio selected.');
+            // Handle case where no audio is selected
+        }
+    };
     const handleAddQuestion = async (e) => {
         if (e) {
             e.preventDefault(); // Prevent default form submission behavior if event object exists
         }
+
         const answers = [
             { order_answer: "A", content_answer: values.content_answer_1 },
             { order_answer: "B", content_answer: values.content_answer_2 },
             { order_answer: "C", content_answer: values.content_answer_3 },
             { order_answer: "D", content_answer: values.content_answer_4 }
         ];
+
+        // Basic validations
         if (values.type === "") {
             toast.error('Vui lòng chọn type');
             return false;
@@ -342,13 +463,10 @@ export default function QuestionsPage() {
         } else if (values.description === "") {
             toast.error('Description không được để trống');
             return false;
-        } else if (values.num_part === "") {
-            toast.error('Vui lòng chọn part');
-            return false;
         }
 
-        // Perform additional validations only if type is not 0 or 1
-        if (![2, 3, 4, 5].includes(values.type)) {
+        // Additional validations for types other than 0 and 1
+        if ([2, 3, 4, 5].includes(values.type)) {
             if (!values.content_answer_1 || values.content_answer_1.trim() === "") {
                 toast.error('Nội dung câu trả lời A không được để trống.');
                 return false;
@@ -367,8 +485,7 @@ export default function QuestionsPage() {
             } else if (Object.keys(values.correct_at).length === 0) {
                 toast.error('Cần phải chọn một đáp án đúng.');
                 return false;
-            }
-            else if (values.image_content === "") {
+            } else if (values.image_content === "") {
                 toast.error('Ảnh không được để trống');
                 return false;
             } else if (values.audio_content === "") {
@@ -376,16 +493,84 @@ export default function QuestionsPage() {
                 return false;
             }
         }
-        try {
-            const response = await axios.post(addQuestionNew, { ...values, answers }, { headers });
-            getAllQuestions();
-        } catch (error) {
-            console.log(error);
-        }
-        toast.success("Thêm câu hỏi thành công.", toastOptions)
-        setIsModalAddOpen(false)
 
+        try {
+            await axios.post(addQuestionNew, { ...values, answers }, { headers });
+            getAllQuestions();
+            toast.success("Thêm câu hỏi thành công.", toastOptions);
+            setIsModalAddOpen(false);
+        } catch (error) {
+            console.error("Error adding question:", error);
+        }
     };
+    const handleAddQuestionGroup = async (e) => {
+        if (e) {
+            e.preventDefault(); // Prevent default form submission behavior if event object exists
+        }
+
+        const answers = [
+            { order_answer: "A", content_answer: valuesQuestionGroup.content_answer_1 },
+            { order_answer: "B", content_answer: valuesQuestionGroup.content_answer_2 },
+            { order_answer: "C", content_answer: valuesQuestionGroup.content_answer_3 },
+            { order_answer: "D", content_answer: valuesQuestionGroup.content_answer_4 }
+        ];
+
+        // Basic validations
+        // if (valuesQuestionGroup.type === "") {
+        //     toast.error('Vui lòng chọn type');
+        //     return false;
+        // } else if (valuesQuestionGroup.type_content === "") {
+        //     toast.error('Vui lòng nhập type content');
+        //     return false;
+        // } else if (valuesQuestionGroup.num_part === "") {
+        //     toast.error('Vui lòng chọn part');
+        //     return false;
+        // } else if (valuesQuestionGroup.content === "") {
+        //     toast.error('Content không được để trống');
+        //     return false;
+        // } else if (valuesQuestionGroup.description === "") {
+        //     toast.error('Description không được để trống');
+        //     return false;
+        // }
+
+        // // Additional validations for types other than 0 and 1
+        // if ([2, 3, 4, 5].includes(valuesQuestionGroup.type)) {
+        //     if (!valuesQuestionGroup.content_answer_1 || valuesQuestionGroup.content_answer_1.trim() === "") {
+        //         toast.error('Nội dung câu trả lời A không được để trống.');
+        //         return false;
+        //     } else if (!valuesQuestionGroup.content_answer_2 || valuesQuestionGroup.content_answer_2.trim() === "") {
+        //         toast.error('Nội dung câu trả lời B không được để trống.');
+        //         return false;
+        //     } else if (!valuesQuestionGroup.content_answer_3 || valuesQuestionGroup.content_answer_3.trim() === "") {
+        //         toast.error('Nội dung câu trả lời C không được để trống.');
+        //         return false;
+        //     } else if (!valuesQuestionGroup.content_answer_4 || valuesQuestionGroup.content_answer_4.trim() === "") {
+        //         toast.error('Nội dung câu trả lời D không được để trống.');
+        //         return false;
+        //     } else if (valuesQuestionGroup.score === "") {
+        //         toast.error('Điểm không được để trống.');
+        //         return false;
+        //     } else if (Object.keys(valuesQuestionGroup.correct_at).length === 0) {
+        //         toast.error('Cần phải chọn một đáp án đúng.');
+        //         return false;
+        //     } else if (valuesQuestionGroup.image_content === "") {
+        //         toast.error('Ảnh không được để trống');
+        //         return false;
+        //     } else if (valuesQuestionGroup.audio_content === "") {
+        //         toast.error('Âm thanh không được để trống');
+        //         return false;
+        //     }
+        // }
+
+        try {
+            await axios.post(addQuestionNew, { ...valuesQuestionGroup, answers }, { headers });
+            getAllQuestions();
+            toast.success("Thêm câu hỏi thành công.", toastOptions);
+        } catch (error) {
+            console.error("Error adding question:", error);
+        }
+    };
+
     const handleUpdateQuestion = async (e) => {
         if (e) {
             e.preventDefault(); // Prevent default form submission behavior if event object exists
@@ -573,6 +758,10 @@ export default function QuestionsPage() {
 
     const handleNumPartChange = (value) => {
         setValues({ ...values, num_part: value });
+    };
+
+    const handleNumPartChange1 = (value) => {
+        setValuesQuestionGroup({ ...valuesQuestionGroup, num_part: value });
     };
 
     const handleAddQuestionsToTest = async () => {
@@ -1442,7 +1631,7 @@ export default function QuestionsPage() {
                 width={900}
                 title="Add Questions to Group"
                 onOk={() => {
-                    handleAddQuestion();
+                    handleAddQuestionGroup();
                     setIsModalQuestionGroup(false);
                 }}
                 open={isModalQuestionGroup}
@@ -1455,39 +1644,41 @@ export default function QuestionsPage() {
                                 label="Type"
                                 rules={[{ required: true, message: 'Type không được để trống' }]}
                             >
-                                <Input
-                                    onChange={handleOnChangeNumber}
-                                    type="number"
+                                <Select
+                                    onChange={handleTypeChangeQuestionGroup}
                                     name="type"
-                                    value="1"
+                                    placeholder="Chọn type"
+                                    value={valuesQuestionGroup.type}
+                                >
+                                    <Option value={1}>Câu hỏi con</Option>
+
+
+                                </Select>
+
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Parent id"
+                                rules={[{ required: true, message: 'Parent id không được để trống' }]}
+                            >
+                                <Input
+                                    onChange={handleOnChangeQuestionGroup}
+                                    name="parent_id"
+                                    type="text"
+                                    value={valuesQuestionGroup.parent_id}
+                                    placeholder="Nhập id"
                                     disabled
                                 />
                             </Form.Item>
                         </Col>
-                        {type === 1 && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Parent id"
-                                    rules={[{ required: true, message: 'Parent id không được để trống' }]}
-                                >
-                                    <Input
-                                        onChange={handleOnChange}
-                                        name="parent_id"
-                                        type="text"
-                                        value={valuesQuestionGroup.parent_id}
-                                        placeholder="Nhập id"
-                                        disabled
-                                    />
-                                </Form.Item>
-                            </Col>
-                        )}
                         <Col span={24} >
                             <Form.Item
                                 label="Type content"
                                 rules={[{ required: true, message: 'Type content không được để trống' }]}
                             >
                                 <Input
-                                    onChange={handleOnChangeNumber}
+                                    onChange={handleOnChangeNumber1}
                                     name="type_content"
                                     type="number"
                                     placeholder="Nhập type content" />
@@ -1500,10 +1691,10 @@ export default function QuestionsPage() {
                                 rules={[{ required: true, message: 'Num part không được để trống' }]}
                             >
                                 <Select
-                                    onChange={handleNumPartChange}
+                                    onChange={handleNumPartChange1}
                                     name="num_part"
                                     placeholder="Chọn Part"
-                                    value={values.num_part}
+                                    value={valuesQuestionGroup.num_part}
                                 >
                                     <>
                                         <Option value={3}>Part 3</Option>
@@ -1521,7 +1712,7 @@ export default function QuestionsPage() {
                             >
                                 <TextArea
                                     rows={4}
-                                    onChange={handleOnChange}
+                                    onChange={handleOnChangeQuestionGroup}
                                     name="content"
                                     placeholder="Nhập nội dung tại đây"
                                 />
@@ -1535,7 +1726,7 @@ export default function QuestionsPage() {
                             >
                                 <TextArea
                                     rows={4}
-                                    onChange={handleOnChange}
+                                    onChange={handleOnChangeQuestionGroup}
                                     name="description"
                                     placeholder="Nhập mô tả tại đây"
                                 />
@@ -1546,7 +1737,7 @@ export default function QuestionsPage() {
                                 label="Điểm"
                                 rules={[{ required: true, message: 'Điểm không được để trống' }]}
                             >
-                                <Input onChange={handleOnChangeNumber} type='number' name='score' placeholder="Nhập điểm câu hỏi" />
+                                <Input onChange={handleOnChangeNumber1} type='number' name='score' placeholder="Nhập điểm câu hỏi" />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -1560,7 +1751,7 @@ export default function QuestionsPage() {
                                     <div>
                                         <img alt="preview" src={URL.createObjectURL(imageFile)} style={{ width: 300 }} />
                                         {/* Render the button only if an image file is selected */}
-                                        {imageFile && <button onClick={handleClick}>Upload Image</button>}
+                                        {imageFile && <button onClick={handleClick1}>Upload Image</button>}
                                     </div>
                                 )}
                             </Form.Item>
@@ -1583,7 +1774,7 @@ export default function QuestionsPage() {
                                         <audio controls>
                                             <source src={URL.createObjectURL(audioFile)} type="audio/mp3" />
                                         </audio>
-                                        <button onClick={handleAudioClick}>Upload audio</button>
+                                        <button onClick={handleAudioClick1}>Upload audio</button>
                                     </>
                                 }
                             </Form.Item>
@@ -1592,23 +1783,23 @@ export default function QuestionsPage() {
                             <label>Answers:</label> <br />
                             <div>
                                 <div className="divQuestion" >
-                                    <input type="radio" id="A" onClick={clickButton} name="order_answer" value="A" />
-                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_1" />
+                                    <input type="radio" id="A" onClick={clickButton1} name="order_answer" value="A" />
+                                    <input onChange={handleOnChangeQuestionGroup} className="inputArea" type="text" name="content_answer_1" />
                                 </div>
                                 <div className="divQuestion">
 
-                                    <input type="radio" onClick={clickButton} id="B" name="order_answer" value="B" />
-                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_2" />
+                                    <input type="radio" onClick={clickButton1} id="B" name="order_answer" value="B" />
+                                    <input onChange={handleOnChangeQuestionGroup} className="inputArea" type="text" name="content_answer_2" />
                                 </div>
 
                                 <div className="divQuestion">
 
-                                    <input type="radio" onClick={clickButton} id="C" name="order_answer" value="C" />
-                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_3" />
+                                    <input type="radio" onClick={clickButton1} id="C" name="order_answer" value="C" />
+                                    <input onChange={handleOnChangeQuestionGroup} className="inputArea" type="text" name="content_answer_3" />
                                 </div>
                                 <div className="divQuestion">
-                                    <input type="radio" onClick={clickButton} id="D" name="order_answer" value="D" />
-                                    <input onChange={handleOnChange} className="inputArea" type="text" name="content_answer_4" />
+                                    <input type="radio" onClick={clickButton1} id="D" name="order_answer" value="D" />
+                                    <input onChange={handleOnChangeQuestionGroup} className="inputArea" type="text" name="content_answer_4" />
                                 </div>
                             </div>
                         </Col>

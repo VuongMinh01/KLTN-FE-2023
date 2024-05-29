@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Image } from "antd";
 import React, { useState, useEffect, useRef } from "react";
-import { createTest, getListTest, deleteTests, getTestDetail, deleteQuestionNew } from "../../utils/APIRoutes";
+import { createTest, getListTest, deleteTests, getTestDetailForDelete, deleteQuestionFromTests } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, EditOutlined, InfoOutlined } from '@ant-design/icons';
@@ -22,6 +22,7 @@ export default function TestV2() {
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
 
+    const [currentTestId, setCurrentTestId] = useState(null);
 
 
 
@@ -86,10 +87,13 @@ export default function TestV2() {
     const handleCancel = () => {
         setIsModalAddOpen(false);
     }
-    const showModalQuestion = (record) => {
+    const showModalQuestion = async (testId) => {
+        setCurrentTestId(testId); // Set the current testId when opening the modal
         setIsModalQuestionOpen(true);
-        fetchQuestionList(record._id); // Fetch question list for the clicked test_id
+        // Fetch question list for the selected test
+        await fetchQuestionList(testId);
     };
+
 
     const updateTable = (data) => {
         setDataSource(previousState => {
@@ -182,7 +186,7 @@ export default function TestV2() {
 
     const fetchQuestionList = async (testId) => {
         try {
-            const response = await axios.get(getTestDetail.replace(":test_id", testId), {
+            const response = await axios.get(getTestDetailForDelete.replace(":test_id", testId), {
                 params: {
                     limit: 10,
                     page: 1,
@@ -192,23 +196,34 @@ export default function TestV2() {
                     'Content-Type': 'application/json'
                 }
             });
-            setQuestionList(response.data.result.questions); // Update questionList state with the fetched data
+
+            // Extract items from all questions
+            const allItems = response.data.result.questions.flatMap(question => question.items);
+
+            // Set the questionList state to allItems
+            setQuestionList(allItems);
+
+            // Log details of the first item for debugging
+            console.log(allItems[0]);
+
         } catch (error) {
             console.error("Error fetching question list:", error);
         }
     };
 
-    const onDeleteQuestion = async (e) => {
+    const onDeleteQuestion = async (question, testId) => {
         try {
-            console.log(e._id, '1');
-            await axios.delete(deleteQuestionNew, {
+            console.log(question._id, '1');
+
+            await axios.delete(deleteQuestionFromTests, {
                 data: {
-                    question_id: e._id
+                    test_id: testId,
+                    question_id: question._id
                 },
                 headers
             });
             // Remove the deleted question from the data source
-            setDataSource(dataSource.filter(question => question._id !== e._id));
+            setQuestionList(questionList.filter(q => q._id !== question._id));
 
             setLoading(false);
             console.log('deleted');
@@ -219,6 +234,8 @@ export default function TestV2() {
             showToast('Failed to delete question');
         }
     };
+
+
     return (
         <div>
             <Space size={20} direction={"vertical"}>
@@ -275,7 +292,7 @@ export default function TestV2() {
                                             }}
                                             style={{ color: "red", marginLeft: "12px" }}
                                         />
-                                        <InfoOutlined onClick={() => showModalQuestion(record)} style={{ color: "green", marginLeft: "12px" }} />
+                                        <InfoOutlined onClick={() => showModalQuestion(record._id)} style={{ color: "green", marginLeft: "12px" }} />
 
                                     </div>
                                 )
@@ -355,6 +372,7 @@ export default function TestV2() {
                             title: "Mã câu hỏi",
                             dataIndex: "_id",
                         },
+
                         {
                             key: '2',
                             title: "Loại câu",
@@ -383,7 +401,8 @@ export default function TestV2() {
                             render: (imageContent) => (
                                 <Image src={imageContent} width={100} />
                             )
-                        },
+                        }
+                        ,
                         {
                             key: '7',
                             title: "Âm thanh",
@@ -399,7 +418,7 @@ export default function TestV2() {
                                         <DeleteOutlined
                                             onClick={() => {
                                                 if (window.confirm("Bạn có xác nhận xoá câu hỏi này không?")) {
-                                                    onDeleteQuestion(record);
+                                                    onDeleteQuestion(record, currentTestId); // Pass both the question object and the currentTestId
                                                 }
                                             }}
                                             style={{ color: "red", marginLeft: "12px" }}
