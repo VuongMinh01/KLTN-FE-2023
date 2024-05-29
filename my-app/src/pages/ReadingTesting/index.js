@@ -704,36 +704,44 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
 
     return (
         <div style={{ background: 'white' }}>
-
+            {loading && <p>Loading...</p>}
             {scorecardDetail && (
                 <>
-                    <div style={{
-                        border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite'
-                    }}>
+                    <div style={{ border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite' }}>
                         <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Thông tin bài làm</h1>
                         <h3>Tổng số câu đúng: {totalCorrect}</h3>
                         <h3>Tổng số điểm: {totalMarks}</h3>
-                        <h3>Thời gian làm bài: {totalTime1}  </h3>
+                        <h3>Thời gian làm bài: {totalTime1}  phút</h3>
                     </div>
                     <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
 
-                    <ul>
-                        {scorecardDetail.questions.map((question, index) => (
-                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
-                                <li key={index}>
-                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {index + 1}</h3>
-                                    <p>Mô tả: {question.description}</p>
-                                    <h4>Đáp án đúng: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</h4>
-                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "null"}</h4>
-                                    <h4>Điểm: {question.score}</h4>
+                    {scorecardDetail.questions
+                        .sort((a, b) => a.num_quest - b.num_quest) // Sort questions by num_quest
+                        .map((question, index) => (
+                            <ul key={index}>
+                                <li>
+                                    <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
+                                        <h3 style={{ color: 'cornflowerblue' }}>Câu {question.num_quest}</h3>
+                                        <p>Mô tả: {question.description}</p>
+                                        <h4>Đáp án đúng: {getAnswer(question) !== null && getAnswer(question) !== "" ? getAnswer(question) : "Không có"}</h4>
+                                        <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "Chưa chọn"}</h4>
+                                        <h4>Điểm: {question.score}</h4>
+                                    </div>
                                 </li>
-                            </div>
+                            </ul>
                         ))}
-                    </ul>
                 </>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
+    function getAnswer(question) {
+        if (question.correct_at) {
+            return question.correct_at.content_answer;
+        } else if (question.selected_at) {
+            return question.selected_at.content_answer;
+        } else {
+            return "Chưa xác định";
+        }
+    }
 
 }

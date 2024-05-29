@@ -24,7 +24,7 @@ export default function HocVien() {
         axios.get(getAllHocVien, {
             params: {
                 page: 1,
-                limit: 10
+                limit: 50
             }, headers
         }).then((response) => {
             console.log(response.data.result, '1');

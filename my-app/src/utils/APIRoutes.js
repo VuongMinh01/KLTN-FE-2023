@@ -33,6 +33,7 @@ export const updateQuestion = `${host}/questions/update`;
 export const updateCourses = `${host}/courses/update`;
 export const updateTest = `${host}/tests/update`;
 export const submitTest = `${host}/scorecards/`;
+
 export const getScore = `${host}/scorecards`;
 export const searchUser = `${host}/search/user`;
 export const uploadImageEndpoint = `${host}/medias/upload-image`;
@@ -47,6 +48,8 @@ export const getQuestionById = `${host}/questions-v2/:question_id`;
 
 
 export const createTest = `${host}/tests-v2`;
+export const updateTestV2 = `${host}/tests-v2/update`;
+
 export const getListTest = `${host}/tests-v2/list`;
 export const deleteTests = `${host}/tests-v2/delete`;
 export const deleteQuestionFromTests = `${host}/tests-v2/delete-question-from-test`;
@@ -55,3 +58,4 @@ export const getTestDetailForDelete = `${host}/tests-v2/full-test-detail/:test_i
 
 export const addQuestionToTest = `${host}/tests-v2/add-question`
 export const getQuestionDetail = `${host}/questions-v2/:question_id`
+export const submitTest2 = `${host}/scorecards-v2/`;

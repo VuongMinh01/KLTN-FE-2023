@@ -31,7 +31,7 @@ const UpdateQuestionReadingPage = () => {
         // Fetch all test data
         axios.get(getAllTestReading, {
             params: {
-                limit: 10,
+                limit: 100,
                 page: 1,
             },
             headers
@@ -56,7 +56,7 @@ const UpdateQuestionReadingPage = () => {
             // Make the API call to fetch the question list based on the test ID
             const response = await axios.get(`${getQuestionList}/${testId}`, {
                 params: {
-                    limit: 10,
+                    limit: 100,
                     page: pagination.current,
                 },
                 headers: {
@@ -356,7 +356,6 @@ const UpdateQuestionReadingPage = () => {
                 Gửi
             </Button>
 
-            <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={resetPage}>Làm mới</Button>
 
             {/* Table to display the list of questions */}
             <Table
@@ -401,18 +400,11 @@ const UpdateQuestionReadingPage = () => {
                 ]}
                 dataSource={questionList}
                 rowKey="_id"
-                pagination={false}
+                pagination={{ pageSize: 10 }}
                 onChange={handleTableChange}
                 loading={loading}
             />
-            <div style={{ marginBottom: '30px', marginTop: '10px' }}>
-                <h3 style={{ float: 'right', marginRight: '40px', border: '1px solid black', padding: '5px', marginLeft: '20px' }}>{pagination.current}</h3>
 
-            </div>
-            <div>
-                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', }} type="primary" onClick={changePage1}>Trang trước</Button>
-                <Button style={{ marginBottom: '10px', marginTop: '10px', float: 'right', marginRight: '20px' }} type="primary" onClick={changePage}>Trang kế</Button>
-            </div>
 
             <Modal
                 width={900}

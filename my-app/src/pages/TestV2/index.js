@@ -1,6 +1,6 @@
 import { Space, Table, Typography, Button, Col, Drawer, Form, Row, Select, Modal, Image } from "antd";
 import React, { useState, useEffect, useRef } from "react";
-import { createTest, getListTest, deleteTests, getTestDetailForDelete, deleteQuestionFromTests } from "../../utils/APIRoutes";
+import { updateTestV2, createTest, getListTest, deleteTests, getTestDetailForDelete, deleteQuestionFromTests } from "../../utils/APIRoutes";
 import Input from "antd/es/input/Input";
 import axios from "axios";
 import { PlusOutlined, DeleteOutlined, EditOutlined, InfoOutlined } from '@ant-design/icons';
@@ -21,6 +21,7 @@ export default function TestV2() {
     // const [search, setSearch] = useState();
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalQuestionOpen, setIsModalQuestionOpen] = useState(false);
+    const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
 
     const [currentTestId, setCurrentTestId] = useState(null);
 
@@ -81,17 +82,30 @@ export default function TestV2() {
     const showModalAdd = () => {
         setIsModalAddOpen(true);
     }
-    const handleOk = async () => {
-        setIsModalAddOpen(false);
-    }
+
     const handleCancel = () => {
         setIsModalAddOpen(false);
     }
+    const showModalUpdate = (record) => {
+        setValues({
+            ...values,
+            test_id: record._id,
+            title: record.title,
+            description: record.description,
+            timeline: record.timeline
+        });
+        console.log(record._id);
+        setIsModalUpdateOpen(true);
+    }
+
+    const handleCancelUpdate = () => {
+        setIsModalUpdateOpen(false);
+    }
     const showModalQuestion = async (testId) => {
-        setCurrentTestId(testId); // Set the current testId when opening the modal
+        setCurrentTestId(testId);
         setIsModalQuestionOpen(true);
-        // Fetch question list for the selected test
         await fetchQuestionList(testId);
+
     };
 
 
@@ -108,15 +122,24 @@ export default function TestV2() {
         const { title, description, timeline } = values;
 
         if (title.length === "") {
-            toast.error("Tên tiêu đề phải lớn hơn 5 kí tự", toastOptions);
+            toast.error("Tên tiêu đề không được để trống", toastOptions);
+            return false;
+        }
+        else if (title.length < 5) {
+            toast.error("Tên tiêu đề không được ít hơn 5 ký tự", toastOptions);
             return false;
         }
         else if (description.length === "") {
+            toast.error("Mô tả không được để trống", toastOptions);
+            return false;
+        }
+
+        else if (description.length < 5) {
             toast.error("Mô tả phải lớn hơn 5 ký tự", toastOptions);
             return false;
         }
-        else if (timeline === "") {
-            toast.error("Timeline không được để trống", toastOptions);
+        else if (timeline === null || timeline === 0 || isNaN(timeline) || timeline === "") {
+            toast.error("Timeline không được để trống và phải là số", toastOptions);
             return false;
         }
         return true;
@@ -134,17 +157,44 @@ export default function TestV2() {
                 }, { headers });
 
                 if (response.status === 200) {
-                    toast.success('Test created successfully!');
+                    toast.success('Thêm Test thành công.');
                     // Reset form or perform any other necessary actions
                 } else {
                     toast.error('Failed to create test');
                 }
             } catch (error) {
                 console.error('Error creating test:', error);
-                toast.error('An error occurred while creating the test');
+                toast.error('Xảy ra lỗi trong lúc thêm.');
             }
         }
     };
+    const handleUpdateTest = async (e) => {
+        e.preventDefault();
+        if (handleValidation()) {
+            try {
+                const { test_id, title, description, timeline } = values;
+                const response = await axios.patch(updateTestV2, {
+                    test_id,
+                    title,
+                    description,
+                    timeline
+                }, { headers });
+
+                if (response.status === 200) {
+                    toast.success('Cập nhật test thành công');
+                    // Reset form or perform any other necessary actions
+                } else {
+                    toast.error('Có lỗi trong việc cập nhật');
+                }
+            } catch (error) {
+                console.error('Error creating test:', error);
+                toast.error('Xảy ra lỗi trong lúc cập nhật');
+            }
+        }
+        updateTable();
+        setIsModalUpdateOpen(false);
+    };
+
 
     const onDeleteTest = async (e) => {
         try {
@@ -293,7 +343,7 @@ export default function TestV2() {
                                             style={{ color: "red", marginLeft: "12px" }}
                                         />
                                         <InfoOutlined onClick={() => showModalQuestion(record._id)} style={{ color: "green", marginLeft: "12px" }} />
-
+                                        <EditOutlined onClick={() => showModalUpdate(record)} style={{ color: "green", marginLeft: "15px" }} />
                                     </div>
                                 )
                             }
@@ -357,6 +407,7 @@ export default function TestV2() {
                     </Row>
                 </Form>
             </Modal>
+
             <Modal
                 width={1500}
                 title="Thông tin chi tiết"
@@ -439,7 +490,75 @@ export default function TestV2() {
                 ></Table>
 
             </Modal>
+            <Modal
+                width={900}
+                title="Thông tin chi tiết"
+                open={isModalUpdateOpen} onOk={handleUpdateTest} onCancel={handleCancelUpdate}
+            >
+                <Form>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Mã bài test"
+                                rules={[{ required: true, message: 'Id không được để trống' }]}
+                            >
+                                <Input
+                                    onChange={handleOnChange}
+                                    name="title"
+                                    type="text"
+                                    disabled
+                                    value={values.test_id}
+                                    placeholder="Nhập mẫ bài kiểm tra"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Nội dung"
+                                rules={[{ required: true, message: 'Title không được để trống' }]}
+                            >
+                                <Input
+                                    onChange={handleOnChange}
+                                    name="title"
+                                    type="text"
+                                    value={values.title}
+                                    placeholder="Nhập tiêu đề"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Mô tả"
+                                rules={[{ required: true, message: 'Descriptionkhông được để trống' }]}
+                            >
+                                <Input
+                                    onChange={handleOnChange}
+                                    name="description"
+                                    type="text"
+                                    value={values.description}
 
+                                    placeholder="Nhập mô tả"
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Thời gian"
+                                rules={[{ required: true, message: 'Timeline không được để trống' }]}
+                            >
+                                <Input
+                                    onChange={handleOnChangeNumber}
+                                    name="timeline"
+                                    type="number"
+                                    value={values.timeline}
+
+                                    placeholder="Nhập thời gian làm bài"
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
+            </Modal>
             <ToastContainer />
         </div>
     )

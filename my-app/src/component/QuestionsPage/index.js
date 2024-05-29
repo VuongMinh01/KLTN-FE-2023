@@ -240,7 +240,7 @@ export default function QuestionsPage() {
             setLoading(true);
             const response = await axios.get(getListQuestionNew, {
                 params: {
-                    limit: 50,
+                    limit: 100,
                     page: 1,
                 },
                 headers: { ...headers }
@@ -451,8 +451,8 @@ export default function QuestionsPage() {
         if (values.type === "") {
             toast.error('Vui lòng chọn type');
             return false;
-        } else if (values.type_content === "") {
-            toast.error('Vui lòng nhập type content');
+        } else if (values.type_content === "" || isNaN(values.type_content)) {
+            toast.error('Type content không được để trống và phải là số.');
             return false;
         } else if (values.num_part === "") {
             toast.error('Vui lòng chọn part');
@@ -463,10 +463,14 @@ export default function QuestionsPage() {
         } else if (values.description === "") {
             toast.error('Description không được để trống');
             return false;
+        } else if (values.score === "" || isNaN(values.score)) {
+            toast.error('Điểm không được để trống và phải là một số.');
+            return false;
         }
 
+
         // Additional validations for types other than 0 and 1
-        if ([2, 3, 4, 5].includes(values.type)) {
+        if (values.type === 0) {
             if (!values.content_answer_1 || values.content_answer_1.trim() === "") {
                 toast.error('Nội dung câu trả lời A không được để trống.');
                 return false;
@@ -479,10 +483,8 @@ export default function QuestionsPage() {
             } else if (!values.content_answer_4 || values.content_answer_4.trim() === "") {
                 toast.error('Nội dung câu trả lời D không được để trống.');
                 return false;
-            } else if (values.score === "") {
-                toast.error('Điểm không được để trống.');
-                return false;
-            } else if (Object.keys(values.correct_at).length === 0) {
+            }
+            else if (Object.keys(values.correct_at).length === 0) {
                 toast.error('Cần phải chọn một đáp án đúng.');
                 return false;
             } else if (values.image_content === "") {
@@ -493,6 +495,7 @@ export default function QuestionsPage() {
                 return false;
             }
         }
+
 
         try {
             await axios.post(addQuestionNew, { ...values, answers }, { headers });
@@ -516,56 +519,56 @@ export default function QuestionsPage() {
         ];
 
         // Basic validations
-        // if (valuesQuestionGroup.type === "") {
-        //     toast.error('Vui lòng chọn type');
-        //     return false;
-        // } else if (valuesQuestionGroup.type_content === "") {
-        //     toast.error('Vui lòng nhập type content');
-        //     return false;
-        // } else if (valuesQuestionGroup.num_part === "") {
-        //     toast.error('Vui lòng chọn part');
-        //     return false;
-        // } else if (valuesQuestionGroup.content === "") {
-        //     toast.error('Content không được để trống');
-        //     return false;
-        // } else if (valuesQuestionGroup.description === "") {
-        //     toast.error('Description không được để trống');
-        //     return false;
-        // }
+        if (valuesQuestionGroup.type === "") {
+            toast.error('Vui lòng chọn type');
+            return false;
+        } else if (valuesQuestionGroup.type_content === "") {
+            toast.error('Vui lòng nhập type content');
+            return false;
+        } else if (valuesQuestionGroup.num_part === "") {
+            toast.error('Vui lòng chọn part');
+            return false;
+        } else if (valuesQuestionGroup.content === "") {
+            toast.error('Content không được để trống');
+            return false;
+        } else if (valuesQuestionGroup.description === "") {
+            toast.error('Description không được để trống');
+            return false;
+        }
+        // Additional validations for types other than 0 and 1
+        if (!valuesQuestionGroup.content_answer_1 || valuesQuestionGroup.content_answer_1.trim() === "") {
+            toast.error('Nội dung câu trả lời A không được để trống.');
+            return false;
+        } else if (!valuesQuestionGroup.content_answer_2 || valuesQuestionGroup.content_answer_2.trim() === "") {
+            toast.error('Nội dung câu trả lời B không được để trống.');
+            return false;
+        } else if (!valuesQuestionGroup.content_answer_3 || valuesQuestionGroup.content_answer_3.trim() === "") {
+            toast.error('Nội dung câu trả lời C không được để trống.');
+            return false;
+        } else if (!valuesQuestionGroup.content_answer_4 || valuesQuestionGroup.content_answer_4.trim() === "") {
+            toast.error('Nội dung câu trả lời D không được để trống.');
+            return false;
+        } else if (valuesQuestionGroup.score === "") {
+            toast.error('Điểm không được để trống.');
+            return false;
+        } else if (Object.keys(valuesQuestionGroup.correct_at).length === 0) {
+            toast.error('Cần phải chọn một đáp án đúng.');
+            return false;
+        } else if (valuesQuestionGroup.image_content === "") {
+            toast.error('Ảnh không được để trống');
+            return false;
+        } else if (valuesQuestionGroup.audio_content === "") {
+            toast.error('Âm thanh không được để trống');
+            return false;
+        }
 
-        // // Additional validations for types other than 0 and 1
-        // if ([2, 3, 4, 5].includes(valuesQuestionGroup.type)) {
-        //     if (!valuesQuestionGroup.content_answer_1 || valuesQuestionGroup.content_answer_1.trim() === "") {
-        //         toast.error('Nội dung câu trả lời A không được để trống.');
-        //         return false;
-        //     } else if (!valuesQuestionGroup.content_answer_2 || valuesQuestionGroup.content_answer_2.trim() === "") {
-        //         toast.error('Nội dung câu trả lời B không được để trống.');
-        //         return false;
-        //     } else if (!valuesQuestionGroup.content_answer_3 || valuesQuestionGroup.content_answer_3.trim() === "") {
-        //         toast.error('Nội dung câu trả lời C không được để trống.');
-        //         return false;
-        //     } else if (!valuesQuestionGroup.content_answer_4 || valuesQuestionGroup.content_answer_4.trim() === "") {
-        //         toast.error('Nội dung câu trả lời D không được để trống.');
-        //         return false;
-        //     } else if (valuesQuestionGroup.score === "") {
-        //         toast.error('Điểm không được để trống.');
-        //         return false;
-        //     } else if (Object.keys(valuesQuestionGroup.correct_at).length === 0) {
-        //         toast.error('Cần phải chọn một đáp án đúng.');
-        //         return false;
-        //     } else if (valuesQuestionGroup.image_content === "") {
-        //         toast.error('Ảnh không được để trống');
-        //         return false;
-        //     } else if (valuesQuestionGroup.audio_content === "") {
-        //         toast.error('Âm thanh không được để trống');
-        //         return false;
-        //     }
-        // }
 
         try {
             await axios.post(addQuestionNew, { ...valuesQuestionGroup, answers }, { headers });
             getAllQuestions();
             toast.success("Thêm câu hỏi thành công.", toastOptions);
+            setIsModalQuestionGroup(false);
+
         } catch (error) {
             console.error("Error adding question:", error);
         }
@@ -585,8 +588,8 @@ export default function QuestionsPage() {
             toast.error('Vui lòng chọn type');
             return false;
         }
-        else if (values.type_content === "") {
-            toast.error('Vui lòng nhập type content');
+        else if (values.type_content === "" || isNaN(values.type_content)) {
+            toast.error('Type content phải là một số');
             return false;
         }
         else if (values.num_part === "") {
@@ -629,8 +632,8 @@ export default function QuestionsPage() {
             toast.error('Nội dung câu trả lời D không được để trống.');
             return false;
         }
-        if (values.score === "") {
-            toast.error('Điểm không được để trống.');
+        else if (values.score === "" || isNaN(values.score) || values.score < 0) {
+            toast.error('Điểm phải là một số và không được bỏ trống.');
             return false;
         }
         if (Object.keys(values.correct_at).length === 0) {
@@ -639,18 +642,9 @@ export default function QuestionsPage() {
         }
         try {
             const response = await axios.patch(updateQuestionNew, { ...values, answers: updatedAnswers }, { headers });
-            toast.success("Cập nhật thành công")
+            toast.success("Cập nhật thành công", toastOptions);
             setIsModalOpen(false);
-
             getAllQuestions();
-            // if (response.message === "Update question successfully") {
-            //     showToast("Cập nhật câu hỏi thành công.");
-            //     setIsModalOpen(false);
-            //     // Optionally, you can update the data source to reflect the changes immediately
-            //     getAllQuestions();
-            // } else {
-            //     toast.error('Cập nhật câu hỏi không thành công.')
-            // }
         } catch (error) {
             console.error("Error updating question:", error);
             toast.error('Có lỗi xảy ra khi cập nhật câu hỏi.');
@@ -927,7 +921,7 @@ export default function QuestionsPage() {
                         },
                         {
                             key: "5",
-                            title: "Description",
+                            title: "Mô tả",
                             dataIndex: "description",
                         },
                         {
@@ -1010,13 +1004,6 @@ export default function QuestionsPage() {
                                     value={values.type}
                                     disabled
                                 >
-                                    <Option value={0}>Câu hỏi đơn</Option>
-                                    <Option value={1}>Câu hỏi con</Option>
-                                    <Option value={2}>Câu hỏi đôi</Option>
-                                    <Option value={3}>Câu hỏi ba</Option>
-                                    <Option value={4}>Câu hỏi bốn</Option>
-                                    <Option value={5}>Câu hỏi năm</Option>
-
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -1057,11 +1044,12 @@ export default function QuestionsPage() {
                                 rules={[{ required: true, message: 'Loại bài thi không được để trống' }]}
                             >
                                 <Input
-                                    onChange={(e) => handleOnChange(e)}
-                                    type="text"
+                                    onChange={(e) => handleOnChangeNumber(e)}
+                                    type="number"
                                     value={values.num_part}
                                     name="num_part"
                                     placeholder="Nhập num part"
+
                                 />
                             </Form.Item>
                         </Col>
@@ -1209,7 +1197,6 @@ export default function QuestionsPage() {
                                     value={values.type}
                                 >
                                     <Option value={0}>Câu hỏi đơn</Option>
-                                    <Option value={1}>Câu hỏi con</Option>
                                     <Option value={2}>Câu hỏi đôi</Option>
                                     <Option value={3}>Câu hỏi ba</Option>
                                     <Option value={4}>Câu hỏi bốn</Option>
@@ -1218,21 +1205,6 @@ export default function QuestionsPage() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        {type === 1 && (
-                            <Col span={24}>
-                                <Form.Item
-                                    label="Parent id"
-                                    rules={[{ required: true, message: 'Parent id không được để trống' }]}
-                                >
-                                    <Input
-                                        onChange={handleOnChange}
-                                        name="parent_id"
-                                        type="text"
-                                        placeholder="Nhập id"
-                                    />
-                                </Form.Item>
-                            </Col>
-                        )}
                         <Col span={24} >
                             <Form.Item
                                 label="Type content"
@@ -1632,7 +1604,6 @@ export default function QuestionsPage() {
                 title="Add Questions to Group"
                 onOk={() => {
                     handleAddQuestionGroup();
-                    setIsModalQuestionGroup(false);
                 }}
                 open={isModalQuestionGroup}
                 onCancel={() => setIsModalQuestionGroup(false)}
