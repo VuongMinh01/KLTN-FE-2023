@@ -19,6 +19,42 @@ export default function ListeningTesting() {
     const navigate = useNavigate();
 
     const changePage = (page) => {
+        if (page === 'part 2' && currentPage === 'part 1') {
+            // Check for unanswered questions in Part 5 before navigating to Part 6
+            const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+            console.log(unansweredQuestions, '1');
+
+            if (questions.length <= 5 || modifiedDataSource.length <= 5) {
+                const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn sang part mới?");
+                if (!confirmed) {
+                    return; // Don't proceed if not confirmed
+                }
+            }
+        }
+        if (page === 'part 3' && currentPage === 'part 2') {
+            // Check for unanswered questions in Part 5 before navigating to Part 6
+            const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+            console.log(unansweredQuestions, '1');
+
+            if (questions.length < 35 || modifiedDataSource.length < 35) {
+                const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn sang part mới?");
+                if (!confirmed) {
+                    return; // Don't proceed if not confirmed
+                }
+            }
+        }
+        if (page === 'part 4' && currentPage === 'part 3') {
+            // Check for unanswered questions in Part 5 before navigating to Part 6
+            const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+            console.log(unansweredQuestions, '1');
+
+            if (questions.length <= 69 || modifiedDataSource.length <= 69) {
+                const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn sang part mới?");
+                if (!confirmed) {
+                    return; // Don't proceed if not confirmed
+                }
+            }
+        }
         setCurrentPage(page);
     };
     const [dataSource, setDataSource] = useState([])
@@ -205,8 +241,7 @@ export default function ListeningTesting() {
             .then(response => {
                 // Handle successful response
                 const { total_marks, total_correct, total_time } = response.data.result;
-                console.log(response.data.result);
-                console.log(total_time);
+                console.log(response.data.result, '123');
                 setTotalCorrect(total_correct);
                 setTotalMarks(total_marks);
                 setTotalTime1(total_time);
@@ -226,16 +261,18 @@ export default function ListeningTesting() {
             <Header />
 
 
+            {currentPage !== 'start' && currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'xem' && (
 
-            {/* <div className="sidebar">
-                <ul>
-                    <li><button onClick={() => changePage('part 1')}>Part 1</button></li>
-                    <li><button onClick={() => changePage('part 2')}>Part 2</button></li>
-                    <li><button onClick={() => changePage('part 3')}>Part 3</button></li>
-                    <li><button onClick={() => changePage('part 4')}>Part 4</button></li>
+                <div className="sidebar">
+                    <ul>
+                        <li><button onClick={() => changePage('part 1')}>Part 1</button></li>
+                        <li><button onClick={() => changePage('part 2')}>Part 2</button></li>
+                        <li><button onClick={() => changePage('part 3')}>Part 3</button></li>
+                        <li><button onClick={() => changePage('part 4')}>Part 4</button></li>
 
-                </ul>
-            </div> */}
+                    </ul>
+                </div>
+            )}
             <div className="main-content">
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
@@ -675,22 +712,24 @@ function Finish({ totalMarks, totalCorrect, changePage, totalTime1 }) {
         </Container>
     );
 }
-
 function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
     const [scorecardDetail, setScorecardDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [id, setId] = useState(testId); // Set initial value of id to testId
     const [submittedId, setSubmittedId] = useState("");
 
+    const token = localStorage.getItem("user").replace(/"/g, '');
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${getScore}/${id}`, { headers: { 'Authorization': `Bearer ${localStorage.getItem("user").replace(/"/g, '')}`, 'Content-Type': 'application/json' } }
-                );
+                const response = await axios.get(`${getScore}/${id}`, { headers });
                 setScorecardDetail(response.data.result);
                 setLoading(false);
-                console.log(response.data.result);
             } catch (error) {
                 console.error("Error fetching scorecard detail:", error);
                 setLoading(false);
@@ -699,31 +738,32 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
         };
 
         fetchData();
-    }, [id]);
+    }, []);
 
     function showToast(message) {
+
         alert(message);
     }
 
     return (
-        <div style={{ background: 'white' }}>
+        <div style={{ background: 'white', margin: '10px 10px 10px 10px' }}>
             {loading && <p>Loading...</p>}
             {scorecardDetail && (
                 <>
-                    <div style={{ border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite', marginLeft: '10px', marginRight: '10px' }}>
+                    <div style={{ border: '1px solid black', borderRadius: '15px', padding: '10px', backgroundColor: 'antiquewhite' }}>
                         <h1 style={{ textAlign: 'center', color: 'cornflowerblue' }}>Thông tin bài làm</h1>
                         <h3>Tổng số câu đúng: {totalCorrect}</h3>
                         <h3>Tổng số điểm: {totalMarks}</h3>
                         <h3>Thời gian làm bài: {totalTime1}  phút</h3>
                     </div>
-                    <h2 style={{ color: 'cornflowerblue', marginLeft: '20px' }}>Câu hỏi:</h2>
+                    <h2 style={{ color: 'cornflowerblue', textAlign: 'center' }}>Câu hỏi:</h2>
 
                     {scorecardDetail.questions
                         .sort((a, b) => a.num_quest - b.num_quest) // Sort questions by num_quest
                         .map((question, index) => (
                             <ul key={index} style={{ listStyle: 'none' }}>
                                 <li>
-                                    <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite', marginLeft: '10px', marginRight: '20px' }}>
+                                    <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite', marginRight: '10px' }}>
                                         <h3 style={{ color: 'cornflowerblue' }}>Câu {question.num_quest}</h3>
                                         <p>Mô tả: {question.description}</p>
                                         <h4>Đáp án đúng: {getAnswer(question) !== null && getAnswer(question) !== "" ? getAnswer(question) : "Không có"}</h4>
@@ -737,7 +777,6 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
             )}
         </div>
     );
-
     function getAnswer(question) {
         if (question.correct_at) {
             return question.correct_at.content_answer;
@@ -747,4 +786,5 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
             return "Chưa xác định";
         }
     }
+
 }

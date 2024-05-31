@@ -71,16 +71,12 @@ export default function Admin() {
         });
 
     function showToast(message) {
-        // Replace this with your toast alert implementation
-        // For example, if you're using react-toastify:
-        // toast.error(message);
         alert(message);
     }
     return (
 
-        <Container fluid>
+        <Container fluid >
             <Header />
-
             <Row>
                 <Col xs={3} sm={2}>
                     <SideMenu userData={userData} />

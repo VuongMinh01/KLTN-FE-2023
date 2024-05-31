@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import StopPage from "../../component/StopPage";
 import StartPage from "../../component/StartPage";
 import Logo from '../../assets/ToeicTesting.png'
+import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 
 
@@ -19,6 +20,30 @@ export default function ReadingTesting() {
     const navigate = useNavigate();
 
     const changePage = (page) => {
+        if (page === 'part 6' && currentPage === 'part 5') {
+            // Check for unanswered questions in Part 5 before navigating to Part 6
+            const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+            console.log(unansweredQuestions, '1');
+
+            if (questions.length <= 29 || modifiedDataSource.length <= 29) {
+                const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn sang part mới?");
+                if (!confirmed) {
+                    return; // Don't proceed if not confirmed
+                }
+            }
+        }
+        if (page === 'part 7' && currentPage === 'part 6') {
+            // Check for unanswered questions in Part 5 before navigating to Part 6
+            const unansweredQuestions = modifiedDataSource.filter(data => !data || !data.selected_at);
+            console.log(unansweredQuestions, '1');
+
+            if (questions.length <= 45 || modifiedDataSource.length <= 45) {
+                const confirmed = window.confirm("Vẫn còn câu hỏi bạn chưa chọn, bạn có muốn sang part mới?");
+                if (!confirmed) {
+                    return; // Don't proceed if not confirmed
+                }
+            }
+        }
         setCurrentPage(page);
     };
     const [dataSource, setDataSource] = useState([])
@@ -218,14 +243,18 @@ export default function ReadingTesting() {
     return (
         <div className="App">
             <Header />
+            <ToastContainer /> {/* Add ToastContainer to display toast messages */}
 
-            {/* <div className="sidebar">
-                <ul>
-                    <li><button onClick={() => changePage('part 5')}>Part 5</button></li>
-                    <li><button onClick={() => changePage('part 6')}>Part 6</button></li>
-                    <li><button onClick={() => changePage('part 7')}>Part 7</button></li>
-                </ul>
-            </div> */}
+            {currentPage !== 'start' && currentPage !== 'stop' && currentPage !== 'finish' && currentPage !== 'xem' && (
+
+                <div className="sidebar">
+                    <ul>
+                        <li><button onClick={() => changePage('part 5')}>Part 5</button></li>
+                        <li><button onClick={() => changePage('part 6')}>Part 6</button></li>
+                        <li><button onClick={() => changePage('part 7')}>Part 7</button></li>
+                    </ul>
+                </div>
+            )}
             <div className="main-content">
                 {currentPage === 'start' && <StartPage onStart={handleStartTest} />}
                 {currentPage === 'stop' && <StopPage onContinue={continueTest} />}
@@ -288,7 +317,7 @@ export default function ReadingTesting() {
 
 function Part5(props) {
     const handleClick = () => {
-        // Call changePage function to change the page
+
         props.changePage('part 6');
         window.scrollTo(0, 0);
 
@@ -703,7 +732,7 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
     }
 
     return (
-        <div style={{ background: 'white' }}>
+        <div style={{ background: 'white', margin: '10px 10px 10px 10px' }}>
             {loading && <p>Loading...</p>}
             {scorecardDetail && (
                 <>
@@ -713,14 +742,14 @@ function ScorecardDetail({ totalMarks, totalCorrect, totalTime1, testId }) {
                         <h3>Tổng số điểm: {totalMarks}</h3>
                         <h3>Thời gian làm bài: {totalTime1}  phút</h3>
                     </div>
-                    <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
+                    <h2 style={{ color: 'cornflowerblue', textAlign: 'center' }}>Câu hỏi:</h2>
 
                     {scorecardDetail.questions
                         .sort((a, b) => a.num_quest - b.num_quest) // Sort questions by num_quest
                         .map((question, index) => (
-                            <ul key={index}>
+                            <ul key={index} style={{ listStyle: 'none' }}>
                                 <li>
-                                    <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
+                                    <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite', marginRight: '10px' }}>
                                         <h3 style={{ color: 'cornflowerblue' }}>Câu {question.num_quest}</h3>
                                         <p>Mô tả: {question.description}</p>
                                         <h4>Đáp án đúng: {getAnswer(question) !== null && getAnswer(question) !== "" ? getAnswer(question) : "Không có"}</h4>

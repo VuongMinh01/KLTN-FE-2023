@@ -59,24 +59,37 @@ function ScorecardDetail() {
                     <h2 style={{ color: 'cornflowerblue' }}>Câu hỏi:</h2>
 
                     <ul>
-                        {scorecardDetail.questions.map((question, index) => (
-                            <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite' }}>
-                                <li key={index}>
-                                    <h3 style={{ color: 'cornflowerblue' }}>Câu {index + 1}</h3>
-                                    <p>Mô tả: {question.description}</p>
-                                    <h4>Đáp án đúng: {question.correct_at && question.correct_at.content_answer ? question.correct_at.content_answer : "null"}</h4>
-                                    <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "null"}</h4>
-                                    <h4>Điểm: {question.score}</h4>
-                                </li>
-                            </div>
-                        ))}
+                        {scorecardDetail.questions
+                            .sort((a, b) => a.num_quest - b.num_quest)
+                            .map((question, index) => (
+                                <ul key={index} style={{ listStyle: 'none' }}>
+                                    <li>
+                                        <div style={{ border: '1px solid black', listStyle: 'none', padding: '10px', marginBottom: '10px', backgroundColor: 'antiquewhite', marginLeft: '10px', marginRight: '20px' }}>
+                                            <h3 style={{ color: 'cornflowerblue' }}>Câu {question.num_quest}</h3>
+                                            <p>Mô tả: {question.description}</p>
+                                            <h4>Đáp án đúng: {getAnswer(question) !== null && getAnswer(question) !== "" ? getAnswer(question) : "Không có"}</h4>
+                                            <h4>Đáp án đã chọn: {question.selected_at ? question.selected_at.content_answer : "Chưa chọn"}</h4>
+                                            <h4>Điểm: {question.score}</h4>
+                                        </div>
+                                    </li>
+                                </ul>
+                            ))}
                     </ul>
                 </>
             )
             }
         </div >
     );
-
+    function getAnswer(question) {
+        if (question.correct_at) {
+            return question.correct_at.content_answer;
+        } else if (question.selected_at) {
+            return question.selected_at.content_answer;
+        } else {
+            return "Chưa xác định";
+        }
+    }
 }
+
 
 export default ScorecardDetail;
